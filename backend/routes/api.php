@@ -1,76 +1,74 @@
 <?php
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\discoController;
+use App\Http\Controllers\reviewController;
+use App\Http\Controllers\userController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
-/*
-|--------------------------------------------------------------------------
-| AUTH ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::group(['middleware' => 'jwt'], function () {
-    Route::post('logout', [App\Http\Controllers\AuthController::class, 'logout']);
+    
+
+// RUTAS DE USUARIO
+Route::get('/csrf-token', function () {
+    return csrf_token();
 });
-/*
-|--------------------------------------------------------------------------
-| USER ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::post('register', [App\Http\Controllers\AuthController::class, 'register']);
-Route::post('login', [App\Http\Controllers\AuthController::class, 'login']);
-Route::get('get-user-id', [App\Http\Controllers\AuthController::class, 'getUserId']);
+// middleware usuarios
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+
+Route::post('login', 'App\Http\Controllers\AuthController@login');
+Route::post('register', 'App\Http\Controllers\AuthController@register');
+
+// Route::post('/login', [userController::class, 'login']);
+// Route::post('/register', [userController::class, 'register']);
+
+// ruta para obtener todos los usuarios
+Route::get('/users', [userController::class, 'getUsers']);
+// ruta para crear un usuario
+Route::post('/users', [userController::class, 'create']);
+// ruta para borrar un usuario
+Route::delete('/users/{id}', [userController::class, 'delete']);
+// ruta para editar un usuario
+Route::put('/users/{id}', [userController::class, 'update']);
 
 
 
-/*
-|--------------------------------------------------------------------------
-| MOVIE ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::post('movie', [App\Http\Controllers\MovieController::class, 'store']);
-Route::post('movies', [App\Http\Controllers\MovieController::class, 'insert']);
-Route::get('movies', [App\Http\Controllers\MovieController::class, 'index']);
-Route::get('movies/{id}', [App\Http\Controllers\MovieController::class, 'show']);
-Route::put('movies/{id}', [App\Http\Controllers\MovieController::class, 'update']);
-Route::delete('movie/{id}', [App\Http\Controllers\MovieController::class, 'delete']);
-Route::get('estrenos', [App\Http\Controllers\MovieController::class, 'getEstrenos']);
-Route::get('title/{id}', [App\Http\Controllers\MovieController::class, 'getTitle']);
+// RUTAS DE DISCOTECAS
+// ruta para obtener todas las discotecas
+Route::get('/discotecas', [discoController::class, 'getDiscotecas']);
+// ruta para obtener una discoteca por id
+Route::get('/discotecas/{id}', [discoController::class, 'getDiscoteca']);
+// ruta para crear una discoteca
+Route::post('/discotecas', [discoController::class, 'createDiscoteca']);
+// ruta para actualizar una discoteca
+Route::put('/discotecas/{id}', [discoController::class, 'updateDiscoteca']);
+// ruta para borrar una discoteca
+Route::delete('/discotecas/{id}', [discoController::class, 'delete']);
+// ruta para obtener las discotecas por nombre
+Route::get('/discotecas/nombre/{nombre_local}', [discoController::class, 'getDiscotecasByName']);
+// ruta para obtener las discotecas por edad
+Route::get('/discotecas/edad/{minEdad}', [discoController::class, 'getDiscotecasByAge']);
+// ruta para obtener las discotecas por horario
+Route::get('/discotecas/horario/{horario}', [discoController::class, 'getDiscotecasBySchedule']);
 
 
-/*
-|--------------------------------------------------------------------------
-| GENRE ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::post('genres', [App\Http\Controllers\GenreController::class, 'insert']);
-Route::get('genres', [App\Http\Controllers\GenreController::class, 'index']);
-Route::get('genres/{id}', [App\Http\Controllers\GenreController::class, 'show']);
-Route::put('genres/{id}', [App\Http\Controllers\GenreController::class, 'update']);
-Route::delete('genres/{id}', [App\Http\Controllers\GenreController::class, 'destroy']);
+// RUTAS DE REVIEWS
+// ruta para crear una review
+Route::post('/reviews', [reviewController::class, 'createReview']);
+// ruta para obtener todas las reviews
+Route::get('/reviews', [reviewController::class, 'getReviews']);
+// ruta para obtener una review por id
+Route::get('/review/{id}', [reviewController::class, 'getReview']);
+// ruta para actualizar una review
+Route::put('/reviews/{id}', [reviewController::class, 'update']);
+// ruta para borrar una review
+Route::delete('/reviews/{id}', [reviewController::class, 'delete']);
+// ruta para obtener las reviews por id de usuario
+Route::get('/reviews/user/{id}', [reviewController::class, 'getReviewsByUser']);
+// ruta para obtener las reviews por id de discoteca
+Route::get('/reviews/disco/{id}', [reviewController::class, 'getReviewsByDisco']);
+// ruta para obtener las reviews por puntuacion
+Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getReviewsByPuntuacion']);
 
-
-/*
-|--------------------------------------------------------------------------
-| SEAT ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::get('seats', [App\Http\Controllers\SeatController::class, 'index']);
-Route::get('seats/{id}', [App\Http\Controllers\SeatController::class, 'show']);
-Route::post('seats', [App\Http\Controllers\SeatController::class, 'insert']);
-Route::delete('seats/{id}', [App\Http\Controllers\SeatController::class, 'delete']);
-Route::post('seats/{id}', [App\Http\Controllers\SeatController::class, 'create']);
-Route::put('seats/{id}', [App\Http\Controllers\SeatController::class, 'update']);
-Route::get('seat', [App\Http\Controllers\SeatController::class, 'getSeat']);
-
-/*
-|--------------------------------------------------------------------------
-| CECKOUT ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::get('checkouts', [App\Http\Controllers\CheckoutController::class, 'index']);
-Route::get('checkouts/{id}', [App\Http\Controllers\CheckoutController::class, 'showBasedOnUserId']);
-Route::post('checkout', [App\Http\Controllers\CheckoutController::class, 'store']);
-Route::delete('checkout/{id}', [App\Http\Controllers\CheckoutController::class, 'destroy']);
-Route::put('checkout/{id}', [App\Http\Controllers\CheckoutController::class, 'update']);
-Route::get('checkout/{id}', [App\Http\Controllers\CheckoutController::class, 'show']);
-Route::get('watchers/{id}', [App\Http\Controllers\CheckoutController::class, 'getMovieWatchers']);
