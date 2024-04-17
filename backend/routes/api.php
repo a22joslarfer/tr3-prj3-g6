@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\discoController;
 use App\Http\Controllers\reviewController;
 use App\Http\Controllers\userController;
+use App\Http\Controllers\BeRealController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -71,4 +72,10 @@ Route::get('/reviews/user/{id}', [reviewController::class, 'getReviewsByUser']);
 Route::get('/reviews/disco/{id}', [reviewController::class, 'getReviewsByDisco']);
 // ruta para obtener las reviews por puntuacion
 Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getReviewsByPuntuacion']);
+
+//RUTAS PARA BEREAL
+//ruta para crear 
+Route::post('/bereals', [BeRealController::class, 'store']);
+//ruta para obtener y mostrar
+Route::get('/bereals/{id}', [BeRealController::class, 'show']);
 
