@@ -1,38 +1,48 @@
 <template>
-    <body>
-        <div class="container">
-            <div class="left">
-                <form @submit.prevent="register" class="form">
-                    <img class="background-image" src="../public/img/images.jpg " alt="Imagen de fondo" />
-                    <img class="foreground-image" src="../public/img/3128-earth.png" alt="Imagen superpuesta" />
-                </form>
-            </div>
-            <div class="right">
-                <div class="title">Regístrate en Viaegis</div>
-                <form @submit.prevent="register" class="form">
+    <div class="container">
+        <div class="content">
+            <div class="title">Únete a Viaegis</div>
+            <form @submit.prevent="register" class="form">
+                <div class="input-group">
+
                     <input type="text" v-model.trim="nombre" class="input" placeholder="Nombre Completo" required />
+                </div>
+                <div class="input-group">
                     <input type="email" v-model.trim="email" class="input" placeholder="Correo Electrónico"
                         title="Por favor, introduce un correo electrónico válido" />
+                </div>
+                <div class="input-group">
                     <input type="password" v-model.trim="password" class="input" placeholder="Contraseña" />
+                    <img src="https://cdn-icons-png.freepik.com/512/2889/2889676.png" class="icon" alt="Lock Icon">
+                </div>
+                <div class="input-group">
                     <input type="password" v-model.trim="password2" class="input" placeholder="Repetir Contraseña" />
-                    <input type="date" v-model.trim="birthdate" class="input" placeholder="Fecha de Nacimiento" required />
+                </div>
+                <div class="input-group">
+                    <input type="date" v-model.trim="birthdate" class="input" placeholder="Fecha de Nacimiento"
+                        required />
+                </div>
+                <div class="input-group">
                     <input type="tel" v-model.trim="phone" class="input" placeholder="Número de Teléfono" required
                         pattern="\d{9}" title="El número de teléfono debe tener 9 dígitos" />
-                    <div class="checkbox">
-                        <input type="checkbox" id="terms" v-model="acceptTerms" required />
-                        <label for="terms">Acepto las condiciones y términos</label>
-                    </div>
-                    <button type="submit" class="button">Regístrate</button>
-                    <div class="text">¿Ya tienes cuenta? ¡Inicia sesión!</div>
-                </form>
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" id="terms" v-model="acceptTerms" required />
+                    <label for="terms">Acepto las condiciones y términos</label>
+                </div>
+                <button type="submit" class="button">Regístrate</button>
+            </form>
+            <div class="login-link">
+                ¿Ya tienes cuenta? <a href="/login" class="boton_login">¡Inicia sesión!</a>
             </div>
         </div>
-    </body>
+    </div>
 </template>
-  
-  
+
 <script>
+
 export default {
+
     name: 'RegisterScreen',
     data() {
         return {
@@ -85,7 +95,7 @@ export default {
                             nombre: data.user.nombre,
                             email: data.user.email,
                             token: data.access_token,
-                            
+
                         }));
 
                         alert(data.error);
@@ -108,74 +118,68 @@ export default {
     }
 };
 </script>
-  
-<style scoped>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
+<style scoped>
 .container {
     display: flex;
-    height: 100vh;
-}
-
-.left {
-    flex: 1;
-    position: relative;
-}
-
-.background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    /* Coloca la imagen de fondo en el fondo */
-}
-
-.foreground-image {
-    position: absolute;
-    top: 50%;
-    /* Ajusta la posición vertical según tus necesidades */
-    left: 50%;
-    /* Ajusta la posición horizontal según tus necesidades */
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    /* Coloca la imagen superpuesta encima del fondo */
-}
-
-.right {
-    flex: 1;
-    background-color: #f0f0f0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('https://i.pinimg.com/originals/8e/2d/79/8e2d79c7abf858ae412c74a25726d950.jpg') center/cover;
+}
+
+.content {
+    width: 300px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-    font-size: 36px;
+    font-size: 28px;
     font-weight: bold;
     color: #333;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .form {
-    width: 80%;
-    max-width: 400px;
+    width: 100%;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.icon{
+    width: 21px;
+    position: fixed;
+    margin-top: 15px;
+    margin-left: -28px;
 }
 
 .input {
     width: 100%;
     height: 40px;
     border: none;
-    border-bottom: 2px solid #ccc;
-    margin-bottom: 20px;
-    font-size: 18px;
+    border-bottom: 1px solid #ccc;
+    /* Cambio clave: borde inferior en lugar de borde completo */
+    background-color: transparent;
+    /* Hacemos el fondo transparente para que el borde inferior sea visible */
+    font-size: 16px;
     padding: 10px;
+    box-sizing: border-box;
+    /* Asegura que el padding no aumente el tamaño total del campo de entrada */
+}
+
+.checkbox {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.checkbox input {
+    margin-right: 10px;
 }
 
 .button {
@@ -183,35 +187,26 @@ export default {
     height: 50px;
     border: none;
     border-radius: 25px;
-    background-color: #0f233b;
+    background-color: #062b25;
     color: white;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
-    margin-bottom: 20px;
     cursor: pointer;
 }
 
-.text {
+.login-link {
+    text-align: center;
     font-size: 16px;
     color: #333;
-    margin-bottom: 10px;
-    margin-left: 71px;
 }
 
-.checkbox {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+.login-link a {
+    color: #053cf1;
+    text-decoration: none;
 }
 
-.checkbox input {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-}
-
-.checkbox label {
-    font-size: 16px;
-    color: #333;
+.login-link a:hover {
+    text-decoration: underline;
+    color: #062897;
 }
 </style>

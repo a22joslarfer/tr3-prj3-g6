@@ -1,35 +1,22 @@
 <template>
     <div class="container">
-
-        <div class="left">
-            <form @submit.prevent="login" class="form">
-                <img class="background-image" src="../public/img/images.jpg" alt="Imagen de fondo">
-                <img class="foreground-image" src="../public/img/3128-earth.png" alt="Imagen superpuesta">
-            </form>
-
+      <div class="content">
+        <div class="title">Iniciar Sesión</div>
+        <form @submit.prevent="login" class="form">
+          <div class="input-group">
+            <input type="text" v-model.trim="email" class="input" placeholder="Correo Electrónico" required />
+          </div>
+          <div class="input-group">
+            <input type="password" v-model.trim="password" class="input" placeholder="Contraseña" required />
+          </div>
+          <button type="submit" class="button">Iniciar Sesión</button>
+        </form>
+        <div class="login-link">
+          ¿Aún no tienes cuenta? <a href="/register" class="boton_login">¡Regístrate!</a>
         </div>
-        <div class="right">
-            <form @submit.prevent="login" class="form">
-
-                <div class="title">Iniciar Sesión</div>
-                <div class="form">
-                    <input type="text" v-model="email" class="input" placeholder="Email">
-                    <input type="password" v-model="password" class="input" placeholder="Contraseña">
-
-                    <button class="button">Iniciar Sesión</button>
-                    <div class="text">¿Aún no tienes cuenta? <router-link to="/register">¡Regístrate!</router-link>
-
-                    </div>
-                    <div class="icons">
-                        <div class="icon"><img src="../public/img/google.png" width="24" height="24"></div>
-                        <div class="icon"><img src="../public/img/instagram.png" width="24" height="24"></div>
-                        <div class="icon"><img src="../public/img/facebook.png" width="24" height="24"></div>
-                    </div>
-                </div>
-            </form>
-        </div>
+      </div>
     </div>
-</template>
+  </template>
 <script>
 export default {
     data() {
@@ -119,109 +106,73 @@ export default {
 </script>
   
 <style scoped>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 .container {
-    display: flex;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('https://i.pinimg.com/originals/8e/2d/79/8e2d79c7abf858ae412c74a25726d950.jpg') center/cover;
 }
 
-.left {
-    flex: 1;
-    position: relative;
-}
-
-.background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    /* Coloca la imagen de fondo en el fondo */
-}
-
-.foreground-image {
-    position: absolute;
-    top: 50%;
-    /* Ajusta la posición vertical según tus necesidades */
-    left: 50%;
-    /* Ajusta la posición horizontal según tus necesidades */
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    /* Coloca la imagen superpuesta encima del fondo */
-}
-
-.right {
-    flex: 1;
-    background-color: #f0f0f0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.content {
+  width: 300px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-    font-size: 36px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .form {
-    width: 80%;
-    max-width: 400px;
+  width: 100%;
+}
+
+.input-group {
+  margin-bottom: 20px;
 }
 
 .input {
-    width: 100%;
-    height: 40px;
-    border: none;
-    border-bottom: 2px solid #ccc;
-    margin-bottom: 20px;
-    font-size: 18px;
-    padding: 10px;
+  width: 100%;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  padding: 10px;
 }
 
 .button {
-    width: 100%;
-    height: 50px;
-    border: none;
-    border-radius: 25px;
-    background-color: #0f233b;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    cursor: pointer;
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 25px;
+  background-color: #062b25;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.text {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 10px;
-    margin-left: 71px;
+.login-link {
+  text-align: center;
+  font-size: 16px;
+  color: #333;
 }
 
-.icons {
-    display: flex;
-    justify-content: space-between;
-    width: 60%;
-    margin-left: 71px;
+.login-link a {
+  color: #053cf1;
+  text-decoration: none;
 }
 
-.icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+.login-link a:hover {
+  text-decoration: underline;
+  color: #062897;
 }
 </style>
