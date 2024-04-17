@@ -22,17 +22,15 @@
                     <div class="card-closer" @click="cerrarPopUp">X</div>
                 </div>
                 <div class="card-body">
-                    <img :src="'https://via.placeholder.com/200'" alt="imagen de la discoteca"
-                        style="width: 100%; height: 200px; object-fit: cover;">
+    <img :src="pin_seleccionado.imgUrl" alt="imagen de la discoteca"
+        style="width: 100%; height: 200px; object-fit: cover;">
 
-                    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
-                    <p>Horario: {{ pin_seleccionado.horario }}</p>
-                    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
-                    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
-                    <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
-
-
-                </div>
+    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
+    <p>Horario: {{ pin_seleccionado.horario }}</p>
+    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
+    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+    <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
+</div>
             </div>
         </div>
         <footer>
