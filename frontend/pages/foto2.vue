@@ -11,8 +11,8 @@ export default {
   },
   methods: {
     programarNotificacion() {
-      const hora = 11;
-      const minutos = 54;
+      const hora = 12;
+      const minutos = 20;
 
       const now = new Date();
       const horaEspecifica = new Date(
