@@ -29,6 +29,8 @@
     <p>Horario: {{ pin_seleccionado.horario }}</p>
     <p>Telefono: {{ pin_seleccionado.telefono }}</p>
     <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+    <audio :src="pin_seleccionado.cancion_mp3" controls></audio>
+    
     <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
 </div>
             </div>
@@ -70,6 +72,7 @@ export default {
             icono_llevar_a_barcelona: null,
             supercluster: null,
             pin_seleccionado: null,
+            uploadedSongUrl: null,
 
         };
     },
@@ -121,33 +124,50 @@ export default {
     },
 
     methods: {
-        async fetchData() {
+        async handleFileUpload() {
+        const file = this.$refs.fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
 
-            const response = await fetch('http://localhost:8000/api/discotecas');
-
+        try {
+            const response = await fetch('http://localhost:8000/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
 
             const data = await response.json();
 
-            this.data = data.map((discoteca) => {
+            if (data.success) {
+                this.uploadedSongUrl = data.fileUrl;
+                this.pin_seleccionado.cancion_mp3 = data.fileUrl;
+            } else {
+                console.error('Error al subir el archivo');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    },
+    async fetchData() {
+    const response = await fetch('http://localhost:8000/api/discotecas');
+    const data = await response.json();
 
-                return {
-                    id: discoteca.id,
-                    titulo: discoteca.nombre_local,
-                    coordenadas: JSON.parse(discoteca.coordenadas),
-                    imgUrl: discoteca.imgUrl,
-                    descripcion: discoteca.descripcion,
-                    telefono: discoteca.telefono,
-                    horario: discoteca.horario,
-                    minEdad: discoteca.minEdad,
-                };
+    this.data = data.map((discoteca) => {
+        return {
+            id: discoteca.id,
+            titulo: discoteca.nombre_local,
+            coordenadas: JSON.parse(discoteca.coordenadas),
+            imgUrl: discoteca.imgUrl,
+            descripcion: discoteca.descripcion,
+            telefono: discoteca.telefono,
+            horario: discoteca.horario,
+            minEdad: discoteca.minEdad,
+            cancion_mp3: discoteca.canciones  // Aquí es donde asignamos el valor de "canciones" al objeto "pin_seleccionado"
+        };
+    });
 
-            });
-
-            this.crear_mostrar_pines_discos();
-            this.añadir_popup_info_de_las_discos();
-
-
-        },
+    this.crear_mostrar_pines_discos();
+    this.añadir_popup_info_de_las_discos();
+},
         initMapaDatosMapBox() {
             mapboxgl.accessToken = 'pk.eyJ1IjoiYTIyam9zbGFyZmVyIiwiYSI6ImNsczIwdDY5YTBldncyc21rbmI4cnVjY3oifQ.mWjSoIuuwJmMG0EFCU_gEA';
 
