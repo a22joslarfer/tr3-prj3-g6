@@ -1,108 +1,19 @@
 <template>
-    <div class="body">
-        <div class="container">
+    <div class="settings">
+        <HeaderPerfil />
+        <div class="buscador"> <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+          <path
+            d="M783.522-110.913 529.848-364.587q-29.761 23.044-68.642 36.565-38.88 13.522-83.119 13.522-111.152 0-188.326-77.174Q112.587-468.848 112.587-580q0-111.152 77.174-188.326Q266.935-845.5 378.087-845.5q111.152 0 188.326 77.174Q643.587-691.152 643.587-580q0 44.478-13.522 83.12-13.521 38.641-36.565 68.163l253.913 254.152-63.891 63.652ZM378.087-405.5q72.848 0 123.674-50.826Q552.587-507.152 552.587-580q0-72.848-50.826-123.674Q450.935-754.5 378.087-754.5q-72.848 0-123.674 50.826Q203.587-652.848 203.587-580q0 72.848 50.826 123.674Q305.239-405.5 378.087-405.5Z" />
+        </svg>
+        <input type="search" name="" id="" placeholder="Busca aquí...">
+    </div>
+        <ul>
+            <li v-for="option in options" :key="option.id" @click="navigateTo(option.route)">
+                {{ option.name }}<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M559-480 371.5-667.5l13-13.5 201 201-201 201-13-13.5L559-480Z"/></svg>
 
-            <header>
-                <nuxt-link to="/PERFIL/main"><h1>VIAEGIS</h1></nuxt-link>
-
-                <li class="li-search-i-holder">
-                    <input type="text" placeholder="Search" class="searchbar">
-                    <i class="material-icons">search</i>
-                </li>
-
-                <li @click="cambiar_tema"><i class="material-icons">contrast</i></li>
-
-                <li><i class="material-icons">account_circle</i></li>
-
-            </header>
-
-            <aside>
-                <ul>
-                    <li @click="navigateTo_ajustes"><i class="material-icons">settings</i></li>
-                    <li @click="navigateTo_favoritos"><i class="material-icons">star</i></li>
-                    <li @click="navigateTo_vista"><i class="material-icons">visibility</i></li>
-                    <li @click="navigateTo_info_cuenta"><i class="material-icons">person</i></li>
-                    <li @click="navigateTo_chats"><i class="material-icons">chat</i></li>
-                </ul>
-
-            </aside>
-
-            <section class="info-panels">
-
-                <div class="main-div-1">
-                    <h4>Chats recents</h4>
-                    <ul>
-                        <li>item1</li>
-                        <li>item1</li>
-                        <li>item1</li>
-                        <li>item1</li>
-                        <li>item1</li>
-                        <li>item1</li>
-                        <i class="material-icons">arrow_downward</i>
-                    </ul>
-                </div>
-
-                <div class="main-div-2">
-                    <h4>Locals mes transitats</h4>
-                    <ul>
-                        <li>item1</li>
-                        <li>item1</li>
-                        <li>item1</li>
-                        <li>item1</li>
-                        <li>item1</li>
-                        <li>item1</li>
-                        <!--downwards arrow material icon-->
-                        <i class="material-icons">arrow_downward</i>
-                    </ul>
-                </div>
-
-                <div class="main-div-3">
-                    <h4>Novetat!</h4>
-                    <img src="https://placehold.co/200x360" alt="">
-                </div>
-
-            </section>
-
-            <section class="friend-list">
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-                <li><img src="https://placehold.co/100x100" alt=""></li>
-
-            </section>
-
-
-        </div>
+            </li>
+        </ul>
+        <FooterOptions />
     </div>
 </template>
 
@@ -110,312 +21,65 @@
 export default {
     data() {
         return {
-            // data
-        }
-    },
-    head() {
+            options: [
+                { id: 1, name: 'Cambiar datos', route: '/PERFIL/ajustes' },
+                { id: 2, name: 'Amigos', route: '/PERFIL/amigos' },
+                { id: 3, name: 'Chats', route: '/PERFIL/chats' },
+                { id: 4, name: 'Notificaciones', route: '/PERFIL/notificaciones' },
+                { id: 5, name: 'Privacidad', route: '/PERFIL/privacidad' },
+                { id: 6, name: 'Seguridad', route: '/PERFIL/seguridad' },
+                { id: 7, name: 'Cerrar sesión' , route: '/PERFIL/logout', },
 
+            ]
+        }
     },
     methods: {
-        navigateTo_ajustes() {
-            navigateTo('ajustes');
-        },
-        navigateTo_favoritos() {
-             navigateTo('favoritos');
-        },
-        navigateTo_vista() {
-             navigateTo('vista');
-        },
-        navigateTo_info_cuenta() {
-             navigateTo('info_cuenta');
-        },
-        navigateTo_chats() {
-             navigateTo('chats');
-        },
-        cambiar_tema() {
-
+        navigateTo(route) {
+            this.$router.push(route);
         }
-    },
+    }
 }
 </script>
 
-
 <style scoped>
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
-header h1 {
-    font-size: 60px;
-    color: #723d3d;
-    font-weight: 700;
-    padding-left: 30px;
+.settings {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: #222222;
+}
+input::placeholder{
+    color: #ccc;
+    font-size: 16px;
+    
+}
+input:focus{
+    outline: none;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
 }
 
 li {
-    list-style: none;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-size: 30px;
-}
-
-.body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #dbdada;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-
-}
-
-.container {
-    display: grid;
-    grid-template-columns: 0.33fr 1fr 1fr 1fr 1fr;
-    grid-template-areas:
-
-        "header header header header header"
-        "aside info-panels info-panels info-panels info-panels"
-        "aside friend-list friend-list friend-list friend-list"
-    ;
-    grid-template-rows: auto 3fr 1fr;
-    background-color: rgb(235, 225, 228);
-    border-radius: 16px;
-    padding: 20px;
-
-}
-
-.container header {
-    grid-area: header;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    background-color: #c28383;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border-bottom: 3px solid #4d12123d;
-}
-
-.container header * {
-    margin: 10px;
-}
-
-
-
-aside {
-    display: flex;
-    flex-direction: column;
-    background-color: #c28383;
-    grid-area: aside;
-}
-
-aside li {
-    padding: 10px;
-    margin-top: 30px;
-    background-color: #4d12123d;
-    border-radius: 50%;
-    height: auto;
-    width: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     cursor: pointer;
-    margin-left: auto;
-    margin-right: auto;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+    margin-top:20px;
 }
 
-aside li i {
-    color: #723d3d;
-    margin-left: auto;
-    margin-right: auto;
+li:hover {
+    background-color: #f0f0f0;
 }
-
-aside li i:hover {
-    color: #dfd9d9;
-
-}
-
-.info-panels {
-    grid-area: info-panels;
-    display: grid;
-
-    grid-template-areas:
-        "div1 div2 div3"
-    ;
-    margin: 40px;
-    padding: 10px;
-
-
-    gap: 20px;
-}
-
-.main-div-1 {
-    grid-area: div1;
-    background-color: #c2838357;
-    padding: 10px;
-}
-
-.main-div-2 {
-    grid-area: div2;
-    background-color: #c2838357;
-    padding: 10px;
-}
-
-.main-div-1 li,
-.main-div-2 li {
-    margin-top: 30px;
-    margin-bottom: 30px;
-    background-color: #4d12123d;
-    height: auto;
-    border-radius: 16px;
-    padding: 30px;
-}
-
-
-.main-div-1,
-.main-div-2,
-.main-div-3 {
-    border-radius: 0;
-    border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px;
-    border-bottom: 2px solid #723d3d;
-    border-left: 5px solid #723d3d;
-}
-
-
-.searchbar {
-    padding: 15px;
-    border-radius: 16px;
-    min-width: 700px;
-    border: none;
-    background-color: #fcfcfcf5;
-    color: #834545;
-    font-size: 40px;
-    font-weight: 700;
-    margin: auto;
-}
-
-.li-search-i-holder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-
-}
-
-.searchbar::placeholder {
-    color: #834545;
-    font-size: 40px;
-    font-weight: 700;
-    margin: auto;
-}
-
-.searchbar:focus {
-    outline: none;
-    border: 3px solid #723d3d;
-}
-
-
-.main-div-1,
-.main-div-2 {
-    overflow-y: scroll;
-    max-height: 700px;
-    text-align: center;
-    font-size: 20px;
-
-}
-
-.main-div-1::-webkit-scrollbar,
-.main-div-2::-webkit-scrollbar
- {
-    width: 10px;
-    background-color: #723d3d42;
-}
-
-.main-div-1::-webkit-scrollbar-thumb,
-.main-div-2::-webkit-scrollbar-thumb {
-    background-color: #df5c5c83;
-    border-radius: 10px;
-}
-
-.main-div-3 {
-    grid-area: div3;
-    background-color: #c2838357;
-    padding: 10px;
-    text-align: center;
-    max-height: 700px;
-}
-
-::-webkit-scrollbar {
-    width: 10px;
-    background-color: #723d3d42;
-}	
-
-::-webkit-scrollbar-thumb {
-    background-color: #df5c5c83;
-    border-radius: 10px;
-}
-
-.main-div-3 img {
-
-    border-radius: 16px;
-    border: 5px solid #1d1c1c;
-    margin-top: 30px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.info-panels ul {
-    list-style: none;
-    margin: 50px;
-    text-align: center;
-
-}
-
-i {
-    font-size: 60px;
-}
-
-.info-panels ul i {
-
-    color: #723d3d;
-    margin-top: 30px;
-    margin-bottom: 30px;
-}
-
-.info-panels ul i:hover {
-    color: #df5c5c;
-}
-
-.friend-list {
-    grid-area: friend-list;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 20px;
-    margin: 20px;
-    margin-top: 0;
-    padding: 20px;
-    justify-content: space-between;
-    overflow-y: scroll;
-}
-
-.friend-list li img {
-    border-radius: 50%;
-    border: 3px solid #18161634;
-    width: 100px;
-    height: 100px;
-    -webkit-transition: .3s ease-in-out;
-    transition: .3s ease-in-out;
-}
-
-.friend-list li img:hover {
-    border: 3px solid coral;
+svg {
+    float: right;
 
 }
 </style>

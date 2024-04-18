@@ -1,4 +1,5 @@
 <template>
+    <div>
     <div class="container">
 
         <nav class="navbar">
@@ -35,21 +36,24 @@
                 </div>
             </div>
         </div>
-        <footer>
-
-        </footer>
+    </div>       
+        <FooterOptions />
     </div>
+
 </template>
 
   
   
 
 <script>
+import FooterOptions from '@/components/FooterOptions.vue';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 export default {
-
+components: {
+    FooterOptions,
+},
     head() {
         return {
             link: [
@@ -398,13 +402,7 @@ export default {
     min-width: 100vw;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 50px;
-    background-color: var(--base);
-}
+
 
 * {
     margin: 0;

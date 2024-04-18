@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <HeaderPerfil :pageTitle="pageTitle"/>
+        <HeaderPerfil />
 
         <h1 class="title">Configuración de Perfil</h1>
         <form @submit.prevent="submitForm" class="form">
@@ -12,6 +12,7 @@
             <button type="submit" class="button">Guardar cambios</button>
         </form>
         <FooterOptions />
+
     </div>
 </template>
 
@@ -19,7 +20,6 @@
 export default {
     data() {
         return {
-            pageTitle: 'Configuración de Perfil',
             username: '',
             email: ''
             // Agrega más datos de configuración según sea necesario
