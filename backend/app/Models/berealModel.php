@@ -14,4 +14,6 @@ class berealModel extends Model
       'img_tra',
       'id_usuari',
   ];
+  protected $table ='bereal';
+
 }

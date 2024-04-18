@@ -1,15 +1,18 @@
 <template>
   <div>
-    <button @click="programarNotificacion">Programar Notificación</button>
+    <button @click="tomarFoto">Tomar Foto</button>
   </div>
 </template>
 
 <script>
 export default {
+  mounted() {
+    this.programarNotificacion();
+  },
   methods: {
     programarNotificacion() {
-      const hora = 10;
-      const minutos = 55;
+      const hora = 11;
+      const minutos = 54;
 
       const now = new Date();
       const horaEspecifica = new Date(
@@ -25,7 +28,6 @@ export default {
       if (tiempoRestante > 0) {
         setTimeout(() => {
           this.enviarNotificacion();
-          this.mostrarAlerta();
         }, tiempoRestante);
       }
     },
@@ -33,15 +35,11 @@ export default {
       if (Notification.permission !== 'granted') {
         Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
-            new Notification('¡HORA DE BEREAL!', {
-              body: '¡Es hora de publicar tu foto!',
-            });
+            this.mostrarAlerta();
           }
         });
       } else {
-        new Notification('¡HORA DE BEREAL!', {
-          body: '¡Es hora de publicar tu foto!',
-        });
+        this.mostrarAlerta();
       }
     },
     mostrarAlerta() {
@@ -50,19 +48,53 @@ export default {
       }
     },
     tomarFoto() {
-      const urlImagen = 'https://ichef.bbci.co.uk/ace/ws/640/amz/worldservice/live/assets/images/2014/08/07/140807115216_macaco2_624x351_caters.jpg';
-      const idUsuario = 1;
+      if (!('mediaDevices' in navigator)) {
+        alert('Tu navegador no soporta la captura de imágenes.');
+        return;
+      }
 
-      console.log('URL de la imagen:', urlImagen, 'ID de usuario:', idUsuario);
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.play();
 
-      fetch('api/bereals', {
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+
+          setTimeout(() => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const fotoURL = canvas.toDataURL('image/jpeg');
+
+            // Mostrar la foto capturada (opcional)
+            const imgPreview = new Image();
+            imgPreview.src = fotoURL;
+            document.body.appendChild(imgPreview);
+
+            // Guardar la foto en la base de datos
+            const idUsuario = 1; // ID de usuario predeterminado
+            this.guardarFotoEnBaseDeDatos(fotoURL, idUsuario);
+
+            stream.getTracks().forEach(track => track.stop());
+          }, 1000); // Esperar un segundo antes de tomar la foto
+        })
+        .catch(error => {
+          console.error('Error al acceder a la cámara:', error);
+        });
+    },
+    guardarFotoEnBaseDeDatos(fotoURL, idUsuario) {
+      fetch('http://localhost:8000/api/bereal', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          foto: urlImagen,
-          idUsuario: idUsuario,
+          img_del: fotoURL,
+          img_tra: fotoURL,
+          id_usuari: idUsuario,
         }),
       })
         .then(response => {

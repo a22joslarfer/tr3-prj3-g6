@@ -75,7 +75,7 @@ Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getRev
 
 //RUTAS PARA BEREAL
 //ruta para crear 
-Route::post('/bereals', [BeRealController::class, 'store']);
+Route::post('/bereal', [BeRealController::class, 'createBereal']);
 //ruta para obtener y mostrar
 Route::get('/bereals/{id}', [BeRealController::class, 'show']);
 

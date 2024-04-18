@@ -1,82 +1,39 @@
 <template>
   <div>
-    <button @click="programarNotificacion">Programar Notificación</button>
+    <h1>Subir Fotos</h1>
+    <input type="file" ref="image1" accept="image/*">
+    <input type="file" ref="image2" accept="image/*">
+    <button @click="uploadImages">Subir Fotos</button>
   </div>
 </template>
 
 <script>
 export default {
   methods: {
-    programarNotificacion() {
-      const hora = 9;
-      const minutos = 37;
+    async uploadImages() {
+      const formData = new FormData();
+      formData.append('img_del', this.$refs.image1.files[0]);
+      formData.append('img_tra', this.$refs.image2.files[0]);
+      formData.append('id_usuari', 1);
 
-      const now = new Date();
-      const horaEspecifica = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        hora,
-        minutos,
-        0
-      );
-      const tiempoRestante = horaEspecifica - now;
-
-      if (tiempoRestante > 0) {
-        setTimeout(() => {
-          this.enviarNotificacion();
-          this.mostrarAlerta();
-        }, tiempoRestante);
-      }
-    },
-    enviarNotificacion() {
-      if (Notification.permission !== 'granted') {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            new Notification('¡HORA DE BEREAL!', {
-              body: '¡Es hora de publicar tu foto!',
-            });
-          }
+      try {
+        const response = await fetch('http://localhost:8000/api/bereal', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json'
+          },
+          body: formData
         });
-      } else {
-        new Notification('¡HORA DE BEREAL!', {
-          body: '¡Es hora de publicar tu foto!',
-        });
+
+        if (response.ok) {
+          console.log('Fotos subidas correctamente');
+        } else {
+          console.error('Error al subir fotos');
+        }
+      } catch (error) {
+        console.error('Error al enviar la solicitud:', error);
       }
-    },
-    mostrarAlerta() {
-      if (confirm('¡Es hora de penjar una foto! ¿Vols ferlo ara?')) {
-        this.tomarFoto();
-      }
-    },
-    tomarFoto() {
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then(stream => {
-          const video = document.createElement('video');
-          video.srcObject = stream;
-          document.body.appendChild(video);
-          video.play();
-
-          setTimeout(() => {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const foto = canvas.toDataURL('image/png');
-
-            // Aquí deberías enviar la foto a tu servidor para almacenarla en la base de datos.
-            console.log('Foto tomada:', foto);
-
-            stream.getTracks().forEach(track => track.stop());
-            document.body.removeChild(video);
-          }, 5000); // Tiempo suficiente para que el usuario pueda posar
-        })
-        .catch(error => {
-          console.error('Error al acceder a las cámaras:', error);
-        });
-    },
-  },
-};
+    }
+  }
+}
 </script>

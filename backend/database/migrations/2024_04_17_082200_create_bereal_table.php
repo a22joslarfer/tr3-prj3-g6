@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('bereal', function (Blueprint $table) {
             $table->id();
-            $table->string('img_del')->nullable();
-            $table->string('img_tra')->nullable();
+            $table->binary('img_del')->nullable();
+            $table->binary('img_tra')->nullable();
             $table->unsignedBigInteger('id_usuari');
             $table->foreign('id_usuari')->references('id')->on('usuarios')->onDelete('cascade');
             $table->timestamps();
