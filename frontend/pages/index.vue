@@ -1,17 +1,7 @@
 <template>
     <div>
+        <HeaderGeneral />
     <div class="container">
-
-        <nav class="navbar">
-            <ul>
-                <li></li>
-                <li><nuxt-link to="/">INICIO</nuxt-link></li>
-                <li><nuxt-link to="/explorar">EXPLORAR</nuxt-link></li>
-                <li><nuxt-link to="/PERFIL/main">PERFIL</nuxt-link></li>
-                <li><nuxt-link to="/Register">LOGIN/REGISTRARSE</nuxt-link></li>
-
-            </ul>
-        </nav>
         <div id="buscador"></div>
 
         <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
@@ -155,13 +145,13 @@ components: {
 
         },
         initMapaDatosMapBox() {
-            mapboxgl.accessToken = 'pk.eyJ1IjoiYTIyam9zbGFyZmVyIiwiYSI6ImNsczIwdDY5YTBldncyc21rbmI4cnVjY3oifQ.mWjSoIuuwJmMG0EFCU_gEA';
+            mapboxgl.accessToken = 'pk.eyJ1IjoiaHVnb3RyaXBpYW5hIiwiYSI6ImNsczFueDBieDBiYngybG1rb2g4bGIyNW0ifQ.EECPYp9RZ_JIpjmlvyy2Hw';
 
             this.map = new mapboxgl.Map({
                 container: this.$refs.map,
-                style: 'mapbox://styles/a22joslarfer/cls1zcyoh013v01qy03s63ok6',
+                style: 'mapbox://styles/hugotripiana/cls1o5thk00xv01pl13ze6ks0',
                 center: [2.0947632393357907, 39.35567342431939],
-                zoom: 5,
+                zoom: 0,
             });
 
             var geocoder = new MapboxGeocoder({

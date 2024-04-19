@@ -1,5 +1,8 @@
 <template>
-    <div class="container">
+    <div>
+        <HeaderGeneral />
+   
+    <div class="container">  
         <div class="content">
             <div class="title">Únete a Viaegis</div>
             <form @submit.prevent="register" class="form">
@@ -37,6 +40,7 @@
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script>

@@ -1,4 +1,7 @@
-<template>
+<template>   
+<div>
+    <HeaderGeneral />
+
     <div class="container">
       <div class="content">
         <div class="title">Iniciar Sesión</div>
@@ -16,6 +19,7 @@
         </div>
       </div>
     </div>
+  </div> 
   </template>
 <script>
 export default {
