@@ -1,35 +1,34 @@
 <template>
     <div>
         <HeaderGeneral />
-    <div class="container">
-        <div id="buscador"></div>
+        <div class="container">
+            <div id="buscador"></div>
 
-        <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
+            <div id="map" ref="map" style="height: 100%; width: 100%;">
+                <div class="map-overlay">DESCUBRE LAS DISCOTECAS DEL MUNDO</div>
+            </div>
 
-        <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
-            <div class="card">
-                <div class="card-header">
-                    <h3>{{ pin_seleccionado.titulo }}</h3>
-                    <div class="card-closer" @click="cerrarPopUp">X</div>
-                </div>
-                <div class="card-body">
-                    <img :src="'https://via.placeholder.com/200'" alt="imagen de la discoteca"
-                        style="width: 100%; height: 200px; object-fit: cover;">
+            <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>{{ pin_seleccionado.titulo }}</h3>
+                        <div class="card-closer" @click="cerrarPopUp">X</div>
+                    </div>
+                    <div class="card-body">
+                        <img :src="'https://via.placeholder.com/200'" alt="imagen de la discoteca"
+                            style="width: 100%; height: 200px; object-fit: cover;">
 
-                    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
-                    <p>Horario: {{ pin_seleccionado.horario }}</p>
-                    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
-                    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
-                    <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
-
-
+                        <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
+                        <p>Horario: {{ pin_seleccionado.horario }}</p>
+                        <p>Telefono: {{ pin_seleccionado.telefono }}</p>
+                        <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+                        <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>       
+        </div>       
         <FooterOptions />
     </div>
-
 </template>
 
   
@@ -41,9 +40,9 @@ import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 export default {
-components: {
-    FooterOptions,
-},
+    components: {
+        FooterOptions,
+    },
     head() {
         return {
             link: [
@@ -61,62 +60,37 @@ components: {
             punto_de_interes_seleccionado: false,
             map: null,
             arr_puntos_de_interes: [],
-            marker: null,
             data: [],
-            icono_llevar_a_barcelona: null,
-            supercluster: null,
             pin_seleccionado: null,
-
+            rotationInterval: null,
         };
     },
     mounted() {
         this.fetchData();
         this.initMapaDatosMapBox();
-
-        Notification.requestPermission().then((permission) => {
-            if (permission === "granted") {
-                console.log("Permisos aceptados");
-
-                if ("geolocation" in navigator) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            const { latitude, longitude } = position.coords;
-                            console.log("Ubicación del usuario:", latitude, longitude);
-
-                            const coordenada1 = {
-                                //pedralbes
-                                latitude: 41.386181,
-                                longitude: 2.106058,
-                            };
-
-                            const coordenada2 = {
-                                //pacha
-                                latitude: 41.385647,
-                                longitude: 2.197256,
-                            };
-                            if (
-                                this.personesAprop({ latitude, longitude }, coordenada1)
-                            ) {
-                                //pedralbes
-                                this.programarNotificacio(9, 37);
-                            } else if (
-                                //pacha
-                                this.personesAprop({ latitude, longitude }, coordenada2)
-                            ) {
-                                this.programarNotificacio(10, 22);
-                            }
-                        },
-                        (error) => {
-                            console.error("Error al obtener la ubicación:", error.message);
-                        }
-                    );
-                }
-            }
-        });
-
+        this.programarRotacion(); // Iniciar rotación automática
     },
-
     methods: {
+        programarRotacion() {
+            let rotation = 0;
+            const rotationIncrement = 0.1; // Incremento de rotación en grados
+
+            this.rotationInterval = setInterval(() => {
+                rotation += rotationIncrement;
+
+                // Mantener la rotación en el rango de 0 a 360 grados
+                rotation = rotation % 360;
+
+                // Aplicar la rotación al mapa
+                this.map.rotateTo(rotation, {
+                    duration: 0, // Sin duración para rotación continua
+                    animate: false, // Desactivar animación
+                });
+            }, 50); // Actualizar cada 50 milisegundos
+        },
+        detenerRotacion() {
+            clearInterval(this.rotationInterval);
+        },
         async fetchData() {
 
             const response = await fetch('http://localhost:8000/api/discotecas');
@@ -511,19 +485,34 @@ components: {
 
 .mapboxgl-ctrl-geocoder {
     position: absolute;
-    top: 40px;
-    left: 10px;
+    top: auto;
+    bottom: 90px; /* Ajusta esta propiedad para definir la distancia desde el borde inferior */
+    left: 50%; /* Centra el elemento horizontalmente */
+    transform: translateX(-50%); /* Ajusta el elemento centrado a la mitad de su ancho */
     z-index: 1000;
-    width: auto;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-
 }
+.mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan, .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan .mapboxgl-canvas
+{
+    cursor: pointer;
+    background-color: #eff4f3;
+    margin-top:-52px;
+}
+.map-overlay {
+    position: absolute;
+    top: 14%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Antonio', sans-serif;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #000;
+    background-color: #eff4f3;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1001;
+    white-space: nowrap;
+}
+
 
 .mapboxgl-ctrl-geocoder input[type="text"] {
     background-color: var(--base);

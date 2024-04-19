@@ -25,8 +25,8 @@ export default {
 
 <style scoped>
 .header {
-  background-color: #333;
-  color: #fff;
+  background-color: #eff4f3;
+  color: #000000;
   padding: 20px 0;
 }
 
@@ -61,7 +61,7 @@ export default {
 }
 
 .nav ul li a {
-  color: #fff;
+  color: #000000;
   text-decoration: none;
   font-size: 16px;
 }
