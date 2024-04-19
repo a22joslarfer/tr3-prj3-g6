@@ -41,8 +41,8 @@
     </div>
 </template>
 
-  
-  
+
+
 
 <script>
 import mapboxgl from 'mapbox-gl';
@@ -175,7 +175,7 @@ export default {
                 container: this.$refs.map,
                 style: 'mapbox://styles/a22joslarfer/cls1zcyoh013v01qy03s63ok6',
                 center: [2.0947632393357907, 39.35567342431939],
-                zoom: 5,
+                zoom: 1,
             });
 
             var geocoder = new MapboxGeocoder({
@@ -371,7 +371,6 @@ export default {
 };
 
 </script>
-  
 
 
 <style>
@@ -416,13 +415,7 @@ export default {
     min-width: 100vw;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 50px;
-    background-color: var(--base);
-}
+
 
 * {
     margin: 0;
