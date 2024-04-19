@@ -1,4 +1,5 @@
 <template>
+    <div>
     <div class="container">
 
         <nav class="navbar">
@@ -22,34 +23,37 @@
                     <div class="card-closer" @click="cerrarPopUp">X</div>
                 </div>
                 <div class="card-body">
-    <img :src="pin_seleccionado.imgUrl" alt="imagen de la discoteca"
-        style="width: 100%; height: 200px; object-fit: cover;">
+                    <img :src="'https://via.placeholder.com/200'" alt="imagen de la discoteca"
+                        style="width: 100%; height: 200px; object-fit: cover;">
 
-    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
-    <p>Horario: {{ pin_seleccionado.horario }}</p>
-    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
-    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
-    <audio :src="pin_seleccionado.cancion_mp3" controls></audio>
-    
-    <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
-</div>
+                    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
+                    <p>Horario: {{ pin_seleccionado.horario }}</p>
+                    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
+                    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+                    <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
+
+
+                </div>
             </div>
         </div>
-        <footer>
-
-        </footer>
+    </div>       
+        <FooterOptions />
     </div>
+
 </template>
 
-
-
+  
+  
 
 <script>
+import FooterOptions from '@/components/FooterOptions.vue';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 export default {
-
+components: {
+    FooterOptions,
+},
     head() {
         return {
             link: [
@@ -72,7 +76,6 @@ export default {
             icono_llevar_a_barcelona: null,
             supercluster: null,
             pin_seleccionado: null,
-            uploadedSongUrl: null,
 
         };
     },
@@ -124,50 +127,33 @@ export default {
     },
 
     methods: {
-        async handleFileUpload() {
-        const file = this.$refs.fileInput.files[0];
-        const formData = new FormData();
-        formData.append('file', file);
+        async fetchData() {
 
-        try {
-            const response = await fetch('http://localhost:8000/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
+            const response = await fetch('http://localhost:8000/api/discotecas');
+
 
             const data = await response.json();
 
-            if (data.success) {
-                this.uploadedSongUrl = data.fileUrl;
-                this.pin_seleccionado.cancion_mp3 = data.fileUrl;
-            } else {
-                console.error('Error al subir el archivo');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    },
-    async fetchData() {
-    const response = await fetch('http://localhost:8000/api/discotecas');
-    const data = await response.json();
+            this.data = data.map((discoteca) => {
 
-    this.data = data.map((discoteca) => {
-        return {
-            id: discoteca.id,
-            titulo: discoteca.nombre_local,
-            coordenadas: JSON.parse(discoteca.coordenadas),
-            imgUrl: discoteca.imgUrl,
-            descripcion: discoteca.descripcion,
-            telefono: discoteca.telefono,
-            horario: discoteca.horario,
-            minEdad: discoteca.minEdad,
-            cancion_mp3: discoteca.canciones  // Aquí es donde asignamos el valor de "canciones" al objeto "pin_seleccionado"
-        };
-    });
+                return {
+                    id: discoteca.id,
+                    titulo: discoteca.nombre_local,
+                    coordenadas: JSON.parse(discoteca.coordenadas),
+                    imgUrl: discoteca.imgUrl,
+                    descripcion: discoteca.descripcion,
+                    telefono: discoteca.telefono,
+                    horario: discoteca.horario,
+                    minEdad: discoteca.minEdad,
+                };
 
-    this.crear_mostrar_pines_discos();
-    this.añadir_popup_info_de_las_discos();
-},
+            });
+
+            this.crear_mostrar_pines_discos();
+            this.añadir_popup_info_de_las_discos();
+
+
+        },
         initMapaDatosMapBox() {
             mapboxgl.accessToken = 'pk.eyJ1IjoiYTIyam9zbGFyZmVyIiwiYSI6ImNsczIwdDY5YTBldncyc21rbmI4cnVjY3oifQ.mWjSoIuuwJmMG0EFCU_gEA';
 
@@ -175,7 +161,7 @@ export default {
                 container: this.$refs.map,
                 style: 'mapbox://styles/a22joslarfer/cls1zcyoh013v01qy03s63ok6',
                 center: [2.0947632393357907, 39.35567342431939],
-                zoom: 1,
+                zoom: 5,
             });
 
             var geocoder = new MapboxGeocoder({
@@ -371,6 +357,7 @@ export default {
 };
 
 </script>
+  
 
 
 <style>
