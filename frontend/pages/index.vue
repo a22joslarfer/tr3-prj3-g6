@@ -72,6 +72,7 @@ components: {
     mounted() {
         this.fetchData();
         this.initMapaDatosMapBox();
+        this.rotarMapa();
 
         Notification.requestPermission().then((permission) => {
             if (permission === "granted") {
@@ -117,6 +118,20 @@ components: {
     },
 
     methods: {
+        rotarMapa() {
+        // Define el ángulo de rotación deseado (en grados)
+        const angle = -30; // Por ejemplo, gira 30 grados cada vez
+
+        this.map.rotateTo(this.map.getBearing() + angle, {
+            duration: 10000, // Duración de la animación en milisegundos (10 segundos en este caso)
+            easing: function (t) {
+                return t;
+            }
+        });
+
+        // Llama a esta función recursivamente para rotar continuamente el mapa
+        setTimeout(this.rotarMapa, 10000); // Llama a la función cada 10 segundos
+    },
         async fetchData() {
 
             const response = await fetch('http://localhost:8000/api/discotecas');

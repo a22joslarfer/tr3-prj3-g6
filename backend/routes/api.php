@@ -2,7 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\discoController;
 use App\Http\Controllers\reviewController;
-use App\Http\Controllers\userController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -21,17 +21,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', 'App\Http\Controllers\AuthController@login');
 Route::post('register', 'App\Http\Controllers\AuthController@register');
 
-// Route::post('/login', [userController::class, 'login']);
-// Route::post('/register', [userController::class, 'register']);
+// Route::post('/login', [UserController::class, 'login']);
+// Route::post('/register', [UserController::class, 'register']);
 
 // ruta para obtener todos los usuarios
-Route::get('/users', [userController::class, 'getUsers']);
+Route::get('/users', [UserController::class, 'getUsers']);
 // ruta para crear un usuario
-Route::post('/users', [userController::class, 'create']);
+Route::post('/users', [UserController::class, 'create']);
 // ruta para borrar un usuario
-Route::delete('/users/{id}', [userController::class, 'delete']);
+Route::delete('/users/{id}', [UserController::class, 'delete']);
 // ruta para editar un usuario
-Route::put('/users/{id}', [userController::class, 'update']);
+Route::put('/users/{id}', [UserController::class, 'update']);
 
 
 

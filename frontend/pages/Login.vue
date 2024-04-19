@@ -1,8 +1,11 @@
-<template>   
-<div>
+<template>
+  <div>
     <HeaderGeneral />
 
     <div class="container">
+      <div class="title_company">VIAEGIS</div>
+      <img src="https://assets-global.website-files.com/65c3fe1a75ff7339cf9340fc/65eedf45bca711043f6c4887_earth-1465.webp" alt="Logo de la empresa" class="company-logo">
+
       <div class="content">
         <div class="title">Iniciar Sesión</div>
         <form @submit.prevent="login" class="form">
@@ -19,111 +22,112 @@
         </div>
       </div>
     </div>
-  </div> 
-  </template>
+  </div>
+</template>
 <script>
 export default {
-    data() {
-        return {
-            email: '',
-            password: '',
-            isLoading: false,
-            csrf: null
-        };
-    },
-    /*
-    
-    created() {
-        fetch('http://localhost:8000/api/csrf-token')
-            .then(response => response.text())  // Get the response text
-            .then(text => {
-                console.log('Response text:', text);  // Log the response text
+  data() {
+    return {
+      email: '',
+      password: '',
+      isLoading: false,
+      csrf: null
+    };
+  },
+  /*
+  
+  created() {
+      fetch('http://localhost:8000/api/csrf-token')
+          .then(response => response.text())  // Get the response text
+          .then(text => {
+              console.log('Response text:', text);  // Log the response text
 
-                // Try to parse the response text as JSON
-                try {
-                    const data = JSON.parse(text);
-                    this.csrf = data.token;
-                    console.log(this.csrf);
-                } catch (error) {
-                    console.error('Failed to parse response as JSON:', error);
-                }
+              // Try to parse the response text as JSON
+              try {
+                  const data = JSON.parse(text);
+                  this.csrf = data.token;
+                  console.log(this.csrf);
+              } catch (error) {
+                  console.error('Failed to parse response as JSON:', error);
+              }
+          });
+  },
+  
+  */
+  methods: {
+    login() {
+      this.isLoading = true;
+
+      // Fetch a new CSRF token
+      fetch('http://localhost:8000/api/csrf-token')
+        .then(response => response.text())
+        .then(text => {
+          try {
+            const data = JSON.parse(text);
+            this.csrf = data.token;
+            console.log('New CSRF token:', this.csrf);
+
+            // Perform the login request with the new CSRF token
+            return fetch('http://localhost:8000/api/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': this.csrf,
+              },
+              body: JSON.stringify({
+                email: this.email.trim(),
+                password: this.password.trim(),
+
+              }),
             });
+          } catch (error) {
+            console.error('Failed to parse CSRF token response as JSON:', error);
+          }
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Success:', data);
+
+          if (data.status === 1) {
+            localStorage.setItem('authToken', data.access_token);
+            console.log(data.access_token);
+            navigateTo('/');
+          } else {
+            alert('Inicio de sesión fallido. Verifica tus credenciales.');
+          }
+        })
+        .catch(error => {
+          console.error('There has been a problem with your fetch operation:', error);
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
     },
-    
-    */
-    methods: {
-        login() {
-            this.isLoading = true;
-
-            // Fetch a new CSRF token
-            fetch('http://localhost:8000/api/csrf-token')
-                .then(response => response.text())
-                .then(text => {
-                    try {
-                        const data = JSON.parse(text);
-                        this.csrf = data.token;
-                        console.log('New CSRF token:', this.csrf);
-
-                        // Perform the login request with the new CSRF token
-                        return fetch('http://localhost:8000/api/login', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': this.csrf,
-                            },
-                            body: JSON.stringify({
-                                email: this.email.trim(),
-                                password: this.password.trim(),
-                               
-                            }),
-                        });
-                    } catch (error) {
-                        console.error('Failed to parse CSRF token response as JSON:', error);
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Success:', data);
-
-                    if (data.status === 1) {
-                        localStorage.setItem('authToken', data.access_token);
-                        console.log(data.access_token);
-                        navigateTo('/');
-                    } else {
-                        alert('Inicio de sesión fallido. Verifica tus credenciales.');
-                    }
-                })
-                .catch(error => {
-                    console.error('There has been a problem with your fetch operation:', error);
-                })
-                .finally(() => {
-                    this.isLoading = false;
-                });
-        },
-    },
+  },
 };
 </script>
-  
+
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap');
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url('https://i.pinimg.com/originals/8e/2d/79/8e2d79c7abf858ae412c74a25726d950.jpg') center/cover;
+  background-color: #eff4f3;
+  position: relative;
 }
-
 .content {
-  width: 300px;
-  padding: 20px;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .title {
@@ -132,8 +136,28 @@ export default {
   color: #333;
   margin-bottom: 20px;
   text-align: center;
+  font-family: "Antonio", sans-serif;
 }
+.title_company {
+ /* arriba del todo en la pagina */
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: "Antonio", sans-serif;
+   /* ponerlo arriba del todo en la pagina */
+   position: absolute;
+    top: 15%;
 
+}
+.company-logo {
+  max-width: 100px; /* ajusta el ancho según sea necesario */
+  margin: 0 auto; /* centrar la imagen */
+  display: block; /* asegurar que la imagen sea un bloque */
+  position: fixed;
+  top: 32%;
+}
 .form {
   width: 100%;
 }
@@ -157,7 +181,7 @@ export default {
   height: 50px;
   border: none;
   border-radius: 25px;
-  background-color: #062b25;
+  background-color: #ff806d;
   color: white;
   font-size: 18px;
   font-weight: bold;

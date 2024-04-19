@@ -3,6 +3,7 @@
         <HeaderGeneral />
    
     <div class="container">  
+        <div class="title_company">VIAEGIS</div>
         <div class="content">
             <div class="title">Únete a Viaegis</div>
             <form @submit.prevent="register" class="form">
@@ -41,6 +42,7 @@
         </div>
     </div>
 </div>
+
 </template>
 
 <script>
@@ -125,11 +127,12 @@ export default {
 
 <style scoped>
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: url('https://i.pinimg.com/originals/8e/2d/79/8e2d79c7abf858ae412c74a25726d950.jpg') center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #eff4f3;
+  position: relative;
 }
 
 .content {
@@ -138,16 +141,39 @@ export default {
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    margin-top:45%;
+    overflow-y: auto;
+    max-height: 100%;
 }
 
 .title {
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-    text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: "Antonio", sans-serif;
 }
+.title_company {
+ /* arriba del todo en la pagina */
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: "Antonio", sans-serif;
+   position: absolute;
+    top: 15%;
 
+}
+.company-logo {
+  max-width: 100px; /* ajusta el ancho según sea necesario */
+  margin: 0 auto; /* centrar la imagen */
+  display: block; /* asegurar que la imagen sea un bloque */
+  position: fixed;
+  top: 32%;
+}
 .form {
     width: 100%;
 }
@@ -187,15 +213,15 @@ export default {
 }
 
 .button {
-    width: 100%;
-    height: 50px;
-    border: none;
-    border-radius: 25px;
-    background-color: #062b25;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 25px;
+  background-color: #ff806d;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .login-link {
