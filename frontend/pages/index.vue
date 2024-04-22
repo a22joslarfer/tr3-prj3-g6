@@ -1,39 +1,40 @@
 <template>
     <div>
         <HeaderGeneral />
-    <div class="container">
-        <div id="buscador"></div>
+        <div class="container">
+            <div id="buscador"></div>
 
-        <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
+            <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
 
-        <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
-            <div class="card">
-                <div class="card-header">
-                    <h3>{{ pin_seleccionado.titulo }}</h3>
-                    <div class="card-closer" @click="cerrarPopUp">X</div>
-                </div>
-                <div class="card-body">
-                    <img :src="'https://via.placeholder.com/200'" alt="imagen de la discoteca"
-                        style="width: 100%; height: 200px; object-fit: cover;">
+            <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>{{ pin_seleccionado.titulo }}</h3>
+                        <div class="card-closer" @click="cerrarPopUp">X</div>
+                    </div>
+                    <div class="card-body">
+                        <img :src="'https://estaticos-cdn.prensaiberica.es/clip/ad737e22-b8ee-4dc0-a523-10ece744331d_16-9-discover-aspect-ratio_default_0.jpg   '"
+                            alt="imagen de la discoteca" style="width: 100%; height: 200px; object-fit: cover;">
 
-                    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
-                    <p>Horario: {{ pin_seleccionado.horario }}</p>
-                    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
-                    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
-                    <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
+                        <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
+                        <p>Horario: {{ pin_seleccionado.horario }}</p>
+                        <p>Telefono: {{ pin_seleccionado.telefono }}</p>
+                        <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+                        <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">
+                            Crear Reseña</NuxtLink>
 
 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>       
         <FooterOptions />
     </div>
 
 </template>
 
-  
-  
+
+
 
 <script>
 import FooterOptions from '@/components/FooterOptions.vue';
@@ -41,9 +42,9 @@ import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 export default {
-components: {
-    FooterOptions,
-},
+    components: {
+        FooterOptions,
+    },
     head() {
         return {
             link: [
@@ -119,19 +120,19 @@ components: {
 
     methods: {
         rotarMapa() {
-        // Define el ángulo de rotación deseado (en grados)
-        const angle = -30; // Por ejemplo, gira 30 grados cada vez
+            // Define el ángulo de rotación deseado (en grados)
+            const angle = -30; // Por ejemplo, gira 30 grados cada vez
 
-        this.map.rotateTo(this.map.getBearing() + angle, {
-            duration: 10000, // Duración de la animación en milisegundos (10 segundos en este caso)
-            easing: function (t) {
-                return t;
-            }
-        });
+            this.map.rotateTo(this.map.getBearing() + angle, {
+                duration: 10000, // Duración de la animación en milisegundos (10 segundos en este caso)
+                easing: function (t) {
+                    return t;
+                }
+            });
 
-        // Llama a esta función recursivamente para rotar continuamente el mapa
-        setTimeout(this.rotarMapa, 10000); // Llama a la función cada 10 segundos
-    },
+            // Llama a esta función recursivamente para rotar continuamente el mapa
+            setTimeout(this.rotarMapa, 10000); // Llama a la función cada 10 segundos
+        },
         async fetchData() {
 
             const response = await fetch('http://localhost:8000/api/discotecas');
@@ -362,26 +363,13 @@ components: {
 };
 
 </script>
-  
+
 
 
 <style>
 @import url('https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css');
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@700&display=swap');
-
-.btn-create-review {
-    background-color: var(--verde);
-    display: flex;
-    border-radius: 8px;
-    color: var(--blanco);
-    font-size: 1.5rem;
-    padding: 1rem 2rem;
-    text-align: center;
-    width: 100%;
-    justify-content: center;
-    text-decoration: none;
-    margin-top: 40px;
-}
+@import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap');
 
 * {
     overflow: hidden;
@@ -454,23 +442,11 @@ components: {
     color: var(--blanco);
 }
 
-.info-card {
-    position: absolute;
-    top: 155px;
-    right: 30px;
-    z-index: 1000;
-    max-width: 450px;
-    background-color: var(--base);
-    border-radius: 10px;
-    color: var(--verde2);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
-    animation: fade-in 0.5s ease-in-out;
-}
-
+/* card review*/
 .card-closer {
     cursor: pointer;
     font-size: 2vw;
-    color: var(--base);
+    color: var(--carne2);
     transition: color 0.2s ease-in-out;
 }
 
@@ -480,44 +456,65 @@ components: {
 
 .card-header {
     display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    background-color: var(--verde2);
+    background-color: var(--base2);
     border-radius: 5px 5px 0 0;
-    padding: 10px;
-    font-size: 2vw;
-    color: var(--base);
+    padding: 7px;
+    font-size: 6vw;
+    color: var(--blanco);
+    flex-direction: column;
+    align-content: space-around;
+    flex-wrap: wrap;
 }
 
 .card-body {
-    text-align: justify;
-    padding: 20px;
     line-height: 1.1;
-    font-size: 1.2vw;
+    font-size: 5vw;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+p{
+    margin: 5px;
+}
+.card{
+    background-color: var(--base2);
+    background-color: hsl(354deg 2.71% 13.94%);
+    color: #fff6f6;
+    border-radius: 16px;
+}
+.info-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    width: 400px;
+    animation: fade-in 0.5s ease-in-out;
+
 }
 
-@media only screen and (max-width: 768px) {
-    .navbar {
-        font-size: 20px;
-        height: 100px;
+.btn-create-review {
+    background-color: var(--base2);
+    display: flex;
+    border-radius: 8px;
+    color: var(--blanco);
+    font-size: 1.5rem;
+    padding: 1rem 2rem;
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+    text-decoration: none;
+    margin-top: 40px;
+}
+
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
     }
 
-    .navbar ul li {
-        font-size: 30px;
-    }
-
-    .info-card {
-        top: 105px;
-        right: 10px;
-        max-width: 350px;
-    }
-
-    .card-header>h3 {
-        font-size: 30px;
-    }
-
-    .card-body {
-        font-size: 20px;
+    to {
+        opacity: 1;
     }
 }
 
@@ -595,5 +592,13 @@ components: {
     color: var(--naranja);
     text-decoration: none;
     font-size: 0;
+}
+
+h3 {
+    font-family: "Anybody", sans-serif;
+
+    font-weight: 900;
+
+    
 }
 </style>

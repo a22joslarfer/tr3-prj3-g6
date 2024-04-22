@@ -8,32 +8,32 @@
   
         <div class="input">
           <label for="username">Nombre de usuario:</label>
-          <input type="text" id="username" v-model="username" placeholder="HugoTripiana03">
+          <input type="text" id="username" class="user_info" v-model="username" placeholder="HugoTripiana03">
         </div>
   
         <div class="input">
           <label for="email">Correo electrónico:</label>
-          <input type="email" id="email" v-model="email" placeholder="hugo@gmail.com">
+          <input type="email" id="email" class="user_info" v-model="email" placeholder="hugo@gmail.com">
         </div>
         
         <div class="input">
           <label for="password">Contraseña:</label>
-          <input type="password" id="password" v-model="password" placeholder="********">
+          <input type="password" id="password" class="user_info" v-model="password" placeholder="********">
         </div>
   
         <div class="input">
           <label for="password2">Repetir contraseña:</label>
-          <input type="password" id="password2" v-model="password2" placeholder="********">
+          <input type="password" id="password2" class="user_info" v-model="password2" placeholder="********">
         </div>
   
         <div class="input">
           <label for="birthdate">Fecha de nacimiento:</label>
-          <input type="date" id="birthdate" v-model="birthdate">
+          <input type="date" id="birthdate" class="user_info" v-model="birthdate">
         </div>
   
         <div class="input">
           <label for="phone">Número de teléfono:</label>
-          <input type="tel" id="phone" v-model="phone" placeholder="123456789">
+          <input type="tel" id="phone" class="user_info" v-model="phone" placeholder="123456789">
         </div>
   
         <button type="submit" class="button">Guardar cambios</button>
@@ -65,6 +65,10 @@
   </script>
   
   <style scoped>
+  .user_info{
+    margin-top:10px;
+    
+  }
   .container {
     max-width: 600px;
     margin: 0 auto;
@@ -85,6 +89,8 @@
     margin-bottom: 10px;
     padding: 10px;
     font-size: 16px;
+    display: grid;
+    grid-template-columns: max-content;
   }
   
   .button {
