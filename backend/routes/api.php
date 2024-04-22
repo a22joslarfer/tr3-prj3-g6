@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
     
 
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES
+|--------------------------------------------------------------------------
+*/
 // RUTAS DE USUARIO
 Route::get('/csrf-token', function () {
     return csrf_token();
@@ -18,12 +23,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::post('login', 'App\Http\Controllers\AuthController@login');
-Route::post('register', 'App\Http\Controllers\AuthController@register');
 
-// Route::post('/login', [userController::class, 'login']);
-// Route::post('/register', [userController::class, 'register']);
 
+Route::post('login', [userController::class, 'login']);
+Route::post('register', [userController::class, 'register']);
 // ruta para obtener todos los usuarios
 Route::get('/users', [userController::class, 'getUsers']);
 // ruta para crear un usuario
@@ -32,6 +35,10 @@ Route::post('/users', [userController::class, 'create']);
 Route::delete('/users/{id}', [userController::class, 'delete']);
 // ruta para editar un usuario
 Route::put('/users/{id}', [userController::class, 'update']);
+
+
+
+
 
 
 

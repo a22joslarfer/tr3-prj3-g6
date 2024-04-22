@@ -2,193 +2,125 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\usuarioModel;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use \Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
-class userController extends Controller
+class UserController extends Controller
 {
-    public function register(Request $request)
+    public function index()
     {
+        // Mostrar todos los usuarios
+        $users = User::all();
+        return response()->json($users);
+    }
+
+    public function store(Request $request)
+    {
+        // Validar los datos del formulario
         $request->validate([
-            'nombre' => 'required',
-            'email' => 'required|email|unique:usuarios,email',
-            'password' => 'required',
-            'password2' => 'required|same:password',
-            'phone' => 'required',
-            'birthdate' => 'required',
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
         ]);
 
-        $user = new usuarioModel();
-        $user->nombre = $request->nombre;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->birthdate = $request->birthdate;
-        $user->password = Hash::make($request->password);
-
+        // Crear un nuevo usuario
+        $user = new User([
+            'name' => $request->input('nombre'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+            'api_token' => Str::random(60), // Generar un token aleatorio
+        ]);
         $user->save();
 
-        /*
-
-            return response()->json([
-            "status" => 1,
-            "msg" => "Registro exitoso",
-        ]);
-        
-        */
-        $token = $user->createToken("auth_token")->plainTextToken;
-        return ($token);
-
+        return response()->json($user, 201);
     }
 
-    public function delete($id)
+    public function show($id)
     {
-        $user = usuarioModel::find($id);
-
-        if (!$user) {
-            return response()->json([
-                "status" => 0,
-                "msg" => "Usuario no encontrado",
-            ], 404);
-        }
-
-        $user->delete();
-        return response()->json([
-            "status" => 1,
-            "msg" => "Usuario eliminado exitosamente",
-        ]);
+        // Mostrar un usuario específico
+        $user = User::findOrFail($id);
+        return response()->json($user);
     }
-
 
     public function update(Request $request, $id)
     {
-        $user = usuarioModel::find($id);
-        $user->nombre = $request->nombre;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->birthdate = $request->birthdate;
-        $user->password = Hash::make($request->password);
-        $user->save();
-        return response()->json([
-            "status" => 1,
-            "msg" => "Usuario actualizado exitosamente",
-        ]);
-    }
-
-    public function create(Request $request)
-    {
+        // Validar los datos del formulario
         $request->validate([
-            'nombre' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required',
-            'password2' => 'required|same:password',
-            'phone' => 'required',
-            'birthdate' => 'required',
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email,' . $id,
         ]);
 
-        $user = new usuarioModel();
-        $user->nombre = $request->nombre;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->birthdate = $request->birthdate;
-        $user->password = Hash::make($request->password);
-
+        // Actualizar un usuario existente
+        $user = User::findOrFail($id);
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
         $user->save();
 
-        return response()->json([
-            "status" => 1,
-            "msg" => "Registro exitoso",
-        ]);
+        return response()->json($user);
     }
 
+    public function destroy($id)
+    {
+        // Eliminar un usuario
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json(null, 204);
+    }
+
+
+    public function register(Request $request)
+    {
+       
+        $user = new User([
+            'name' => $request->input('nombre'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+            'api_token' => Str::random(60), 
+        ]);
+        $user->save();
+
+        return response()->json($user, 201);
+    }
 
 
     public function login(Request $request)
     {
+        // Validar los datos del formulario
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
-
+            'password' => 'required|string',
         ]);
-        $user = usuarioModel::where("email", "=", $request->email)->first();
 
-        if (isset($user->id)) {
-            if (Hash::check($request->password, $user->password)) {
-
-                $token = $user->createToken("auth_token")->plainTextToken;
-
-                //si esta todo bien
-                return response()->json([
-                    "status" => 1,
-                    "msg" => "Usuario logeado  exitosamente",
-                    "access_token" => $token
-
-                ]);
-            } else {
-                return response()->json([
-                    "status" => 0,
-                    "msg" => "La password es incorrecta",
-
-                ], 404);
-            }
-        } else {
+        // Intentar autenticar al usuario
+        if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                "status" => 0,
-                "msg" => "Usuario no registrado",
-            ], 404);
-        }
-    }
-    public function userProfile()
-    {
-        return response()->json([
-            "status" => 0,
-            "msg" => "Perfil del usuario",
-            "data" => auth()->user()
-        ]);
-    }
-    public function logout()
-    {
-        if (auth()->check()) {
-            auth()->user()->tokens()->delete();
-            return response()->json([
-                "status" => 1,
-                "msg" => "Logout exitoso",
-            ]);
+                'message' => 'Invalid credentials',
+            ], 401);
         }
 
-        return response()->json([
-            "status" => 0,
-            "msg" => "Usuario no autenticado",
-        ], 401);
-    }
-    public function updateUserProfile(Request $request)
-    {
-        $user = auth()->user();
+        // Obtener el usuario autenticado
+        $user = User::where('email', $request->input('email'))->firstOrFail();
 
-        // Aquí debes agregar la lógica para actualizar el perfil del usuario
-        //Puedes utilizar  $request->input('name') y $request->input('email');
-
-
-        // Ejemplo de actualización del nombre del usuario
-        $user->name = $request->input('name');
+        // Generar un nuevo token de API
+        $user->api_token = Str::random(60);
         $user->save();
 
-        return response()->json([
-            "status" => 1,
-            "msg" => "Perfil del usuario actualizado exitosamente",
-            "data" => $user,
-        ]);
+        return response()->json($user);
     }
-    public function getUsers()
+
+    public function logout(Request $request)
     {
-        $users = usuarioModel::all();
-        return response()->json(
-            $users
-        );
+        // Obtener el usuario autenticado
+        $user = $request->user();
+
+        // Eliminar el token de API del usuario
+        $user->api_token = null;
+        $user->save();
+
+        return response()->json(['message' => 'Logged out']);
     }
-
-
-
 }

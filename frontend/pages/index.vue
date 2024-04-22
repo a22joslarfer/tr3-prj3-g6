@@ -353,7 +353,7 @@ export default {
   
 
 
-<style>
+<style scoped>
 @import url('https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css');
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@700&display=swap');
 
@@ -372,7 +372,12 @@ export default {
 }
 
 * {
+    box-sizing: border-box;
+    font-family: "Antonio", sans-serif;
+    margin: 0;
+    padding: 0px;
     overflow: hidden;
+
 }
 
 :root {

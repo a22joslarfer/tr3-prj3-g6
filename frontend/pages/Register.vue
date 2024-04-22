@@ -1,48 +1,47 @@
 <template>
-    <body>
+    <div>
+    
+
         <div class="container">
-            <div class="left">
+            <div class="title_company">VIAEGIS</div>
+            <div class="content">
+                <div class="title">Únete a Viaegis</div>
                 <form @submit.prevent="register" class="form">
-                    <img class="background-image" src="../public/img/images.jpg " alt="Imagen de fondo" />
-                    <img class="foreground-image" src="../public/img/3128-earth.png" alt="Imagen superpuesta" />
-                </form>
-            </div>
-            <div class="right">
-                <div class="title">Regístrate en Viaegis</div>
-                <form @submit.prevent="register" class="form">
-                    <input type="text" v-model.trim="nombre" class="input" placeholder="Nombre Completo" required />
-                    <input type="email" v-model.trim="email" class="input" placeholder="Correo Electrónico"
-                        title="Por favor, introduce un correo electrónico válido" />
-                    <input type="password" v-model.trim="password" class="input" placeholder="Contraseña" />
-                    <input type="password" v-model.trim="password2" class="input" placeholder="Repetir Contraseña" />
-                    <input type="date" v-model.trim="birthdate" class="input" placeholder="Fecha de Nacimiento" required />
-                    <input type="tel" v-model.trim="phone" class="input" placeholder="Número de Teléfono" required
-                        pattern="\d{9}" title="El número de teléfono debe tener 9 dígitos" />
-                    <div class="checkbox">
-                        <input type="checkbox" id="terms" v-model="acceptTerms" required />
-                        <label for="terms">Acepto las condiciones y términos</label>
+                    <div class="input-group">
+
+                        <input type="text" v-model.trim="name" class="input" placeholder="Nombre Completo" required />
                     </div>
+                    <div class="input-group">
+                        <input type="email" v-model.trim="email" class="input" placeholder="Correo Electrónico"
+                            title="Por favor, introduce un correo electrónico válido" />
+                    </div>
+                    <div class="input-group">
+                        <input type="password" v-model.trim="password" class="input" placeholder="Contraseña" />
+                        <img src="" class="icon" alt="Lock Icon">
+                    </div>
+                  
                     <button type="submit" class="button">Regístrate</button>
-                    <div class="text">¿Ya tienes cuenta? ¡Inicia sesión!</div>
                 </form>
+                <div class="login-link">
+                    ¿Ya tienes cuenta? <a href="/login" class="boton_login">¡Inicia sesión!</a>
+                </div>
             </div>
         </div>
-    </body>
+    </div>
+
 </template>
-  
-  
+
 <script>
+
 export default {
+
     name: 'RegisterScreen',
     data() {
         return {
-            nombre: '',
+            name: '',
             email: '',
             password: '',
-            password2: '', // Add this line
-            birthdate: '', // Add this line
-            phone: '', // Add this line
-            acceptTerms: false, // Add this line
+       
         };
     },
 
@@ -54,12 +53,10 @@ export default {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    nombre: this.nombre.trim(),
+                    name: this.name.trim(),
                     email: this.email.trim(),
                     password: this.password.trim(),
-                    birthdate: this.birthdate, // Include birthdate
-                    phone: this.phone, // Include phone
-                    password2: this.password2, // Include password2
+                   
                 }),
             })
                 .then(response => {
@@ -85,7 +82,7 @@ export default {
                             nombre: data.user.nombre,
                             email: data.user.email,
                             token: data.access_token,
-                            
+
                         }));
 
                         alert(data.error);
@@ -108,110 +105,3 @@ export default {
     }
 };
 </script>
-  
-<style scoped>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.container {
-    display: flex;
-    height: 100vh;
-}
-
-.left {
-    flex: 1;
-    position: relative;
-}
-
-.background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    /* Coloca la imagen de fondo en el fondo */
-}
-
-.foreground-image {
-    position: absolute;
-    top: 50%;
-    /* Ajusta la posición vertical según tus necesidades */
-    left: 50%;
-    /* Ajusta la posición horizontal según tus necesidades */
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    /* Coloca la imagen superpuesta encima del fondo */
-}
-
-.right {
-    flex: 1;
-    background-color: #f0f0f0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.title {
-    font-size: 36px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.form {
-    width: 80%;
-    max-width: 400px;
-}
-
-.input {
-    width: 100%;
-    height: 40px;
-    border: none;
-    border-bottom: 2px solid #ccc;
-    margin-bottom: 20px;
-    font-size: 18px;
-    padding: 10px;
-}
-
-.button {
-    width: 100%;
-    height: 50px;
-    border: none;
-    border-radius: 25px;
-    background-color: #0f233b;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    cursor: pointer;
-}
-
-.text {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 10px;
-    margin-left: 71px;
-}
-
-.checkbox {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.checkbox input {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-}
-
-.checkbox label {
-    font-size: 16px;
-    color: #333;
-}
-</style>

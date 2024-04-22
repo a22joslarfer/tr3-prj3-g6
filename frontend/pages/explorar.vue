@@ -126,7 +126,7 @@ export default {
 
   
   
-<style lang="scss" scoped>
+<style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap');
 
 :root {
