@@ -78,4 +78,7 @@ Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getRev
 Route::post('/bereal', [BeRealController::class, 'createBereal']);
 //ruta para obtener y mostrar
 Route::get('/bereals/{id}', [BeRealController::class, 'show']);
+//mostrar todos
+Route::get('/bereals', [BeRealController::class, 'index']);
+
 

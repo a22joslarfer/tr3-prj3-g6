@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\berealModel; 
+use App\Models\Bereal; // Asegúrate de importar correctamente el modelo
 
 class BeRealController extends Controller
 {
@@ -15,18 +14,32 @@ class BeRealController extends Controller
      */
     public function createBereal(Request $request)
     {
-        $request->validate([
-            'img_del' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'img_tra' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        $validatedData = $request->validate([
+            'img_del' => 'required|file',
+            'img_tra' => 'required|file',
             'id_usuari' => 'required|exists:usuarios,id'
         ]);
 
-        berealModel::create($request->all());        
+        $img_del = $request->file('img_del')->store('public/img');
+        $img_tra = $request->file('img_tra')->store('public/img');
+
+        $bereal = Bereal::create([
+          'img_del' => str_replace('public/', 'storage/', $img_del),
+          'img_tra' => str_replace('public/', 'storage/', $img_tra),
+          'id_usuari' => $validatedData['id_usuari']
+      ]);
+
+        return response()->json($bereal, 201);
+    }
+
+    public function index()
+    {
+        $bereals = Bereal::all();
+        return response()->json($bereals);
     }
 
     public function show($id)
     {
-        $bereals = berealModel::findOrFail($id);
-        return view('bereals.show', compact('bereals'));
+        return Bereal::find($id);
     }
 }

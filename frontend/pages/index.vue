@@ -1,72 +1,44 @@
 <template>
   <div>
-    <h1>Subir Fotos</h1>
-    <button @click="tomarFotos">Tomar Fotos</button>
-    <button @click="subirFotos">Subir Fotos</button>
+    <input type="file" @change="handleFileChange('img_del')" accept="image/*" />
+    <input type="file" @change="handleFileChange('img_tra')" accept="image/*" />
+    <button @click="uploadImages">Subir Imágenes</button>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      img_del: null,
+      img_tra: null,
+    }
+  },
   methods: {
-    async tomarFotos() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const video = document.createElement('video');
-        video.srcObject = stream;
-        video.play();
-
-        // Captura la imagen después de 3 segundos (puedes ajustar el tiempo)
-        setTimeout(async () => {
-          const canvas = document.createElement('canvas');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          const context = canvas.getContext('2d');
-          context.drawImage(video, 0, 0, canvas.width, canvas.height);
-          const fotoBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'));
-
-          // Guarda la imagen en el estado o en una variable para subirla después
-          this.fotos = [fotoBlob];
-
-          // Detiene el streaming de video
-          stream.getTracks().forEach(track => track.stop());
-        }, 3000); // 3 segundos de espera antes de tomar la foto
-      } catch (error) {
-        console.error('Error al acceder a la cámara:', error);
-      }
+    handleFileChange(type) {
+      this[type] = event.target.files[0];
     },
-    async subirFotos() {
-      if (this.fotos.length === 0) {
-        console.error('No hay fotos para subir');
-        return;
-      }
-
+    async uploadImages() {
       const formData = new FormData();
-      this.fotos.forEach((foto, index) => {
-        formData.append(`foto${index + 1}`, foto);
-      });
-      formData.append('id_usuari', 1); // ID del usuario, ajusta según sea necesario
-
+      formData.append('img_del', this.img_del);
+      formData.append('img_tra', this.img_tra);
+      formData.append('id_usuari', 1);
       try {
         const response = await fetch('http://localhost:8000/api/bereal', {
           method: 'POST',
           body: formData
         });
-
         if (response.ok) {
-          console.log('Fotos subidas correctamente');
+          alert('Imágenes subidas correctamente');
         } else {
-          console.error('Error al subir fotos');
+          alert('Error al subir imágenes');
         }
       } catch (error) {
-        console.error('Error al enviar la solicitud:', error);
+        console.error('Error al subir imágenes:', error);
+        alert('Error al subir imágenes');
       }
-    }
+    },
+
   },
-  data() {
-    return {
-      fotos: []
-    };
-  }
 }
 </script>
