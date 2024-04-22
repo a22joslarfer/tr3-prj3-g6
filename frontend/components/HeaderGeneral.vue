@@ -25,9 +25,11 @@ export default {
 
 <style scoped>
 .header {
-  background-color: #333;
+  background-color: #f0f1f1;
+;
   color: #fff;
   padding: 20px 0;
+  margin-left:1px;
 }
 
 .container {
@@ -35,19 +37,20 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
   height: 25px;
+  margin-left:20px;
 }
 
 .logo img {
-  height: 40px;
+  height: 60px;
   position: absolute;
-  left: 2px;
-  transform: translateY(-20%); 
+  left: 5px;
+  transform: translateY(-25%); 
 
 }
 
 .nav ul {
   list-style: none;
-  margin: 0;
+  margin: 5px;
   padding: 0;
 }
 
@@ -61,7 +64,8 @@ export default {
 }
 
 .nav ul li a {
-  color: #fff;
+  margin-left:10px;
+  color: #000000;
   text-decoration: none;
   font-size: 16px;
 }

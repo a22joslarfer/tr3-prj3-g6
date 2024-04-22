@@ -1,6 +1,13 @@
 <template>
     <div>
         <HeaderGeneral />
+        <div class="carousel-container">
+            <carousel :perPageCustom="[[0, 1], [768, 2], [1024, 3]]" :autoplay="true" :autoplayTimeout="5000">
+                <slide v-for="(item, index) in carouselItems" :key="index">
+                    <img :src="item.imgUrl" alt="imagen del carrusel" class="carousel-image">
+                </slide>
+            </carousel>
+        </div>
     <div class="container">
         <div id="buscador"></div>
 
@@ -41,9 +48,9 @@ import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 export default {
-components: {
-    FooterOptions,
-},
+    components: {
+        FooterOptions,
+    },
     head() {
         return {
             link: [
@@ -66,56 +73,67 @@ components: {
             icono_llevar_a_barcelona: null,
             supercluster: null,
             pin_seleccionado: null,
-
         };
     },
     mounted() {
-        this.fetchData();
-        this.initMapaDatosMapBox();
+    this.fetchData();
+    this.initMapaDatosMapBox();
 
-        Notification.requestPermission().then((permission) => {
-            if (permission === "granted") {
-                console.log("Permisos aceptados");
+    Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+            console.log("Permisos aceptados");
 
-                if ("geolocation" in navigator) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            const { latitude, longitude } = position.coords;
-                            console.log("Ubicación del usuario:", latitude, longitude);
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        console.log("Ubicación del usuario:", latitude, longitude);
 
-                            const coordenada1 = {
-                                //pedralbes
-                                latitude: 41.386181,
-                                longitude: 2.106058,
-                            };
+                        const coordenada1 = {
+                            latitude: 41.386181,
+                            longitude: 2.106058,
+                        };
 
-                            const coordenada2 = {
-                                //pacha
-                                latitude: 41.385647,
-                                longitude: 2.197256,
-                            };
-                            if (
-                                this.personesAprop({ latitude, longitude }, coordenada1)
-                            ) {
-                                //pedralbes
-                                this.programarNotificacio(9, 37);
-                            } else if (
-                                //pacha
-                                this.personesAprop({ latitude, longitude }, coordenada2)
-                            ) {
-                                this.programarNotificacio(10, 22);
-                            }
-                        },
-                        (error) => {
-                            console.error("Error al obtener la ubicación:", error.message);
+                        const coordenada2 = {
+                            latitude: 41.385647,
+                            longitude: 2.197256,
+                        };
+
+                        if (this.personesAprop({ latitude, longitude }, coordenada1)) {
+                            this.programarNotificacio(9, 37);
+                        } else if (this.personesAprop({ latitude, longitude }, coordenada2)) {
+                            this.programarNotificacio(10, 22);
                         }
-                    );
-                }
+                    },
+                    (error) => {
+                        console.error("Error al obtener la ubicación:", error.message);
+                    }
+                );
             }
+        }
+    });
+
+    // Girar el mapa de oeste a este
+    this.map.on('load', () => {
+        console.log("Mapa cargado correctamente");
+
+        this.map.easeTo({
+            bearing: 0, // Iniciar con 0 grados
+            duration: 50, // Duración de la animación en milisegundos
+            easing: (t) => t, // Función de easing lineal
+            animate: true // Activar animación
         });
 
-    },
-
+        setTimeout(() => {
+            this.map.easeTo({
+                bearing: 360, // Girar a 360 grados (una vuelta completa)
+                duration: 50, // Duración de la animación en milisegundos
+                easing: (t) => t, // Función de easing lineal
+                animate: true // Activar animación
+            });
+        }, 5); // Espera 5000 milisegundos antes de girar a 360 grados
+    });
+},
     methods: {
         async fetchData() {
 
@@ -160,12 +178,12 @@ components: {
             });
 
             this.map.addControl(geocoder);
-            this.$nextTick(() => {
-                var geocoderElement = document.querySelector('.mapboxgl-ctrl-geocoder');
-                var searchBar = document.getElementById('buscador');
-                searchBar.appendChild(geocoderElement);
-            });
-        },
+        this.$nextTick(() => {
+            var geocoderElement = document.querySelector('.mapboxgl-ctrl-geocoder');
+            var searchBar = document.getElementById('buscador');
+            searchBar.appendChild(geocoderElement);
+        });
+    },
         crear_mostrar_pines_discos() {
 
             if (this.map.getSource('points')) {
@@ -380,7 +398,7 @@ components: {
     --azul: hsl(226, 64%, 58%);
     --blanco: hsl(0, 0%, 100%);
     --base2: hsl(354, 9%, 5%);
-    --verde2: hsl(124, 9%, 32%);
+    --verde2: hsl(0, 0%, 100%);
     --naranja: hsl(32, 85%, 76%);
     --carne2: hsl(32, 70%, 89%);
     --rojo: hsl(0, 84%, 15%);
@@ -480,6 +498,16 @@ components: {
     line-height: 1.1;
     font-size: 1.2vw;
 }
+.carousel-container {
+    margin-top: 20px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.carousel-image {
+    width: 100%;
+    height: auto;
+}
 
 @media only screen and (max-width: 768px) {
     .navbar {
@@ -511,13 +539,12 @@ components: {
 
 .mapboxgl-ctrl-geocoder {
     position: absolute;
-    top: 40px;
-    left: 10px;
+    bottom:100px;
+    left: 110px;
     z-index: 1000;
     width: auto;
     height: auto;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -526,19 +553,10 @@ components: {
 }
 
 .mapboxgl-ctrl-geocoder input[type="text"] {
-    background-color: var(--base);
-    border: none;
-    color: var(--verde2);
-    font-size: 1.5vw;
+    background-color:rgba(134, 95, 95, 0);
+    border-radius: 1px;
     padding: 10px;
-}
-
-
-.mapboxgl-ctrl-geocoder button {
-    background-color: var(--verde2);
-    font-size: .5vw;
-    padding: 10px;
-    border-radius: 20px;
+    margin-left:17px;
 }
 
 .mapboxgl-ctrl-geocoder .suggestions {
@@ -556,7 +574,12 @@ components: {
     color: var(--base);
 
 }
+.mapboxgl-canvas{
+    top:-60px;
+    left:0;
+    background-color: #f0f1f1;
 
+}
 .mapboxgl-ctrl-geocoder .suggestions li {
     list-style: none;
     padding: 10px;
@@ -581,4 +604,9 @@ components: {
     text-decoration: none;
     font-size: 0;
 }
+.mapboxgl-ctrl-geocoder--icon,
+.mapboxgl-ctrl-geocoder--icon-loading {
+    display: none !important;
+}
+
 </style>
