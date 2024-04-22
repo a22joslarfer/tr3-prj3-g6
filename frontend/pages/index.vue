@@ -1,42 +1,34 @@
 <template>
     <div>
         <HeaderGeneral />
-        <div class="carousel-container">
-            <carousel :perPageCustom="[[0, 1], [768, 2], [1024, 3]]" :autoplay="true" :autoplayTimeout="5000">
-                <slide v-for="(item, index) in carouselItems" :key="index">
-                    <img :src="item.imgUrl" alt="imagen del carrusel" class="carousel-image">
-                </slide>
-            </carousel>
-        </div>
     <div class="container">
         <div id="buscador"></div>
 
-        <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
+            <div id="map" ref="map" style="height: 100%; width: 100%;">
+                <div class="map-overlay">DESCUBRE LAS DISCOTECAS DEL MUNDO</div>
+            </div>
 
-        <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
-            <div class="card">
-                <div class="card-header">
-                    <h3>{{ pin_seleccionado.titulo }}</h3>
-                    <div class="card-closer" @click="cerrarPopUp">X</div>
-                </div>
-                <div class="card-body">
-                    <img :src="'https://via.placeholder.com/200'" alt="imagen de la discoteca"
-                        style="width: 100%; height: 200px; object-fit: cover;">
+            <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>{{ pin_seleccionado.titulo }}</h3>
+                        <div class="card-closer" @click="cerrarPopUp">X</div>
+                    </div>
+                    <div class="card-body">
+                        <img :src="'https://via.placeholder.com/200'" alt="imagen de la discoteca"
+                            style="width: 100%; height: 200px; object-fit: cover;">
 
-                    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
-                    <p>Horario: {{ pin_seleccionado.horario }}</p>
-                    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
-                    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
-                    <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
-
-
+                        <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
+                        <p>Horario: {{ pin_seleccionado.horario }}</p>
+                        <p>Telefono: {{ pin_seleccionado.telefono }}</p>
+                        <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+                        <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>       
+        </div>       
         <FooterOptions />
     </div>
-
 </template>
 
   
@@ -68,73 +60,79 @@ export default {
             punto_de_interes_seleccionado: false,
             map: null,
             arr_puntos_de_interes: [],
-            marker: null,
             data: [],
-            icono_llevar_a_barcelona: null,
-            supercluster: null,
             pin_seleccionado: null,
+
         };
     },
     mounted() {
-    this.fetchData();
-    this.initMapaDatosMapBox();
+        this.fetchData();
+        this.initMapaDatosMapBox();
 
-    Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-            console.log("Permisos aceptados");
+        Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+                console.log("Permisos aceptados");
 
-            if ("geolocation" in navigator) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const { latitude, longitude } = position.coords;
-                        console.log("Ubicación del usuario:", latitude, longitude);
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const { latitude, longitude } = position.coords;
+                            console.log("Ubicación del usuario:", latitude, longitude);
 
-                        const coordenada1 = {
-                            latitude: 41.386181,
-                            longitude: 2.106058,
-                        };
+                            const coordenada1 = {
+                                //pedralbes
+                                latitude: 41.386181,
+                                longitude: 2.106058,
+                            };
 
-                        const coordenada2 = {
-                            latitude: 41.385647,
-                            longitude: 2.197256,
-                        };
-
-                        if (this.personesAprop({ latitude, longitude }, coordenada1)) {
-                            this.programarNotificacio(9, 37);
-                        } else if (this.personesAprop({ latitude, longitude }, coordenada2)) {
-                            this.programarNotificacio(10, 22);
+                            const coordenada2 = {
+                                //pacha
+                                latitude: 41.385647,
+                                longitude: 2.197256,
+                            };
+                            if (
+                                this.personesAprop({ latitude, longitude }, coordenada1)
+                            ) {
+                                //pedralbes
+                                this.programarNotificacio(9, 37);
+                            } else if (
+                                //pacha
+                                this.personesAprop({ latitude, longitude }, coordenada2)
+                            ) {
+                                this.programarNotificacio(10, 22);
+                            }
+                        },
+                        (error) => {
+                            console.error("Error al obtener la ubicación:", error.message);
                         }
-                    },
-                    (error) => {
-                        console.error("Error al obtener la ubicación:", error.message);
-                    }
-                );
+                    );
+                }
             }
-        }
-    });
-
-    // Girar el mapa de oeste a este
-    this.map.on('load', () => {
-        console.log("Mapa cargado correctamente");
-
-        this.map.easeTo({
-            bearing: 0, // Iniciar con 0 grados
-            duration: 50, // Duración de la animación en milisegundos
-            easing: (t) => t, // Función de easing lineal
-            animate: true // Activar animación
         });
 
-        setTimeout(() => {
-            this.map.easeTo({
-                bearing: 360, // Girar a 360 grados (una vuelta completa)
-                duration: 50, // Duración de la animación en milisegundos
-                easing: (t) => t, // Función de easing lineal
-                animate: true // Activar animación
-            });
-        }, 5); // Espera 5000 milisegundos antes de girar a 360 grados
-    });
-},
+    },
+
     methods: {
+        programarRotacion() {
+            let rotation = 0;
+            const rotationIncrement = 0.1; // Incremento de rotación en grados
+
+            this.rotationInterval = setInterval(() => {
+                rotation += rotationIncrement;
+
+                // Mantener la rotación en el rango de 0 a 360 grados
+                rotation = rotation % 360;
+
+                // Aplicar la rotación al mapa
+                this.map.rotateTo(rotation, {
+                    duration: 0, // Sin duración para rotación continua
+                    animate: false, // Desactivar animación
+                });
+            }, 50); // Actualizar cada 50 milisegundos
+        },
+        detenerRotacion() {
+            clearInterval(this.rotationInterval);
+        },
         async fetchData() {
 
             const response = await fetch('http://localhost:8000/api/discotecas');
@@ -539,12 +537,13 @@ export default {
 
 .mapboxgl-ctrl-geocoder {
     position: absolute;
-    bottom:100px;
-    left: 110px;
+    top: 40px;
+    left: 10px;
     z-index: 1000;
     width: auto;
     height: auto;
     border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
     display: flex;
     justify-content: center;
     align-items: center;
