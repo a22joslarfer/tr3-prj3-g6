@@ -3,15 +3,15 @@
     <h1>Lista de Bereals</h1>
     <ul v-if="bereals.length">
       <li v-for="bereal in bereals" :key="bereal.id">
-        <img :src="bereal.img_del" alt="Imagen del Bereal">
-        <img :src="bereal.img_tra" alt="Imagen del Bereal">
+        <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
+        <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
         <p>ID de Usuario: {{ bereal.id_usuari }}</p>
       </li>
     </ul>
     <p v-else>No se encontraron Bereals.</p>
   </div>
 </template>
-  
+
 <script>
 export default {
   data() {
@@ -20,10 +20,10 @@ export default {
     }
   },
   async mounted() {
-    await this.fetchBereals();
+    await this.obtenerBereals();
   },
   methods: {
-    async fetchBereals() {
+    async obtenerBereals() {
       try {
         const response = await fetch('http://perubafoto.daw.inspedralbes.cat/backend/public/api/bereals');
         if (!response.ok) {
@@ -34,7 +34,21 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    // Método para construir la URL completa de la imagen
+    getImagenUrl(rutaRelativaImagen) {
+      // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
+      return `http://perubafoto.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
     }
+
+
   }
 }
 </script>
+
+<style>
+.bereal-image {
+  width: 200px;
+  height: auto;
+}
+</style>

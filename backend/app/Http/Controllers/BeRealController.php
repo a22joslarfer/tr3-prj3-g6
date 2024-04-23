@@ -2,8 +2,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Bereal; // Asegúrate de importar correctamente el modelo
-
+use App\Models\Bereal; 
 class BeRealController extends Controller
 {
     /**
