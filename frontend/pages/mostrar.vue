@@ -25,7 +25,7 @@ export default {
   methods: {
     async obtenerBereals() {
       try {
-        const response = await fetch('http://perubafoto.daw.inspedralbes.cat/backend/public/api/bereals');
+        const response = await fetch('http://localhost:8000/api/bereals');
         if (!response.ok) {
           throw new Error('Error al obtener los Bereals');
         }
@@ -38,7 +38,7 @@ export default {
     // Método para construir la URL completa de la imagen
     getImagenUrl(rutaRelativaImagen) {
       // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
-      return `http://perubafoto.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
+      return `http://localhost:8000/${rutaRelativaImagen}`;
     }
 
 
