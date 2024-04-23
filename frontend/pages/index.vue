@@ -5,23 +5,25 @@
     <div class="container">
         <div id="buscador"></div>
 
-            <div id="map" ref="map" style="height: 100%; width: 100%;">
-            </div>
+        <div id="buscador"></div>
 
-            <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>{{ pin_seleccionado.titulo }}</h3>
-                        <div class="card-closer" @click="cerrarPopUp">X</div>
-                    </div>
-                    <div class="card-body">
-                        <img :src="'https://via.placeholder.com/200'" alt="imagen de la discoteca"
-                            style="width: 100%; height: 200px; object-fit: cover;">
+<div id="map" ref="map" style="height: 100%; width: 100%;"></div>
 
-                        <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
-                        <p>Horario: {{ pin_seleccionado.horario }}</p>
-                        <p>Telefono: {{ pin_seleccionado.telefono }}</p>
-                        <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+<div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
+    <div class="card">
+        <div class="card-header">
+            <h3>{{ pin_seleccionado.titulo }}</h3>
+            <div class="card-closer" @click="cerrarPopUp">X</div>
+        </div>
+        <div class="card-body">
+<img :src="pin_seleccionado.imgUrl" alt="imagen de la discoteca"
+style="width: 100%; height: 200px; object-fit: cover;">
+
+<p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
+<p>Horario: {{ pin_seleccionado.horario }}</p>
+<p>Telefono: {{ pin_seleccionado.telefono }}</p>
+<p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+<audio :src="pin_seleccionado.cancion_mp3" controls></audio>
                         <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
                     </div>
                 </div>
@@ -62,6 +64,9 @@ export default {
             arr_puntos_de_interes: [],
             data: [],
             pin_seleccionado: null,
+            uploadedSongUrl: null,
+            icono_llevar_a_barcelona: null,
+            supercluster: null,
 
         };
     },
@@ -113,53 +118,50 @@ export default {
     },
 
     methods: {
-        programarRotacion() {
-            let rotation = 0;
-            const rotationIncrement = 0.1; // Incremento de rotación en grados
+        async handleFileUpload() {
+        const file = this.$refs.fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
 
-            this.rotationInterval = setInterval(() => {
-                rotation += rotationIncrement;
-
-                // Mantener la rotación en el rango de 0 a 360 grados
-                rotation = rotation % 360;
-
-                // Aplicar la rotación al mapa
-                this.map.rotateTo(rotation, {
-                    duration: 0, // Sin duración para rotación continua
-                    animate: false, // Desactivar animación
-                });
-            }, 50); // Actualizar cada 50 milisegundos
-        },
-        detenerRotacion() {
-            clearInterval(this.rotationInterval);
-        },
-        async fetchData() {
-
-            const response = await fetch('http://localhost:8000/api/discotecas');
-
+        try {
+            const response = await fetch('http://localhost:8000/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
 
             const data = await response.json();
 
-            this.data = data.map((discoteca) => {
+            if (data.success) {
+                this.uploadedSongUrl = data.fileUrl;
+                this.pin_seleccionado.cancion_mp3 = data.fileUrl;
+            } else {
+                console.error('Error al subir el archivo');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    },
+        async fetchData() {
+    const response = await fetch('http://localhost:8000/api/discotecas');
+    const data = await response.json();
 
-                return {
-                    id: discoteca.id,
-                    titulo: discoteca.nombre_local,
-                    coordenadas: JSON.parse(discoteca.coordenadas),
-                    imgUrl: discoteca.imgUrl,
-                    descripcion: discoteca.descripcion,
-                    telefono: discoteca.telefono,
-                    horario: discoteca.horario,
-                    minEdad: discoteca.minEdad,
-                };
+    this.data = data.map((discoteca) => {
+        return {
+            id: discoteca.id,
+            titulo: discoteca.nombre_local,
+            coordenadas: JSON.parse(discoteca.coordenadas),
+            imgUrl: discoteca.imgUrl,
+            descripcion: discoteca.descripcion,
+            telefono: discoteca.telefono,
+            horario: discoteca.horario,
+            minEdad: discoteca.minEdad,
+            cancion_mp3: discoteca.canciones  // Aquí es donde asignamos el valor de "canciones" al objeto "pin_seleccionado"
+        };
+    });
 
-            });
-
-            this.crear_mostrar_pines_discos();
-            this.añadir_popup_info_de_las_discos();
-
-
-        },
+    this.crear_mostrar_pines_discos();
+    this.añadir_popup_info_de_las_discos();
+},
         initMapaDatosMapBox() {
             mapboxgl.accessToken = 'pk.eyJ1IjoiaHVnb3RyaXBpYW5hIiwiYSI6ImNsczFueDBieDBiYngybG1rb2g4bGIyNW0ifQ.EECPYp9RZ_JIpjmlvyy2Hw';
 
