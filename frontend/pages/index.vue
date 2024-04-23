@@ -1,11 +1,11 @@
 <template>
     <div>
         <HeaderGeneral />
+        <div class="subtitle">DESCUBRE LAS DISCOTECAS DEL MUNDO</div>
     <div class="container">
         <div id="buscador"></div>
 
             <div id="map" ref="map" style="height: 100%; width: 100%;">
-                <div class="map-overlay">DESCUBRE LAS DISCOTECAS DEL MUNDO</div>
             </div>
 
             <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
@@ -369,6 +369,17 @@ export default {
 <style>
 @import url('https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css');
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@700&display=swap');
+.subtitle {
+    font-family: "Anybody", sans-serif;
+    font-size: 25px;
+    font-optical-sizing: auto;
+    font-weight: 800; /* Puedes ajustar este valor según lo necesites */
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+    text-align: center;
+    text-transform: uppercase;
+    background-color:#f0f1f1
+}
 
 .btn-create-review {
     background-color: var(--verde);
@@ -537,13 +548,13 @@ export default {
 
 .mapboxgl-ctrl-geocoder {
     position: absolute;
-    top: 40px;
-    left: 10px;
+    bottom:110px;
+    left: 100px;
     z-index: 1000;
     width: auto;
     height: auto;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -574,7 +585,7 @@ export default {
 
 }
 .mapboxgl-canvas{
-    top:-60px;
+    top:-100px;
     left:0;
     background-color: #f0f1f1;
 
