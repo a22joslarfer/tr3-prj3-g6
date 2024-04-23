@@ -1,23 +1,23 @@
 <template>
-    <div class="container">
-       
+  <div class="container">
 
-        <form @submit.prevent="fetchLogin" id="form">
 
-            <label for="email">Email</label>
-            <input type="text" id="email" v-model="email" placeholder="exemple@gmail.com">
+    <form @submit.prevent="login" id="form">
 
-            <label for="password">Contrasenya</label>
-            <input type="password" id="password" v-model="password" placeholder="contrasenya actual">
+      <label for="email">Email</label>
+      <input type="text" id="email" v-model="email" placeholder="exemple@gmail.com">
 
-            <nuxt-link to="/register" class="nuxt-link">No tens compte? Registra't</nuxt-link>
+      <label for="password">Contrasenya</label>
+      <input type="password" id="password" v-model="password" placeholder="contrasenya actual">
 
-            <button type="submit">Login</button>
+      <nuxt-link to="/register" class="nuxt-link">No tens compte? Registra't</nuxt-link>
 
-        </form>
-        
+      <button type="submit">Login</button>
 
-    </div>
+    </form>
+
+
+  </div>
 </template>
 
 
@@ -27,66 +27,45 @@ export default {
     return {
       email: '',
       password: '',
-      isLoading: false,
-      csrf: null
+
     };
   },
   methods: {
     login() {
-      this.isLoading = true;
+      fetch('http://localhost:8000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: this.email.trim(),
+          password: this.password.trim(),
 
-      fetch('http://localhost:8000/api/csrf-token')
-        .then(response => response.text())
-        .then(text => {
-          try {
-            const data = JSON.parse(text);
-            this.csrf = data.token;
-            console.log('New CSRF token:', this.csrf);
-
-            return fetch('http://localhost:8000/api/login', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': this.csrf,
-              },
-              body: JSON.stringify({
-                email: this.email.trim(),
-                password: this.password.trim(),
-
-              }),
-            });
-          } catch (error) {
-            console.error('Failed to parse CSRF token response as JSON:', error);
-          }
-        })
+        }),
+      })
         .then(response => {
           if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            throw new Error(`Error al iniciar sesión: ${response.status} - ${response.statusText}`);
           }
           return response.json();
         })
         .then(data => {
-          console.log('Success:', data);
-
-          if (data.status === 1) {
-            localStorage.setItem('authToken', data.access_token);
-            console.log(data.access_token);
-            navigateTo('/');
-          } else {
-            alert('Inicio de sesión fallido. Verifica tus credenciales.');
-          }
+          console.log('Sesión iniciada correctamente:', data);
+          localStorage.setItem('token', data.token);
+          const store = useStore();
+          store.save_user_info(data.name, data.email, data.id);
+          console.log('Usuari:', store.return_user_username());
+          console.log('Email:', store.return_user_email());
+          console.log('Id:', store.return_user_id());
+          this.$router.push('/');
         })
         .catch(error => {
-          console.error('There has been a problem with your fetch operation:', error);
-        })
-        .finally(() => {
-          this.isLoading = false;
+          console.error('Error al iniciar sesión:', error);
         });
+
     },
   },
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

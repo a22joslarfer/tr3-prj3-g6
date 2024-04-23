@@ -12,12 +12,13 @@ class reviewController extends Controller
     public function createReview(Request $request)
     {
         $request->validate([
-            'usuario_id' => '',
+            'usuario_id' => 'required',
             'disco_id' => 'required',
             'titulo' => 'required',
             'content' => 'required',
             'puntuacion' => 'required',
             'photo' => '|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'categoria' => 'required',
         ]);
 
         $review = new reviewModel;
@@ -26,6 +27,7 @@ class reviewController extends Controller
         $review->titulo = $request->titulo;
         $review->content = $request->content;
         $review->puntuacion = $request->puntuacion;
+        $review->categoria = $request->categoria;
 
         $photoPath = $request->file('photo')->store('photos', 'public');
 
@@ -51,7 +53,7 @@ class reviewController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'usuario_id' => '',
+            'usuario_id' => 'required',
             'disco_id' => 'required',
             'titulo' => 'required',
             'content' => 'required',
