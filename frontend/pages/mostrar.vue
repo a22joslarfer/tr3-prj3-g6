@@ -11,7 +11,7 @@
     <p v-else>No se encontraron Bereals.</p>
   </div>
 </template>
-
+  
 <script>
 export default {
   data() {
@@ -25,7 +25,7 @@ export default {
   methods: {
     async fetchBereals() {
       try {
-        const response = await fetch('http://localhost:8000/api/bereals');
+        const response = await fetch('http://perubafoto.daw.inspedralbes.cat/backend/public/api/bereals');
         if (!response.ok) {
           throw new Error('Error al obtener los Bereals');
         }
