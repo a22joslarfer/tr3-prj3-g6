@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -27,7 +28,7 @@ class UserController extends Controller
 
         // Crear un nuevo usuario
         $user = new User([
-            'name' => $request->input('name'),
+            'name' => $request->input('nombre'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
             'api_token' => Str::random(60), // Generar un token aleatorio
@@ -68,5 +69,65 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(null, 204);
+    }
+
+
+    public function register(Request $request)
+    {
+       
+        $user = new User([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+            'api_token' => Str::random(60), 
+        ]);
+        $user->save();
+
+        return response()->json($user, 201);
+    }
+
+
+    public function login(Request $request)
+    {
+        // Validar los datos del formulario
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        // Intentar autenticar al usuario
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'message' => 'Invalid credentials',
+            ], 401);
+        }
+
+        // Obtener el usuario autenticado
+        $user = User::where('email', $request->input('email'))->firstOrFail();
+
+        // Generar un nuevo token de API
+        $user->api_token = Str::random(60);
+        $user->save();
+
+        return response()->json($user);
+    }
+
+    public function logout(Request $request)
+    {
+        // Obtener el usuario autenticado
+        $user = $request->user();
+
+        // Eliminar el token de API del usuario
+        $user->api_token = null;
+        $user->save();
+
+        return response()->json(['message' => 'Logged out']);
+    }
+
+    public function getUser($id)
+    {
+        $user = User::find($id);
+        return response()->json($user);
+        
     }
 }

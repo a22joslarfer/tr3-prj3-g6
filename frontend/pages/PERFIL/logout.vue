@@ -1,62 +1,57 @@
 <template>
-    <div>
-<HeaderPerfil :pageTitle="pageTitle"/>
-<!-- alert -->
-<div v-if="showAlert" class="alert">
-      <p>{{ alertMessage }}</p>
-      <button @click="hideAlert">Cerrar</button>
+  <div>
+    <div class="container">
+      <div class="title">Cerrar Sesión</div>
+      <button @click="logout" class="button">Cerrar Sesión</button>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-      data() {
-        return {
-          pageTitle: 'Cerrar Sesión', // Definir el título aquí en el objeto data
-          showAlert: false,
-          alertMessage: 'Este es un mensaje de alerta.'
-        }
-      },
-      methods: {
-        showCustomAlert(message) {
-      this.alertMessage = message;
-      this.showAlert = true;
-    },
-    hideAlert() {
-      this.showAlert = false;
+import { useStore } from '../stores/index.js';
+
+export default {
+  mounted() {
+    const store = useStore();
+    console.log(store); // Verifica que la tienda se esté utilizando correctamente
+  },
+  methods: {
+    logout() {
+      const store = useStore();
+      store.reset_booking_info();
+      localStorage.removeItem('token');
+      this.$router.push('/login');
     }
   }
-}
+};
 </script>
 
-
-<style lang="scss" scoped>
-
-.alert {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 10px;
-  margin: 20px 0;
-  border: 1px solid #f5c6cb;
-  border-radius: 5px;
+<style scoped>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #eff4f3;
 }
 
-.alert p {
-  margin: 0;
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.alert button {
-  margin-top: 5px;
-  padding: 5px 10px;
-  background-color: #dc3545;
-  color: white;
+.button {
+  width: 200px;
+  height: 50px;
   border: none;
-  border-radius: 3px;
+  border-radius: 25px;
+  background-color: #ff806d;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
-}
-
-.alert button:hover {
-  background-color: #c82333;
 }
 </style>

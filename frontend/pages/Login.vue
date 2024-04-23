@@ -3,10 +3,15 @@
     <HeaderGeneral />
 
     <div class="container">
-      <div class="title_company">VIAEGIS</div>
-      <img src="https://assets-global.website-files.com/65c3fe1a75ff7339cf9340fc/65eedf45bca711043f6c4887_earth-1465.webp" alt="Logo de la empresa" class="company-logo">
+      <img src="https://static.vecteezy.com/system/resources/previews/029/938/250/non_2x/planet-earth-globe-world-map-ai-generative-free-png.png" alt="Logo de la empresa" class="company-logo">
+
+      <div class="title_company">BIENVENIDO A VIAEGIS</div>
+      
 
       <div class="content">
+        <div class="login-link">
+        ¿Aún no tienes cuenta? <nuxt-link to="/register" class="boton_login">¡Regístrate!</nuxt-link>
+      </div>
         <div class="title">Iniciar Sesión</div>
         <form @submit.prevent="login" class="form">
           <div class="input-group">
@@ -17,96 +22,57 @@
           </div>
           <button type="submit" class="button">Iniciar Sesión</button>
         </form>
-        <div class="login-link">
-          ¿Aún no tienes cuenta? <a href="/register" class="boton_login">¡Regístrate!</a>
-        </div>
       </div>
     </div>
+    <FooterOptions />
   </div>
 </template>
+
+
+
 <script>
+import { useStore } from '../stores/index.js';
 export default {
   data() {
     return {
       email: '',
       password: '',
-      isLoading: false,
-      csrf: null
+
     };
   },
-  /*
-  
-  created() {
-      fetch('http://localhost:8000/api/csrf-token')
-          .then(response => response.text())  // Get the response text
-          .then(text => {
-              console.log('Response text:', text);  // Log the response text
-
-              // Try to parse the response text as JSON
-              try {
-                  const data = JSON.parse(text);
-                  this.csrf = data.token;
-                  console.log(this.csrf);
-              } catch (error) {
-                  console.error('Failed to parse response as JSON:', error);
-              }
-          });
-  },
-  
-  */
   methods: {
     login() {
-      this.isLoading = true;
+      fetch('http://localhost:8000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: this.email.trim(),
+          password: this.password.trim(),
 
-      // Fetch a new CSRF token
-      fetch('http://localhost:8000/api/csrf-token')
-        .then(response => response.text())
-        .then(text => {
-          try {
-            const data = JSON.parse(text);
-            this.csrf = data.token;
-            console.log('New CSRF token:', this.csrf);
-
-            // Perform the login request with the new CSRF token
-            return fetch('http://localhost:8000/api/login', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': this.csrf,
-              },
-              body: JSON.stringify({
-                email: this.email.trim(),
-                password: this.password.trim(),
-
-              }),
-            });
-          } catch (error) {
-            console.error('Failed to parse CSRF token response as JSON:', error);
-          }
-        })
+        }),
+      })
         .then(response => {
           if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            throw new Error(`Error al iniciar sesión: ${response.status} - ${response.statusText}`);
           }
           return response.json();
         })
         .then(data => {
-          console.log('Success:', data);
-
-          if (data.status === 1) {
-            localStorage.setItem('authToken', data.access_token);
-            console.log(data.access_token);
-            navigateTo('/');
-          } else {
-            alert('Inicio de sesión fallido. Verifica tus credenciales.');
-          }
+          console.log('Sesión iniciada correctamente:', data);
+          localStorage.setItem('token', data.token);
+          const store = useStore();
+          store.save_user_info(data.name, data.email, data.id);
+          console.log('Usuari:', store.return_user_username());
+          console.log('Email:', store.return_user_email());
+          console.log('Id:', store.return_user_id());
+          this.$router.push('/');
         })
         .catch(error => {
-          console.error('There has been a problem with your fetch operation:', error);
-        })
-        .finally(() => {
-          this.isLoading = false;
+          console.error('Error al iniciar sesión:', error);
         });
+
     },
   },
 };
@@ -114,6 +80,8 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap');
+
 .container {
   display: flex;
   justify-content: center;
@@ -122,12 +90,13 @@ export default {
   background-color: #eff4f3;
   position: relative;
 }
+
 .content {
-    width: 300px;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  margin-top: -66%;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
 }
 
 .title {
@@ -138,26 +107,24 @@ export default {
   text-align: center;
   font-family: "Antonio", sans-serif;
 }
-.title_company {
- /* arriba del todo en la pagina */
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20px;
-  text-align: center;
-  font-family: "Antonio", sans-serif;
-   /* ponerlo arriba del todo en la pagina */
-   position: absolute;
-    top: 15%;
 
+.title_company {
+  font-family: "Anybody", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+  position: absolute;
+  font-size: 20px;
+  top: 15%;
 }
+
 .company-logo {
-  max-width: 100px; /* ajusta el ancho según sea necesario */
-  margin: 0 auto; /* centrar la imagen */
-  display: block; /* asegurar que la imagen sea un bloque */
-  position: fixed;
-  top: 32%;
+  max-width: 100px;
+  width: 80px;
+  position: absolute;
+  top: 5%;
 }
+
 .form {
   width: 100%;
 }
@@ -169,11 +136,15 @@ export default {
 .input {
   width: 100%;
   height: 40px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f9f9f9;
+  border: 1px solid rgb(101, 101, 105);
+  border-radius: 12px;
   font-size: 16px;
   padding: 10px;
+}
+
+.input:focus {
+  border: 2px solid #f3634d;
+  outline: none;
 }
 
 .button {
@@ -192,6 +163,8 @@ export default {
   text-align: center;
   font-size: 16px;
   color: #333;
+  margin-bottom: 32%;
+    margin-top: 60px;
 }
 
 .login-link a {

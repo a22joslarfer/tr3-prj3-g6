@@ -22,11 +22,6 @@
         </div>
   
         <div class="input">
-          <label for="password2">Repetir contraseña:</label>
-          <input type="password" id="password2" class="user_info" v-model="password2" placeholder="********">
-        </div>
-  
-        <div class="input">
           <label for="birthdate">Fecha de nacimiento:</label>
           <input type="date" id="birthdate" class="user_info" v-model="birthdate">
         </div>
@@ -50,13 +45,15 @@
       return {
         pageTitle: 'Configuración de Perfil',
         username: '',
-        email: ''
+        email: '',
+        password: '',
+        birthdate: '',
+        phone: '',
         // Agrega más datos de configuración según sea necesario
       }
     },
     methods: {
       submitForm() {
-        // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
         console.log('Datos del formulario:', this.username, this.email);
         alert('Cambios guardados exitosamente');
       }

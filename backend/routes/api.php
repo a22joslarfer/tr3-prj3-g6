@@ -2,12 +2,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\discoController;
 use App\Http\Controllers\reviewController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\userController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\categoriasReviewController;
     
 
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES
+|--------------------------------------------------------------------------
+*/
 // RUTAS DE USUARIO
 Route::get('/csrf-token', function () {
     return csrf_token();
@@ -18,20 +23,23 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::post('login', 'App\Http\Controllers\AuthController@login');
-Route::post('register', 'App\Http\Controllers\AuthController@register');
 
-// Route::post('/login', [UserController::class, 'login']);
-// Route::post('/register', [UserController::class, 'register']);
 
+Route::post('login', [userController::class, 'login']);
+Route::post('register', [userController::class, 'register']);
 // ruta para obtener todos los usuarios
-Route::get('/users', [UserController::class, 'getUsers']);
+Route::get('/users', [userController::class, 'getUsers']);
 // ruta para crear un usuario
-Route::post('/users', [UserController::class, 'create']);
+Route::post('/users', [userController::class, 'create']);
 // ruta para borrar un usuario
-Route::delete('/users/{id}', [UserController::class, 'delete']);
+Route::delete('/users/{id}', [userController::class, 'delete']);
 // ruta para editar un usuario
-Route::put('/users/{id}', [UserController::class, 'update']);
+Route::put('/users/{id}', [userController::class, 'update']);
+//ruta para obtener un usuario por id
+Route::get('/users/{id}', [userController::class, 'getUser']);
+
+
+
 
 
 
@@ -71,4 +79,3 @@ Route::get('/reviews/user/{id}', [reviewController::class, 'getReviewsByUser']);
 Route::get('/reviews/disco/{id}', [reviewController::class, 'getReviewsByDisco']);
 // ruta para obtener las reviews por puntuacion
 Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getReviewsByPuntuacion']);
-

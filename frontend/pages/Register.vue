@@ -1,47 +1,33 @@
 <template>
     <div>
-        <HeaderGeneral />
-   
-    <div class="container">  
-        <div class="title_company">VIAEGIS</div>
-        <div class="content">
-            <div class="title">Únete a Viaegis</div>
-            <form @submit.prevent="register" class="form">
-                <div class="input-group">
+    
 
-                    <input type="text" v-model.trim="nombre" class="input" placeholder="Nombre Completo" required />
+        <div class="container">
+            <div class="title_company">VIAEGIS</div>
+            <div class="content">
+                <div class="title">Únete a Viaegis</div>
+                <form @submit.prevent="register" class="form">
+                    <div class="input-group">
+
+                        <input type="text" v-model.trim="name" class="input" placeholder="Nombre Completo" required />
+                    </div>
+                    <div class="input-group">
+                        <input type="email" v-model.trim="email" class="input" placeholder="Correo Electrónico"
+                            title="Por favor, introduce un correo electrónico válido" />
+                    </div>
+                    <div class="input-group">
+                        <input type="password" v-model.trim="password" class="input" placeholder="Contraseña" />
+                        <img src="" class="icon" alt="Lock Icon">
+                    </div>
+                  
+                    <button type="submit" class="button">Regístrate</button>
+                </form>
+                <div class="login-link">
+                    ¿Ya tienes cuenta? <a href="/login" class="boton_login">¡Inicia sesión!</a>
                 </div>
-                <div class="input-group">
-                    <input type="email" v-model.trim="email" class="input" placeholder="Correo Electrónico"
-                        title="Por favor, introduce un correo electrónico válido" />
-                </div>
-                <div class="input-group">
-                    <input type="password" v-model.trim="password" class="input" placeholder="Contraseña" />
-                    <img src="https://cdn-icons-png.freepik.com/512/2889/2889676.png" class="icon" alt="Lock Icon">
-                </div>
-                <div class="input-group">
-                    <input type="password" v-model.trim="password2" class="input" placeholder="Repetir Contraseña" />
-                </div>
-                <div class="input-group">
-                    <input type="date" v-model.trim="birthdate" class="input" placeholder="Fecha de Nacimiento"
-                        required />
-                </div>
-                <div class="input-group">
-                    <input type="tel" v-model.trim="phone" class="input" placeholder="Número de Teléfono" required
-                        pattern="\d{9}" title="El número de teléfono debe tener 9 dígitos" />
-                </div>
-                <div class="checkbox">
-                    <input type="checkbox" id="terms" v-model="acceptTerms" required />
-                    <label for="terms">Acepto las condiciones y términos</label>
-                </div>
-                <button type="submit" class="button">Regístrate</button>
-            </form>
-            <div class="login-link">
-                ¿Ya tienes cuenta? <a href="/login" class="boton_login">¡Inicia sesión!</a>
             </div>
         </div>
     </div>
-</div>
 
 </template>
 
@@ -52,13 +38,10 @@ export default {
     name: 'RegisterScreen',
     data() {
         return {
-            nombre: '',
+            name: '',
             email: '',
             password: '',
-            password2: '', // Add this line
-            birthdate: '', // Add this line
-            phone: '', // Add this line
-            acceptTerms: false, // Add this line
+       
         };
     },
 
@@ -70,12 +53,10 @@ export default {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    nombre: this.nombre.trim(),
+                    name: this.name.trim(),
                     email: this.email.trim(),
                     password: this.password.trim(),
-                    birthdate: this.birthdate, // Include birthdate
-                    phone: this.phone, // Include phone
-                    password2: this.password2, // Include password2
+                   
                 }),
             })
                 .then(response => {
