@@ -1,18 +1,20 @@
 <template>
-  <div>
-    <HeaderGeneral />
+  <HeaderGeneral />
 
-    <div class="container">
-      <img src="https://static.vecteezy.com/system/resources/previews/029/938/250/non_2x/planet-earth-globe-world-map-ai-generative-free-png.png" alt="Logo de la empresa" class="company-logo">
+  <div class="login-container">
 
-      <div class="title_company">BIENVENIDO A VIAEGIS</div>
-      
-
-      <div class="content">
-        <div class="login-link">
-        ¿Aún no tienes cuenta? <nuxt-link to="/register" class="boton_login">¡Regístrate!</nuxt-link>
+    <div class="content">
+      <div class="company-info">
+        <img
+          src="https://static.vecteezy.com/system/resources/previews/029/938/250/non_2x/planet-earth-globe-world-map-ai-generative-free-png.png"
+          alt="Logo de la empresa" class="company-logo">
+        <div class="title_company">BIENVENIDO A VIAEGIS</div>
       </div>
-        <div class="title">Iniciar Sesión</div>
+
+      <div class="login-form">
+        <div class="login-link">
+          ¿Aún no tienes cuenta? <nuxt-link to="/register" class="boton_login">¡Regístrate!</nuxt-link>
+        </div>
         <form @submit.prevent="login" class="form">
           <div class="input-group">
             <input type="text" v-model.trim="email" class="input" placeholder="Correo Electrónico" required />
@@ -22,13 +24,21 @@
           </div>
           <button type="submit" class="button">Iniciar Sesión</button>
         </form>
+        <div class="sc-18d118e1-0 gjmkph">
+          <hr class="sc-1a86d6e9-0 doHtqb"><span class="sc-7b9b9acb-0 bMZrBT">or</span>
+          <hr class="sc-1a86d6e9-0 doHtqb">
+        </div>
+        <div>
+    <button id="signinButton" class="google-signin-button">
+      <img src="../public/google_icon.png" alt="Google Logo" class="google-logo"> Iniciar sesión con Google
+    </button>
+  </div>
       </div>
     </div>
+
     <FooterOptions />
   </div>
 </template>
-
-
 
 <script>
 import { useStore } from '../stores/index.js';
@@ -75,37 +85,35 @@ export default {
 
     },
   },
-};
-</script>
+  }
 
+</script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap');
 
-.container {
+.login-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
   background-color: #eff4f3;
-  position: relative;
+
 }
 
 .content {
-  width: 300px;
-  margin-top: -66%;
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
+  width: 100%;
+  max-width: 600px;
+  /* Controla el ancho máximo del contenido */
+  padding: 20px;
 }
 
-.title {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20px;
+.company-info {
   text-align: center;
-  font-family: "Antonio", sans-serif;
+  margin-bottom: 15px;
+}
+
+.company-logo {
+  max-width: 100px;
+  width: 80px;
 }
 
 .title_company {
@@ -113,20 +121,22 @@ export default {
   font-optical-sizing: auto;
   font-weight: 800;
   font-style: normal;
-  position: absolute;
   font-size: 20px;
-  top: 15%;
 }
 
-.company-logo {
-  max-width: 100px;
-  width: 80px;
-  position: absolute;
-  top: 5%;
+.login-form {
+  text-align: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
 .form {
   width: 100%;
+  margin-top: 50px;
 }
 
 .input-group {
@@ -135,7 +145,7 @@ export default {
 
 .input {
   width: 100%;
-  height: 40px;
+  height: 8vh;
   border: 1px solid rgb(101, 101, 105);
   border-radius: 12px;
   font-size: 16px;
@@ -148,23 +158,19 @@ export default {
 }
 
 .button {
-  width: 100%;
-  height: 50px;
-  border: none;
-  border-radius: 25px;
-  background-color: #ff806d;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
+  width: 47%;
+    height: 50px;
+    border: none;
+    border-radius: 25px;
+    background-color: #ff806d;
+    color: white;
+    font-size: 18px;
 }
 
 .login-link {
-  text-align: center;
   font-size: 16px;
   color: #333;
-  margin-bottom: 32%;
-    margin-top: 60px;
+  margin-bottom: 20px;
 }
 
 .login-link a {
@@ -175,5 +181,40 @@ export default {
 .login-link a:hover {
   text-decoration: underline;
   color: #062897;
+}
+
+.gjmkph {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+.doHtqb {
+    border-top: 0.5px solid rgb(205, 214, 223);
+    border-bottom: 0.5px solid rgb(205, 214, 223);
+    width: 64px;
+}
+
+.bMZrBT {
+    display: block;
+    text-transform: uppercase;
+    margin: 0px 12px;
+    color: rgb(105, 119, 134);
+    padding: 24px 12px;
+    font-size: 0.75rem;
+    letter-spacing: 0px;
+    line-height: 1.5;
+    font-weight: 600;
+}
+.google-logo{
+  width: 20px;
+  margin-right: 10px;
+}
+.google-signin-button{
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 16px;
+  
 }
 </style>
