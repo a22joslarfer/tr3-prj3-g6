@@ -76,7 +76,7 @@ class UserController extends Controller
     {
        
         $user = new User([
-            'name' => $request->input('nombre'),
+            'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
             'api_token' => Str::random(60), 
@@ -122,5 +122,12 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(['message' => 'Logged out']);
+    }
+
+    public function getUser($id)
+    {
+        $user = User::find($id);
+        return response()->json($user);
+        
     }
 }

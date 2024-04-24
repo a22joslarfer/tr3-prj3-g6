@@ -13,6 +13,7 @@
         <button class='boton anterior' @click="prevElement">&lt;</button>
         <button class='boton siguiente' @click="nextElement">&gt;</button>
       </nav>
+      <FooterOptions />
     </div>
   </template>
   
