@@ -48,13 +48,17 @@
 <script>
 
 export default {
+
+    name: 'RegisterScreen',
     data() {
         return {
             name: '',
             email: '',
             password: '',
+
         };
     },
+
     methods: {
         register() {
             fetch('http://localhost:8000/api/register', {
@@ -66,6 +70,7 @@ export default {
                     name: this.name.trim(),
                     email: this.email.trim(),
                     password: this.password.trim(),
+
                 }),
             })
                 .then(response => {
@@ -83,7 +88,17 @@ export default {
                     }
                 })
                 .then(data => {
+
                     if (data.error) {
+                        localStorage.setItem('authToken', data.access_token);
+                        // Almacena solo la información necesaria del usuario
+                        localStorage.setItem('user', JSON.stringify({
+                            nombre: data.user.nombre,
+                            email: data.user.email,
+                            token: data.access_token,
+
+                        }));
+
                         alert(data.error);
                     } else {
                         alert('Usuario registrado correctamente!');

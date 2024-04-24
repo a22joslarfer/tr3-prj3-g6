@@ -20,7 +20,7 @@
                         <p>Horario: {{ pin_seleccionado.horario }}</p>
                         <p>Telefono: {{ pin_seleccionado.telefono }}</p>
                         <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
-                        <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">
+                        <NuxtLink :to="'/' + pin_seleccionado.id" class="btn-create-review">
                             Crear Reseña</NuxtLink>
 
 
@@ -40,7 +40,7 @@
 import FooterOptions from '@/components/FooterOptions.vue';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-
+import { useStore } from '~/stores';
 export default {
     components: {
         FooterOptions,
@@ -366,18 +366,13 @@ export default {
 
 
 
-<style scoped>
+<style>
 @import url('https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css');
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap');
 
 * {
-    box-sizing: border-box;
-    font-family: "Antonio", sans-serif;
-    margin: 0;
-    padding: 0px;
     overflow: hidden;
-
 }
 
 :root {
@@ -401,6 +396,7 @@ export default {
 }
 
 
+
 * {
     margin: 0;
     padding: 0;
@@ -411,7 +407,7 @@ export default {
 .navbar {
     width: 100%;
     height: 150px;
-    background-color: whitesmoke;
+    background-color: var(--base);
 }
 
 .navbar ul {
@@ -421,9 +417,8 @@ export default {
     list-style: none;
     height: 100%;
     color: var(--blanco);
-    
+    margin-left: 10%;
 }
-
 
 .navbar>ul>li {
     font-size: 60px;
@@ -478,15 +473,18 @@ export default {
     flex-direction: column;
     text-align: center;
 }
-p{
+
+p {
     margin: 5px;
 }
-.card{
+
+.card {
     background-color: var(--base2);
     background-color: hsl(354deg 2.71% 13.94%);
     color: #fff6f6;
     border-radius: 16px;
 }
+
 .info-card {
     position: absolute;
     top: 50%;
@@ -604,6 +602,6 @@ h3 {
 
     font-weight: 900;
 
-    
+
 }
 </style>

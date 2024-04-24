@@ -42,10 +42,13 @@
 
       <button type="submit" class="btn btn-primary">Submit Review</button>
     </form>
+    <FooterOptions />
   </div>
+  
 </template>
 
 <script>
+import { useStore } from '../stores/index.js';
 export default {
   data() {
     return {
