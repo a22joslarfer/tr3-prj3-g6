@@ -208,13 +208,13 @@ export default {
 }
 
 .login-link a {
-    color: #053cf1;
+    color: #f1693f;
     text-decoration: underline;
 }
 
 .login-link a:hover {
     text-decoration: underline;
-    color: #062897;
+    color: #a34427;
 }
 
 .gjmkph {

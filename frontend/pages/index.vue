@@ -40,7 +40,6 @@
 import FooterOptions from '@/components/FooterOptions.vue';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { useStore } from '~/stores';
 export default {
     components: {
         FooterOptions,

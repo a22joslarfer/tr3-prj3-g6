@@ -3,17 +3,17 @@
     <form @submit.prevent="submitReview" class="form">
 
       <div class="form-group">
-        <label for="titulo">Title:</label>
-        <input type="text" id="titulo" v-model="titulo" class="form-control" required>
+        <label for="titulo" class="texto">TITULO</label>
+        <input type="text" id="titulo" v-model="titulo" class="form-control" required placeholder="Titulo de la reseña...">
       </div>
 
       <div class="form-group">
-        <label for="content">Content:</label>
-        <textarea id="content" v-model="content" class="form-control" required></textarea>
+        <label for="content" class="texto">CONTENIDO</label>
+        <textarea id="content" v-model="content" class="form-control" required placeholder="Contenido de la reseña..."></textarea>
       </div>
 
       <div class="form-group">
-        <label for="categoria">Category:</label>
+        <label for="categoria" class="texto">CATEGORIA</label>
         <select id="categoria" v-model="categoria" class="form-control" required>
           <option v-for="categoria in categorias_reviews" :key="categoria.nombre" :value="categoria.id">
             {{ categoria.nombre }}
@@ -24,23 +24,21 @@
 
 
       <div class="form-group">
-        <label for="puntuacion">Rating:</label>
+        <label for="puntuacion" class="texto">PUNTUACIÓN</label>
         <input type="number" id="puntuacion" v-model="puntuacion" class="form-control" required>
       </div>
 
 
       <div class="form-group">
-        <label for="photo">Photo:</label>
+        <label for="photo" class="texto">FOTO</label>
         <div class="dropzone">
           <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file"
-            accept="image/*">
-          <div class="dropzone-text" @click="openFileInput">
-
-          </div>
+            accept="image/*" >
+           
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary">Submit Review</button>
+      <button type="submit" class="btn btn-primary">Enviar reseña</button>
     </form>
     <FooterOptions />
   </div>
@@ -148,9 +146,22 @@ label {
   font-weight: bold;
 }
 
-
-
-
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+textarea{
+  resize: none;
+}
+.texto{
+  font-family: 'Anybody', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+}
 input[type="text"],
 input[type="number"],
 textarea {
@@ -159,6 +170,7 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+  margin-top: 10px;
 }
 
 textarea {
@@ -190,6 +202,7 @@ textarea {
   border-radius: 4px;
   padding: 20px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 .dropzone-text {
