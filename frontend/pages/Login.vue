@@ -70,14 +70,15 @@ export default {
           return response.json();
         })
         .then(data => {
-          console.log('Sesión iniciada correctamente:', data);
-          localStorage.setItem('token', data.token);
-          const store = useStore();
-          store.save_user_info(data.name, data.email, data.id);
-          console.log('Usuari:', store.return_user_username());
-          console.log('Email:', store.return_user_email());
-          console.log('Id:', store.return_user_id());
-          this.$router.push('/');
+          console.log('Success:', data);
+
+          if (data.status === 1) {
+            localStorage.setItem('authToken', data.access_token);
+            console.log(data.access_token);
+            navigateTo('/');
+          } else {
+            alert('Inicio de sesión fallido. Verifica tus credenciales.');
+          }
         })
         .catch(error => {
           console.error('Error al iniciar sesión:', error);
@@ -88,133 +89,7 @@ export default {
   }
 
 </script>
+
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap');
 
-.login-container {
-  display: flex;
-  min-height: 100vh;
-  background-color: #eff4f3;
-
-}
-
-.content {
-  width: 100%;
-  max-width: 600px;
-  /* Controla el ancho máximo del contenido */
-  padding: 20px;
-}
-
-.company-info {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.company-logo {
-  max-width: 100px;
-  width: 80px;
-}
-
-.title_company {
-  font-family: "Anybody", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 800;
-  font-style: normal;
-  font-size: 20px;
-}
-
-.login-form {
-  text-align: center;
-}
-
-.title {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.form {
-  width: 100%;
-  margin-top: 50px;
-}
-
-.input-group {
-  margin-bottom: 20px;
-}
-
-.input {
-  width: 100%;
-  height: 8vh;
-  border: 1px solid rgb(101, 101, 105);
-  border-radius: 12px;
-  font-size: 16px;
-  padding: 10px;
-}
-
-.input:focus {
-  border: 2px solid #f3634d;
-  outline: none;
-}
-
-.button {
-  width: 47%;
-    height: 50px;
-    border: none;
-    border-radius: 25px;
-    background-color: #ff806d;
-    color: white;
-    font-size: 18px;
-}
-
-.login-link {
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.login-link a {
-  color: #053cf1;
-  text-decoration: underline;
-}
-
-.login-link a:hover {
-  text-decoration: underline;
-  color: #062897;
-}
-
-.gjmkph {
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    justify-content: center;
-}
-.doHtqb {
-    border-top: 0.5px solid rgb(205, 214, 223);
-    border-bottom: 0.5px solid rgb(205, 214, 223);
-    width: 64px;
-}
-
-.bMZrBT {
-    display: block;
-    text-transform: uppercase;
-    margin: 0px 12px;
-    color: rgb(105, 119, 134);
-    padding: 24px 12px;
-    font-size: 0.75rem;
-    letter-spacing: 0px;
-    line-height: 1.5;
-    font-weight: 600;
-}
-.google-logo{
-  width: 20px;
-  margin-right: 10px;
-}
-.google-signin-button{
-  border-radius: 25px;
-  padding: 10px 20px;
-  font-size: 16px;
-  
-}
 </style>

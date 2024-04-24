@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\reviewModel;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class reviewController extends Controller
 {
@@ -12,36 +14,47 @@ class reviewController extends Controller
     public function createReview(Request $request)
     {
         $request->validate([
-            'usuario_id' => '',
+            'usuario_id' => 'required',
             'disco_id' => 'required',
             'titulo' => 'required',
             'content' => 'required',
             'puntuacion' => 'required',
-            'photo' => '|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048|required',
+            'categoria' => 'required',
         ]);
 
-        $review = new reviewModel;
-        $review->usuario_id = $request->usuario_id;
-        $review->disco_id = $request->disco_id;
-        $review->titulo = $request->titulo;
-        $review->content = $request->content;
-        $review->puntuacion = $request->puntuacion;
+        try {
+            $review = new ReviewModel;
+            $review->usuario_id = $request->usuario_id;
+            $review->disco_id = $request->disco_id;
+            $review->titulo = $request->titulo;
+            $review->content = $request->content;
+            $review->puntuacion = $request->puntuacion;
+            $review->categoria = $request->categoria;
 
-        $photoPath = $request->file('photo')->store('photos', 'public');
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('photos', 'public');
+                $review->photo = $photoPath;
+            }
 
-        $review->photo = $photoPath;
+            $review->save();
 
-        $review->save();
+            return response()->json($review);
+        } catch (\Exception $e) {
+            // Log the error for debugging purposes
+            Log::error('Error creating review: ' . $e->getMessage());
 
-        return response()->json($review);
+            // Return a generic error response
+            return response()->json(['error' => 'An error occurred while creating the review.'], 500);
+        }
     }
+
+
     public function getReviews()
     {
         $reviews = reviewModel::all();
 
         return response()->json($reviews);
-
-
     }
     public function getReview($id)
     {
@@ -51,7 +64,7 @@ class reviewController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'usuario_id' => '',
+            'usuario_id' => 'required',
             'disco_id' => 'required',
             'titulo' => 'required',
             'content' => 'required',
@@ -93,8 +106,4 @@ class reviewController extends Controller
         $reviews = reviewModel::where('puntuacion', $puntuacion)->get();
         return response()->json($reviews);
     }
-
-
-
-
 }

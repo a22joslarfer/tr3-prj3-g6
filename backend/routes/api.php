@@ -3,7 +3,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\discoController;
 use App\Http\Controllers\reviewController;
 use App\Http\Controllers\userController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\categoriasReviewController;
     
@@ -35,11 +34,6 @@ Route::post('/users', [userController::class, 'create']);
 Route::delete('/users/{id}', [userController::class, 'delete']);
 // ruta para editar un usuario
 Route::put('/users/{id}', [userController::class, 'update']);
-//ruta para obtener un usuario por id
-Route::get('/users/{id}', [userController::class, 'getUser']);
-
-
-
 
 
 
@@ -83,3 +77,4 @@ Route::get('/reviews/user/{id}', [reviewController::class, 'getReviewsByUser']);
 Route::get('/reviews/disco/{id}', [reviewController::class, 'getReviewsByDisco']);
 // ruta para obtener las reviews por puntuacion
 Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getReviewsByPuntuacion']);
+
