@@ -175,7 +175,7 @@ export default {
 
 .login-link a {
   color: #053cf1;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 .login-link a:hover {
