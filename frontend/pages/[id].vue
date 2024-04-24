@@ -1,8 +1,6 @@
 <template>
   <div class="container">
     <form @submit.prevent="submitReview" class="form">
-      <input type="hidden" v-model="disco_id">
-      <input type="hidden" v-model="usuario_id">
 
       <div class="form-group">
         <label for="titulo">Title:</label>
@@ -29,6 +27,7 @@
         <label for="puntuacion">Rating:</label>
         <input type="number" id="puntuacion" v-model="puntuacion" class="form-control" required>
       </div>
+
 
       <div class="form-group">
         <label for="photo">Photo:</label>
@@ -62,19 +61,23 @@ export default {
   },
   methods: {
     submitReview() {
-      const formData = new FormData();
-      formData.append('disco_id', this.disco_id);
-      formData.append('usuario_id', this.usuario_id);
-      formData.append('titulo', this.titulo);
-      formData.append('content', this.content);
-      formData.append('puntuacion', this.puntuacion);
-      if (this.photo) {
-        formData.append('photo', this.photo);
-      }
+      let data = {
+        disco_id: this.disco_id,
+        usuario_id: this.usuario_id,
+        titulo: this.titulo,
+        content: this.content,
+        puntuacion: this.puntuacion,
+        photo: this.photo,
+        categoria: this.categoria,
+      };
 
       fetch('http://localhost:8000/api/reviews', {
         method: 'POST',
-        body: formData
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
       })
         .then(response => {
           if (!response.ok) {
@@ -86,7 +89,7 @@ export default {
 
         })
         .catch(error => {
-          // Handle error if needed
+          alert('Error submitting review: ' + error.message);
         });
     },
     handleFileUpload(event) {
@@ -206,12 +209,14 @@ textarea {
   -moz-appearance: none;
   background-color: #fff;
   cursor: pointer;
-  padding-right: 30px; /* Add space for the arrow */
+  padding-right: 30px;
+  /* Add space for the arrow */
 }
 
 /* Style the arrow icon */
 .select-wrapper:after {
-  content: '\25BC'; /* Downward arrow */
+  content: '\25BC';
+  /* Downward arrow */
   font-size: 16px;
   position: absolute;
   top: 50%;
@@ -223,14 +228,17 @@ textarea {
 /* Apply hover and focus styles to the select dropdown */
 .select-wrapper:hover select,
 .select-wrapper select:focus {
-  border-color: #b8daff; /* Light blue border color on hover/focus */
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Light blue shadow on hover/focus */
+  border-color: #b8daff;
+  /* Light blue border color on hover/focus */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  /* Light blue shadow on hover/focus */
 }
 
 /* Style select options */
 .select-wrapper select option {
   padding: 10px;
 }
+
 /* Estilos para las opciones del select */
 .select-wrapper select option {
   padding: 10px;

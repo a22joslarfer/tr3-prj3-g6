@@ -3,7 +3,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\discoController;
 use App\Http\Controllers\reviewController;
 use App\Http\Controllers\userController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\categoriasReviewController;
     
@@ -86,3 +85,6 @@ Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getRev
 Route::get('/categorias_reviews', [categoriasReviewController::class, 'getCategorias']);
 // ruta para obtener una categoria por nombre
 Route::get('/categorias_reviews/{nombre}', [categoriasReviewController::class, 'getCategoria']);
+
+
+
