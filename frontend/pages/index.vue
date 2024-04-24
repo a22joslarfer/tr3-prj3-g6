@@ -1,7 +1,6 @@
 <template>
     <div>
         <HeaderGeneral />
-        <div class="subtitle">DESCUBRE LAS DISCOTECAS DEL MUNDO</div>
     <div class="container">
         <div id="buscador"></div>
 
@@ -395,6 +394,7 @@ export default {
     justify-content: center;
     text-decoration: none;
     margin-top: 40px;
+    animation: pulse 1s infinite;
 }
 
 * {
@@ -480,6 +480,12 @@ export default {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
     animation: fade-in 0.5s ease-in-out;
 }
+.card-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        animation: slideInLeft 1s ease-in-out;
+    }
 
 .card-closer {
     cursor: pointer;
@@ -502,6 +508,11 @@ export default {
     font-size: 2vw;
     color: var(--base);
 }
+.audio-player {
+        width: 100%;
+        margin-top: 20px;
+        animation: slideInRight 1s ease-in-out;
+    }
 
 .card-body {
     text-align: justify;
@@ -547,7 +558,18 @@ export default {
 
 
 /* Estilos searchbar nav */
-
+.map-container {
+        height: 100%;
+        width: 100%;
+        animation: fadeIn 1s ease-in-out;
+    }
+.mapboxgl-map{
+    position:relative;
+    width: 100%;
+    height: 100%;
+    top:-100px;
+    background-color: #f0f1f1;
+}
 .mapboxgl-ctrl-geocoder {
     position: absolute;
     bottom:110px;
@@ -556,7 +578,6 @@ export default {
     width: auto;
     height: auto;
     border-radius: 10px;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -565,8 +586,9 @@ export default {
 }
 
 .mapboxgl-ctrl-geocoder input[type="text"] {
-    background-color:rgba(134, 95, 95, 0);
-    border-radius: 1px;
+    background-color:rgb(255, 255, 255);
+    border-radius: 30px;
+    border:1px solid rgb(101,101,105);
     padding: 10px;
     margin-left:17px;
 }
@@ -586,12 +608,8 @@ export default {
     color: var(--base);
 
 }
-.mapboxgl-canvas{
-    top:-100px;
-    left:0;
-    background-color: #f0f1f1;
 
-}
+
 .mapboxgl-ctrl-geocoder .suggestions li {
     list-style: none;
     padding: 10px;
@@ -621,4 +639,46 @@ export default {
     display: none !important;
 }
 
+@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            transform: translateX(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
 </style>

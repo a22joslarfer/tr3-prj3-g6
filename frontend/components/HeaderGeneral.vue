@@ -6,6 +6,9 @@
           <!-- Aquí puedes colocar tu logo -->
           <img src="../public/copas.png" alt="Logo">
         </div>
+        <div class="name">
+          <h2>VIAEGIS</h2>
+        </div>
         <div class="menu-activador">
           <input type="checkbox" id="lanzador" @click="toggleMenu" />
           <label for="lanzador">
@@ -57,9 +60,12 @@ body, html {
   padding: 25px 0;
   margin-left: 1px;
   width: 100%;
-  position: fixed; /* Fijar el header */
   top: 0; /* Posicionarlo en la parte superior */
   z-index: 10001; /* Asegurarse de que esté por encima del resto del contenido */
+  display: flex;
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  margin-top: -17px;
 }
 
 .container {
@@ -67,20 +73,30 @@ body, html {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  height: 25px;
-  margin-left: 20px;
+  height: 70px;
+  width: 100%;
+  max-width: 1200px; /* Ancho máximo del contenedor */
+  padding: 0 20px; /* Espaciado interno */
+}
+
+.name h2 {
+  margin: 0; /* Eliminar el margen */
+  font-size: 60px; /* Aumentar el tamaño de la fuente */
+  font-weight: bold; /* Añadir negrita */
+  color: #333; /* Cambiar el color del texto */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Añadir sombra al texto */
+  letter-spacing: 2px; /* Añadir espaciado entre letras */
+  text-transform: uppercase; /* Convertir a mayúsculas */
 }
 
 .logo img {
   height: 60px;
-  transform: translateY(-25%);
 }
 
 .menu-activador {
   width: 30px;
   height: 20px;
-  margin-left: 50px;
-  margin: -30px 50px 0; /* Ajuste en el margen-top */
+  margin-left: 20px; /* Ajuste en el margen izquierdo */
 }
 
 #lanzador {
@@ -122,7 +138,7 @@ label {
 /* Estilos del menú desplegable */
 .menu-desplegable {
   position: fixed; /* Fijar el menú desplegable */
-  top: 70px; /* Altura del header */
+  top: 118px; /* Altura del header */
   left: 0;
   width: 100%;
   height: calc(100% - 70px); /* Restar el alto del header */
@@ -159,6 +175,7 @@ label {
   color: #000;
   font-size: 18px;
 }
+
 .mapboxgl-ctrl-geocoder {
   position: absolute;
   top: 10px; /* Ajusta la posición vertical según lo necesites */
