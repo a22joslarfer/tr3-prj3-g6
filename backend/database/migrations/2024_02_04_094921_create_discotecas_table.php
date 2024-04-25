@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,6 +20,7 @@ return new class extends Migration
             $table->string('horario');
             $table->string('nombre_local');
             $table->string('telefono');
+            $table->string('canciones_url')->nullable(); // Nuevo campo para la URL de las canciones
             $table->timestamps();
         });
     }

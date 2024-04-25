@@ -1,50 +1,55 @@
 <template>
-    <div>
-        <HeaderGeneral />
     <div class="container">
+
+        <nav class="navbar">
+            <ul>
+                <li></li>
+                <li><nuxt-link to="/">INICIO</nuxt-link></li>
+                <li><nuxt-link to="/explorar">EXPLORAR</nuxt-link></li>
+                <li><nuxt-link to="/PERFIL/main">PERFIL</nuxt-link></li>
+                <li><nuxt-link to="/Register">LOGIN/REGISTRARSE</nuxt-link></li>
+
+            </ul>
+        </nav>
         <div id="buscador"></div>
 
-        <div id="buscador"></div>
+        <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
 
-<div id="map" ref="map" style="height: 100%; width: 100%;"></div>
-
-<div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
-    <div class="card">
-        <div class="card-header">
-            <h3>{{ pin_seleccionado.titulo }}</h3>
-            <div class="card-closer" @click="cerrarPopUp">X</div>
-        </div>
-        <div class="card-body">
-<img :src="pin_seleccionado.imgUrl" alt="imagen de la discoteca"
-style="width: 100%; height: 200px; object-fit: cover;">
-
-<p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
-<p>Horario: {{ pin_seleccionado.horario }}</p>
-<p>Telefono: {{ pin_seleccionado.telefono }}</p>
-<p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
-<audio :src="pin_seleccionado.cancion_mp3" controls></audio>
-                        <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
-                    </div>
+        <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{{ pin_seleccionado.titulo }}</h3>
+                    <div class="card-closer" @click="cerrarPopUp">X</div>
                 </div>
-            </div>
-        </div>       
-        <FooterOptions />
-    </div>
+                <div class="card-body">
+    <img :src="pin_seleccionado.imgUrl" alt="imagen de la discoteca"
+        style="width: 100%; height: 200px; object-fit: cover;">
 
+    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
+    <p>Horario: {{ pin_seleccionado.horario }}</p>
+    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
+    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+    <audio :src="pin_seleccionado.cancion_mp3" controls></audio>
+    
+    <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
+</div>
+            </div>
+        </div>
+        <footer>
+
+        </footer>
+    </div>
 </template>
 
-
-
+  
+  
 
 <script>
-import FooterOptions from '@/components/FooterOptions.vue';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { useStore } from '~/stores';
+
 export default {
-    components: {
-        FooterOptions,
-    },
+
     head() {
         return {
             link: [
@@ -62,18 +67,18 @@ export default {
             punto_de_interes_seleccionado: false,
             map: null,
             arr_puntos_de_interes: [],
+            marker: null,
             data: [],
-            pin_seleccionado: null,
-            uploadedSongUrl: null,
             icono_llevar_a_barcelona: null,
             supercluster: null,
+            pin_seleccionado: null,
+            uploadedSongUrl: null,
 
         };
     },
     mounted() {
         this.fetchData();
         this.initMapaDatosMapBox();
-        this.rotarMapa();
 
         Notification.requestPermission().then((permission) => {
             if (permission === "granted") {
@@ -142,7 +147,7 @@ export default {
             console.error('Error:', error);
         }
     },
-        async fetchData() {
+    async fetchData() {
     const response = await fetch('http://localhost:8000/api/discotecas');
     const data = await response.json();
 
@@ -164,13 +169,13 @@ export default {
     this.añadir_popup_info_de_las_discos();
 },
         initMapaDatosMapBox() {
-            mapboxgl.accessToken = 'pk.eyJ1IjoiaHVnb3RyaXBpYW5hIiwiYSI6ImNsczFueDBieDBiYngybG1rb2g4bGIyNW0ifQ.EECPYp9RZ_JIpjmlvyy2Hw';
+            mapboxgl.accessToken = 'pk.eyJ1IjoiYTIyam9zbGFyZmVyIiwiYSI6ImNsczIwdDY5YTBldncyc21rbmI4cnVjY3oifQ.mWjSoIuuwJmMG0EFCU_gEA';
 
             this.map = new mapboxgl.Map({
                 container: this.$refs.map,
-                style: 'mapbox://styles/hugotripiana/cls1o5thk00xv01pl13ze6ks0',
+                style: 'mapbox://styles/a22joslarfer/cls1zcyoh013v01qy03s63ok6',
                 center: [2.0947632393357907, 39.35567342431939],
-                zoom: 0,
+                zoom: 5,
             });
 
             var geocoder = new MapboxGeocoder({
@@ -179,12 +184,12 @@ export default {
             });
 
             this.map.addControl(geocoder);
-        this.$nextTick(() => {
-            var geocoderElement = document.querySelector('.mapboxgl-ctrl-geocoder');
-            var searchBar = document.getElementById('buscador');
-            searchBar.appendChild(geocoderElement);
-        });
-    },
+            this.$nextTick(() => {
+                var geocoderElement = document.querySelector('.mapboxgl-ctrl-geocoder');
+                var searchBar = document.getElementById('buscador');
+                searchBar.appendChild(geocoderElement);
+            });
+        },
         crear_mostrar_pines_discos() {
 
             if (this.map.getSource('points')) {
@@ -366,23 +371,12 @@ export default {
 };
 
 </script>
-
+  
 
 
 <style>
 @import url('https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css');
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@700&display=swap');
-.subtitle {
-    font-family: "Anybody", sans-serif;
-    font-size: 25px;
-    font-optical-sizing: auto;
-    font-weight: 800; /* Puedes ajustar este valor según lo necesites */
-    font-style: normal;
-    font-variation-settings: "wdth" 100;
-    text-align: center;
-    text-transform: uppercase;
-    background-color:#f0f1f1
-}
 
 .btn-create-review {
     background-color: var(--verde);
@@ -396,7 +390,6 @@ export default {
     justify-content: center;
     text-decoration: none;
     margin-top: 40px;
-    animation: pulse 1s infinite;
 }
 
 * {
@@ -411,7 +404,7 @@ export default {
     --azul: hsl(226, 64%, 58%);
     --blanco: hsl(0, 0%, 100%);
     --base2: hsl(354, 9%, 5%);
-    --verde2: hsl(0, 0%, 100%);
+    --verde2: hsl(124, 9%, 32%);
     --naranja: hsl(32, 85%, 76%);
     --carne2: hsl(32, 70%, 89%);
     --rojo: hsl(0, 84%, 15%);
@@ -423,7 +416,13 @@ export default {
     min-width: 100vw;
 }
 
-
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background-color: var(--base);
+}
 
 * {
     margin: 0;
@@ -482,17 +481,11 @@ export default {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
     animation: fade-in 0.5s ease-in-out;
 }
-.card-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        animation: slideInLeft 1s ease-in-out;
-    }
 
 .card-closer {
     cursor: pointer;
     font-size: 2vw;
-    color: var(--carne2);
+    color: var(--base);
     transition: color 0.2s ease-in-out;
 }
 
@@ -502,108 +495,59 @@ export default {
 
 .card-header {
     display: flex;
-    background-color: var(--base2);
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: var(--verde2);
     border-radius: 5px 5px 0 0;
-    padding: 7px;
-    font-size: 6vw;
-    color: var(--blanco);
-    flex-direction: column;
-    align-content: space-around;
-    flex-wrap: wrap;
+    padding: 10px;
+    font-size: 2vw;
+    color: var(--base);
 }
-.audio-player {
-        width: 100%;
-        margin-top: 20px;
-        animation: slideInRight 1s ease-in-out;
-    }
 
 .card-body {
-    line-height: 1.1;
-    font-size: 5vw;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-}
-.carousel-container {
-    margin-top: 20px;
-    width: 100%;
-    overflow: hidden;
-}
-
-.carousel-image {
-    width: 100%;
-    height: auto;
-}
-
-p {
-    margin: 5px;
-}
-
-.card {
-    background-color: var(--base2);
-    background-color: hsl(354deg 2.71% 13.94%);
-    color: #fff6f6;
-    border-radius: 16px;
-}
-
-.info-card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    text-align: justify;
     padding: 20px;
-    width: 400px;
-    animation: fade-in 0.5s ease-in-out;
-
+    line-height: 1.1;
+    font-size: 1.2vw;
 }
 
-.btn-create-review {
-    background-color: var(--base2);
-    display: flex;
-    border-radius: 8px;
-    color: var(--blanco);
-    font-size: 1.5rem;
-    padding: 1rem 2rem;
-    text-align: center;
-    width: 100%;
-    justify-content: center;
-    text-decoration: none;
-    margin-top: 40px;
-}
-
-
-@keyframes fade-in {
-    from {
-        opacity: 0;
+@media only screen and (max-width: 768px) {
+    .navbar {
+        font-size: 20px;
+        height: 100px;
     }
 
-    to {
-        opacity: 1;
+    .navbar ul li {
+        font-size: 30px;
+    }
+
+    .info-card {
+        top: 105px;
+        right: 10px;
+        max-width: 350px;
+    }
+
+    .card-header>h3 {
+        font-size: 30px;
+    }
+
+    .card-body {
+        font-size: 20px;
     }
 }
 
 
 /* Estilos searchbar nav */
-.map-container {
-        height: 100%;
-        width: 100%;
-        animation: fadeIn 1s ease-in-out;
-    }
-.mapboxgl-map{
-    position:relative;
-    width: 100%;
-    height: 100%;
-    top:-100px;
-    background-color: #f0f1f1;
-}
+
 .mapboxgl-ctrl-geocoder {
     position: absolute;
-    bottom:110px;
-    left: 100px;
+    top: 40px;
+    left: 10px;
     z-index: 1000;
     width: auto;
     height: auto;
     border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -612,11 +556,19 @@ p {
 }
 
 .mapboxgl-ctrl-geocoder input[type="text"] {
-    background-color:rgb(255, 255, 255);
-    border-radius: 30px;
-    border:1px solid rgb(101,101,105);
+    background-color: var(--base);
+    border: none;
+    color: var(--verde2);
+    font-size: 1.5vw;
     padding: 10px;
-    margin-left:17px;
+}
+
+
+.mapboxgl-ctrl-geocoder button {
+    background-color: var(--verde2);
+    font-size: .5vw;
+    padding: 10px;
+    border-radius: 20px;
 }
 
 .mapboxgl-ctrl-geocoder .suggestions {
@@ -634,7 +586,6 @@ p {
     color: var(--base);
 
 }
-
 
 .mapboxgl-ctrl-geocoder .suggestions li {
     list-style: none;
@@ -660,51 +611,4 @@ p {
     text-decoration: none;
     font-size: 0;
 }
-.mapboxgl-ctrl-geocoder--icon,
-.mapboxgl-ctrl-geocoder--icon-loading {
-    display: none !important;
-}
-
-@keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-
-    @keyframes slideInLeft {
-        from {
-            transform: translateX(-50px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-
-    @keyframes slideInRight {
-        from {
-            transform: translateX(50px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-
-    @keyframes pulse {
-        0% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.05);
-        }
-        100% {
-            transform: scale(1);
-        }
-    }
 </style>

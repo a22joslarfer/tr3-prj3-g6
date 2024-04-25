@@ -21,7 +21,7 @@ services:
       - db
 
   nuxt-app:
-    image: node:20-bullseye
+    image: node:18-bullseye
     container_name: nuxt
     working_dir: /app
     environment:

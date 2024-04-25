@@ -49,10 +49,11 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: #333;
+  background-color: #ffffff;
   color: white;
   height: 60px;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
 }
 
 .icon {
@@ -72,6 +73,6 @@ export default {
 }
 
 svg {
-  fill: white;
+  fill: rgb(0, 0, 0);
 }
 </style>
