@@ -1,158 +1,168 @@
 <template>
-    <div>
+    <div id="container">
+        <ul>
+            <li v-for="user in this.connectedUserIds.filter(id => id !== userId)" :key="user"
+                @click="storeSendingToId(user)">{{ user }}</li>
+        </ul>
 
+        <div id="chat">
+            <div v-if="privateChats[receiverId]" class="privateChatBox">
+
+
+                <div v-for="(message, index) in privateChats[receiverId]" :key="index">
+                    <div v-if="message.senderId === userId" class="senderMessageBox">
+                        <p> {{ message.text }}</p>
+                    </div>
+                    <div v-else class="recieverMessageBox">
+                        <p><strong>DE {{ message.receiverId }} {{ message.text }}</strong></p>
+                        
+                    </div>
+                </div>
+
+            </div>
+
+            <form @submit.prevent="sendPrivateMessage">
+                <input v-model="newMessage" type="text" placeholder="Write your message here..." />
+                <button type="submit">Send</button>
+            </form>
+        </div>
     </div>
 </template>
 
 <script>
-    export default {
-        
+import { socket } from "../socket.js";
+
+export default {
+    data() {
+        return {
+            connectedUserIds: [],
+            newMessage: '',
+            userId: '',
+            privateChats: {},
+            receiverId: '',
+        };
+    },
+    created() {
+        if (process.client) {
+            this.userId = socket.id;
+            socket.emit('userJoined', socket.id);
+
+            socket.on('updateConnectedUsers', (userIds) => {
+                this.connectedUserIds = userIds;
+            });
+
+            socket.on('newMessage', (message) => {
+                this.messages.push(message);
+            });
+
+            socket.on('privateMessageReceived', (message, senderId) => {
+                if (!this.privateChats[senderId] || !this.privateChats[senderId].some(chat => chat.text === message && chat.senderId === senderId)) {
+                    if (!this.privateChats[senderId]) {
+                        this.privateChats[senderId] = [];
+                    }
+                    this.privateChats[senderId].push({ text: message, senderId: senderId });
+                }
+            });
+
+            console.log('socketid   ' + this.userId);
+        }
+    },
+    methods: {
+        storeSendingToId(id) {
+            this.receiverId = id;
+        },
+        sendPrivateMessage() {
+            if (!this.receiverId || this.newMessage.trim() === '') {
+                alert('Please select a user and enter a non-empty message.');
+                return;
+            }
+
+            const message = this.newMessage;
+
+            if (!this.privateChats[this.receiverId]) {
+                this.privateChats[this.receiverId] = [];
+            }
+            this.privateChats[this.receiverId].push({ text: message, senderId: socket.id });
+
+            socket.emit('sendPrivateMessage', message, this.receiverId, socket.id);
+
+            this.newMessage = '';
+        }
     }
+};
 </script>
 
 
-<style lang="scss" scoped>
-
-/* ESTILOS GLOBALES ------------------------------------------------------------------------------------  */
-
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
-header h1 {
-    font-size: 60px;
-    color: #723d3d;
-    font-weight: 700;
-    padding-left: 30px;
-}
-
-
-li {
-    list-style: none;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-size: 30px;
-}
-
-.body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #dbdada;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-
-}
-
-.container {
-    display: grid;
-    grid-template-columns: 0.33fr 1fr 1fr 1fr 1fr;
-    grid-template-areas:
-
-        "header header header header header"
-        "aside info-panels info-panels info-panels info-panels"
-        "aside friend-list friend-list friend-list friend-list"
-    ;
-    grid-template-rows: auto 3fr 1fr;
-    background-color: rgb(235, 225, 228);
-    border-radius: 16px;
-    padding: 20px;
-
-}
-
-.container header {
-    grid-area: header;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    background-color: #c28383;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border-bottom: 3px solid #4d12123d;
-}
-
-.container header * {
-    margin: 10px;
-}
 
 
 
-aside {
+<style scoped>
+
+
+#container {
     display: flex;
     flex-direction: column;
-    background-color: #c28383;
-    grid-area: aside;
+    height: 100%;
 }
 
-aside li {
+#chat {
+    flex: 1;
+    padding: 4px;
+}
+
+.privateChatBox {
+    overflow-y: auto;
+    max-height: calc(100vh - 200px); /* Adjust height as needed */
+}
+
+.senderMessageBox,
+.recieverMessageBox {
+    max-width: 100%;
+    padding: 4px;
+    justify-content: center;
+
+    margin: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.senderMessageBox {
+    background-color: #ccccccd7;
+    color: black;
+    
+   
+}
+
+.recieverMessageBox {
+    background-color: #cccccc46;
+    align-self: flex-end;
+}
+
+input[type="text"] {
+    width: 100%;
     padding: 10px;
-    margin-top: 30px;
-    background-color: #4d12123d;
-    border-radius: 50%;
-    height: auto;
-    width: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin-left: auto;
-    margin-right: auto;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-bottom: 10px;
 }
 
-aside li i {
-    color: #723d3d;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-aside li i:hover {
-    color: #dfd9d9;
-
-}
-
-
-.searchbar {
-    padding: 15px;
-    border-radius: 16px;
-    min-width: 700px;
+button[type="submit"] {
+    width:100%;
+    height: 40px;
+    background-color: #25D366;
+    color: #fff;
     border: none;
-    background-color: #fcfcfcf5;
-    color: #834545;
-    font-size: 40px;
-    font-weight: 700;
-    margin: auto;
+    border-radius: 20px;
+    cursor: pointer;
 }
 
-.li-search-i-holder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-
+ul li {
+    padding: 10px;
+    
+    cursor: pointer;
+    list-style: none;
+    text-align: left;
 }
-
-.searchbar::placeholder {
-    color: #834545;
-    font-size: 40px;
-    font-weight: 700;
-    margin: auto;
-}
-
-.searchbar:focus {
-    outline: none;
-    border: 3px solid #723d3d;
-}
-
-i {
-    font-size: 60px;
-}
-
-/* ESTILOS GLOBALES ------------------------------------------------------------------------------------  */
 
 
 </style>
