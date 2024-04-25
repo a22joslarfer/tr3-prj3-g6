@@ -42,7 +42,7 @@ class BeRealController extends Controller
         return Bereal::find($id);
     }
 
-    
+    /*
     public function addComentaris(Request $request, $id)
     {
       $bereal = Bereal::findOrFail($id);
@@ -55,6 +55,8 @@ class BeRealController extends Controller
     public function getComentaris($id)
     {
       $bereal = Bereal::findOrFail($id);
-      return response()->json(['comentaris' => bereal->comentaris]);
+      return response()->json(['comentaris' => $bereal->comentaris]);
     }
+    */
 }
+
