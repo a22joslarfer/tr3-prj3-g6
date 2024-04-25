@@ -13,6 +13,7 @@ class Bereal extends Model
       'img_del',
       'img_tra',
       'id_usuari',
+      'comentaris'
   ];
   protected $table ='bereal';
 

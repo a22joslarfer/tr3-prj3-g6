@@ -80,5 +80,7 @@ Route::post('/bereal', [BeRealController::class, 'createBereal']);
 Route::get('/bereals/{id}', [BeRealController::class, 'show']);
 //mostrar todos
 Route::get('/bereals', [BeRealController::class, 'index']);
-
-
+//crear comentari 
+Route::post('/bereal/{id}/commentari', [BeRealController::class, 'addComentari']);
+//veure comentari
+Route::post('/bereal/{id}/commentaris', [BeRealController::class, 'getComentaris']);
