@@ -1,87 +1,158 @@
 <template>
-    <div class="settings">
-        <HeaderPerfil />
-        <div class="buscador"> 
-        <input type="search" name="" id="" placeholder="Busca aquí...">
+    <div class="social-profile">
+      <div class="profile-header">
+        <div class="profile-image">
+          <div class="bordered-image">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-GjJceC84m1AjZSUzAWP5bXixhKWr9HfUC4hkka5l5oAeLEnI1UtUNa45yyr46sldxyE&usqp=CAU">
+          </div>
+        </div>
+        <div class="profile-info">
+          <h1 class="username">Lionel Messi</h1>
+          <p class="bio">¡Bienvenido al mundo de las redes sociales! Conéctate, comparte y descubre.</p>
+        </div>
+      </div>
+      <div class="user-stats">
+        <div class="stat">
+          <span class="stat-label">Publicaciones</span>
+          <span class="stat-value">10</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Seguidores</span>
+          <span class="stat-value">500M</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Siguiendo</span>
+          <span class="stat-value">300</span>
+        </div>
+      </div>
+      <div class="edit-profile">
+        <button>Editar perfil</button>
+      </div>
+      <div class="instagram-stories">
+  <div class="story" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_zqXfEtVU1TPQeQX4MgJ4wjqBDLEVH2okT5Vbgs5ZsJ869wAmvk1MWJsWX4WqG4j-W1w&usqp=CAU');">
+    <span class="story-username">Story 1</span>
+  </div>
+  <div class="story" style="background-image: url('https://e00-elmundo.uecdn.es/assets/multimedia/imagenes/2018/05/08/15257737585365.jpg');">
+    <span class="story-username">Story 2</span>
+  </div>
+  <div class="story" style="background-image: url('https://e00-marca.uecdn.es/blogs/alacontra/imagenes_posts/2010/09/15/messi_570x420.jpg');">
+    <span class="story-username">Story 3</span>
+  </div>
+  <div class="story" style="background-image: url('https://e00-marca.uecdn.es/blogs/alacontra/imagenes_posts/2010/09/15/messi_570x420.jpg');">
+    <span class="story-username">Story 3</span>
     </div>
-        <ul>
-            <li v-for="option in options" :key="option.id" @click="navigateTo(option.route)">
-                {{ option.name }}<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M559-480 371.5-667.5l13-13.5 201 201-201 201-13-13.5L559-480Z"/></svg>
-
-            </li>
-        </ul>
-        <FooterOptions />
+    
     </div>
-</template>
-
-<script>
-export default {
-    data() {
-        return {
-            options: [
-                { id: 1, name: 'Cambiar datos', route: '/PERFIL/ajustes' },
-                { id: 2, name: 'Amigos', route: '/PERFIL/amigos' },
-                { id: 3, name: 'Chats', route: '/PERFIL/chats' },
-                { id: 4, name: 'Notificaciones', route: '/PERFIL/notificaciones' },
-                { id: 5, name: 'Privacidad', route: '/PERFIL/privacidad' },
-                { id: 6, name: 'Seguridad', route: '/PERFIL/seguridad' },
-                { id: 7, name: 'Cerrar sesión' , route: '/PERFIL/logout', },
-
-            ]
-        }
-    },
-    methods: {
-        navigateTo(route) {
-            this.$router.push(route);
-        }
-    }
-}
-</script>
-
-<style scoped>
-.settings {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-input{
-    background-image: url('../../public/search_FILL1_wght100_GRAD-25_opsz20.svg');
-    width: calc(100% - 30px); /* Ajusta el ancho del input para que quepa el ícono */
-    padding: 10px 40px 10px 10px; /* Ajusta el padding derecho para dejar espacio al ícono */
-    margin-top: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    color: #222222;
-    background-repeat: no-repeat;
-    background-position: left 10px center;
-    background-size: 20px;
-}
-input::placeholder{
-    color: #ccc;
-    font-size: 16px;
-    position: relative;
-    left: 10%;
-}
-input:focus{
-    outline: none;
-}
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    cursor: pointer;
+    </div>
+  </template>
+  
+  <style>
+  
+   .instagram-stories {
+    display: flex;
+    overflow-x: auto;
     padding: 10px 0;
-    border-bottom: 1px solid #ccc;
-    margin-top:20px;
-}
-
-li:hover {
-    background-color: #f0f0f0;
-}
-svg {
-    float: right;
-
-}
-</style>
+  }
+  
+  .story {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 10px;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid #ffc40000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .story-username {
+    position: absolute;
+    bottom: -20px;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #555;
+  }
+    .social-profile {
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    .profile-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+  
+    .bordered-image {
+      position: relative;
+      overflow: hidden;
+      border-radius: 50%;
+      animation: border-pulse 2s infinite alternate;
+    }
+  
+    .bordered-image img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+    }
+  
+    .profile-info {
+      flex: 1;
+    }
+  
+    .username {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      margin-left:24px;
+    }
+  
+    .bio {
+      font-size: 14px;
+      color: #777;
+    }
+  
+    .user-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+  
+    .stat {
+      text-align: center;
+    }
+  
+    .stat-label {
+      font-size: 14px;
+      color: #555;
+    }
+  
+    .stat-value {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  
+    .edit-profile button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  
+    @keyframes border-pulse {
+      0% {
+        border: 2px solid #ffc400;
+      }
+      100% {
+        border: 2px solid #555;
+      }
+    }
+  </style>
+  

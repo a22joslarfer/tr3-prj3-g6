@@ -64,7 +64,7 @@ export default {
   async created() {
     this.loading = true;
     try {
-      const response = await axios.get('http://viaegis.daw.inspedralbes.cat/backend/public/api/discotecas');
+      const response = await axios.get('http://localhost:8000/api/discotecas');
       this.images = response.data.map(item => ({
         url: item.imgUrl,
         cityId: item.id_ciudad !== null ? item.id_ciudad.toString() : null

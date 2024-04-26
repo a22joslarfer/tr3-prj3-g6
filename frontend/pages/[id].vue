@@ -74,7 +74,7 @@ export default {
         categoria: this.categoria,
       };
 
-      fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/reviews', {
+      fetch('http://localhost:8000/api/reviews', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -102,7 +102,7 @@ export default {
       this.$refs.fileInput.click();
     },
     fetchCategorias() {
-      fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
+      fetch('http://localhost:8000/api/categorias_reviews')
         .then(response => {
           if (!response.ok) {
             throw new Error(`Error fetching categorias: ${response.status} - ${response.statusText}`);

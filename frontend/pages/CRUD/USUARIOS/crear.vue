@@ -58,7 +58,7 @@ export default {
     methods: {
         async crear() {
             try {
-                const response = await fetch(`http://viaegis.daw.inspedralbes.cat/backend/public/api/users`, {
+                const response = await fetch(`http://localhost:8000/api/users`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

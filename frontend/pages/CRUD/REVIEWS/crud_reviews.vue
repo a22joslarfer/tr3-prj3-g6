@@ -66,7 +66,7 @@
     methods: {
       async fetchReviews() {
         try {
-          const response = await fetch("http://viaegis.daw.inspedralbes.cat/backend/public/api/reviews");
+          const response = await fetch("http://localhost:8000/api/reviews");
           if (!response.ok) {
             throw new Error(
               `Error al obtener las reseñas: ${response.status} - ${response.statusText}`
@@ -83,7 +83,7 @@
           this.reviews.map(async (review) => {
             try {
               const response = await fetch(
-                `http://viaegis.daw.inspedralbes.cat/backend/public/api/discotecas/${review.disco_id}`
+                `http://localhost:8000/api/discotecas/${review.disco_id}`
               );
               if (!response.ok) {
                 throw new Error(
@@ -107,7 +107,7 @@
         if (confirm("¿Estás seguro de que quieres eliminar esta reseña?")) {
           try {
             const response = await fetch(
-              `http://viaegis.daw.inspedralbes.cat/backend/public/api/reviews/${id}`,
+              `http://localhost:8000/api/reviews/${id}`,
               {
                 method: "DELETE",
                 headers: {

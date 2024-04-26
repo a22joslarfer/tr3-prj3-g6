@@ -124,7 +124,7 @@ export default {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/upload', {
+            const response = await fetch('http://localhost:8000/api/upload', {
                 method: 'POST',
                 body: formData,
             });
@@ -142,7 +142,7 @@ export default {
         }
     },
         async fetchData() {
-    const response = await fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/discotecas');
+    const response = await fetch('http://localhost:8000/api/discotecas');
     const data = await response.json();
 
     this.data = data.map((discoteca) => {
