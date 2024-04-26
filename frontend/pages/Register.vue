@@ -3,6 +3,13 @@
 
     <div class="login-container">
         <div class="content">
+            <!-- Add multi-step progress bar -->
+            <div class="step-progress-content"> 
+                            <button type="radio" class="boton-atras" @click="step--"><</button>
+                            <UProgress :value="3" :max="3" />
+
+                        </div>
+
             <div class="company-info">
                 <img src="https://static.vecteezy.com/system/resources/previews/029/938/250/non_2x/planet-earth-globe-world-map-ai-generative-free-png.png"
                     alt="Logo de la empresa" class="company-logo">
@@ -14,19 +21,42 @@
                     ¿Ya tienes cuenta? <nuxt-link to="/login" class="boton_login">¡Inicia sesión!</nuxt-link>
                 </div>
                 <form @submit.prevent="register" class="form">
-                    <div class="input-group">
-
+                    <div class="input-group" v-if="step === 1">
                         <input type="text" v-model.trim="name" class="input" placeholder="Nombre Completo" required />
-                    </div>
-                    <div class="input-group">
-                        <input type="email" v-model.trim="email" class="input" placeholder="Correo Electrónico"
-                            title="Por favor, introduce un correo electrónico válido" />
-                    </div>
-                    <div class="input-group">
-                        <input type="password" v-model.trim="password" class="input" placeholder="Contraseña" />
-                    </div>
+                        <div class="botones">
 
-                    <button type="submit" class="button">Regístrate</button>
+                            <button type="button" class="button next-button" @click="step++">Siguiente</button>
+                        </div>
+                    </div>
+                    <div v-if="step === 2">
+                        <div class="input-group">
+                            <input type="email" v-model.trim="email" class="input" placeholder="Correo Electrónico"
+                                required />
+                        </div>
+                        <div class="input-group">
+                            <input type="password" v-model.trim="password" class="input" placeholder="Contraseña"
+                                required />
+                        </div>
+                        <div class="botones">
+                            <button type="button" class="button back-button" @click="step--"></button>
+
+                            <button type="button" class="button next-button" @click="step++">Siguiente</button>
+                        </div>
+                    </div>
+                    <div v-if="step === 3">
+                        <div class="input-group">
+                            <input type="text" v-model.trim="phone" class="input" placeholder="Teléfono" />
+                        </div>
+                        <div class="input-group">
+                            <input type="date" v-model.trim="birthday" class="input"
+                                placeholder="Fecha de Nacimiento" />
+                        </div>
+                        <div class="botones">
+                            <button type="button" class="button back-button" @click="step--"></button>
+
+                            <button type="submit" class="button">Regístrate</button>
+                        </div>
+                    </div>
                 </form>
                 <div class="sc-18d118e1-0 gjmkph">
                     <hr class="sc-1a86d6e9-0 doHtqb"><span class="sc-7b9b9acb-0 bMZrBT">or</span>
@@ -49,12 +79,15 @@
 
 export default {
 
-    name: 'RegisterScreen',
     data() {
         return {
+            step: 1,
             name: '',
             email: '',
             password: '',
+            phone: '',
+            birthday: '',
+
 
         };
     },
@@ -70,6 +103,9 @@ export default {
                     name: this.name.trim(),
                     email: this.email.trim(),
                     password: this.password.trim(),
+                    phone: this.phone.trim(),
+                    birthday: this.birthday.trim(),
+
 
                 }),
             })
@@ -126,17 +162,21 @@ export default {
 
 .login-container {
     background-color: #eff4f3;
-    
+
 }
+
 .login-form-container {
     display: flex;
     justify-content: center;
     margin-top: 20px;
 }
+
 .content {
     width: 100%;
+    height: 100vh;
     padding: 20px;
-    overflow-y: auto;
+    overflow-y: visible;
+    /* Cambiar de 'auto' a 'visible' */
     flex: 1;
 }
 
@@ -184,6 +224,7 @@ export default {
     border-radius: 12px;
     font-size: 16px;
     padding: 10px;
+
 }
 
 .input:focus {
@@ -199,6 +240,17 @@ export default {
     background-color: #ff806d;
     color: white;
     font-size: 18px;
+}
+
+.back-button {
+    background-color: #f1693f;
+    color: #333;
+}
+
+.next-button,
+.submit-button {
+    background-color: #f0663c;
+    color: #fff;
 }
 
 .login-link {
@@ -253,5 +305,18 @@ export default {
     padding: 10px 20px;
     font-size: 16px;
 
+}
+
+.boton-atras{
+    background-color: #4c4d4caf;
+    color: #333;
+    border: none;
+    border-radius: 25px;
+    font-size: 25px;
+    margin-right: 10px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
 }
 </style>

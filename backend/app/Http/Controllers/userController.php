@@ -79,6 +79,8 @@ class UserController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
+            'phone' => $request->input('phone'),
+            'birthday' => $request->input('birthday'),
             'api_token' => Str::random(60), 
         ]);
         $user->save();
