@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     login() {
-      fetch('http://localhost:8000/api/login', {
+      fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -68,7 +68,7 @@ export default {
         },
         async fetchData() {
 
-            const response = await fetch('http://localhost:8000/api/discotecas');
+            const response = await fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/discotecas');
 
             const data = await response.json();
 

@@ -44,7 +44,7 @@ export default {
         async submitForm() {
             try {
                 const response = await fetch(
-                    `http://localhost:8000/api/reviews/${this.review_id}`,
+                    `http://viaegis.daw.inspedralbes.cat/backend/public/api/reviews/${this.review_id}`,
                     {
                         method: "PUT",
                         headers: {

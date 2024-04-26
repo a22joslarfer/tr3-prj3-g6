@@ -27,7 +27,7 @@ export default {
     },
     methods: {
         fetchReviews() {
-            fetch(`http://localhost:8000/api/review/${this.puntoInteresId}`)
+            fetch(`http://viaegis.daw.inspedralbes.cat/backend/public/api/review/${this.puntoInteresId}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Error al obtener las reseñas: ${response.status} - ${response.statusText}`);
