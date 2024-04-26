@@ -71,6 +71,7 @@ export default {
         })
         .then(data => {
           console.log('Sesión iniciada correctamente:', data);
+          alert('Sesión iniciada correctamente');
           localStorage.setItem('token', data.token);
           const store = useStore();
           store.save_user_info(data.name, data.email, data.id);

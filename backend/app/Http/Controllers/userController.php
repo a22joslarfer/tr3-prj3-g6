@@ -124,6 +124,12 @@ class UserController extends Controller
         return response()->json(['message' => 'Logged out']);
     }
 
+    public function getUsers($id)
+    {
+        $user = User::find($id);
+        return response()->json($user);
+        
+    }
     public function getUser($id)
     {
         $user = User::find($id);

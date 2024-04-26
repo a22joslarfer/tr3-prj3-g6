@@ -1,40 +1,44 @@
-<template>
+<template>   
+ <HeaderGeneral />
+
   <div class="container">
     <form @submit.prevent="submitReview" class="form">
 
       <div class="form-group">
-        <label for="titulo" class="texto">TITULO</label>
-        <input type="text" id="titulo" v-model="titulo" class="form-control" required placeholder="Titulo de la reseña...">
+        <label for="titulo" class="texto">Título *</label>
+        <input type="text" id="titulo" v-model="titulo" class="form-control" required
+          placeholder="Ingresa el título de la reseña...">
       </div>
 
       <div class="form-group">
-        <label for="content" class="texto">CONTENIDO</label>
-        <textarea id="content" v-model="content" class="form-control" required placeholder="Contenido de la reseña..."></textarea>
+        <label for="content" class="texto">Contenido *</label>
+        <textarea id="content" v-model="content" class="form-control" required
+          placeholder="Escribe aquí el contenido de la reseña..."></textarea>
       </div>
 
       <div class="form-group">
-        <label for="categoria" class="texto">CATEGORIA</label>
+        <label for="categoria" class="texto">Categoría *</label>
         <select id="categoria" v-model="categoria" class="form-control" required>
+          <option disabled value="">Selecciona una categoría</option>
           <option v-for="categoria in categorias_reviews" :key="categoria.nombre" :value="categoria.id">
             {{ categoria.nombre }}
           </option>
         </select>
       </div>
 
-
-
       <div class="form-group">
-        <label for="puntuacion" class="texto">PUNTUACIÓN</label>
-        <input type="number" id="puntuacion" v-model="puntuacion" class="form-control" required>
+        <label for="puntuacion" class="texto">Puntuación *</label>
+          <NuxtRating :read-only="false" :rating-count="5" :rating-size="'40px'" :active-color="'gold'"
+            :rating-value="1" rating-content="⭐" @rating-selected="logRating" class="star-rating"/>
+
       </div>
 
-
       <div class="form-group">
-        <label for="photo" class="texto">FOTO</label>
-        <div class="dropzone">
+        <label for="photo" class="texto">Foto (opcional):</label>
+        <div class="dropzone" @click="openFileInput">
           <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file"
-            accept="image/*" >
-           
+            accept="image/*" style="display: none;">
+          <span>Seleccionar archivo</span>
         </div>
       </div>
 
@@ -42,7 +46,6 @@
     </form>
     <FooterOptions />
   </div>
-  
 </template>
 
 <script>
@@ -61,6 +64,11 @@ export default {
     };
   },
   methods: {
+
+   logRating(rating) {
+      console.log('Rating:', rating);
+      this.puntuacion = rating;
+    },
     submitReview() {
       let data = {
         disco_id: this.disco_id,
@@ -133,130 +141,83 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 600px;
-  margin: 0 auto;
   padding: 20px;
 }
 
-.form-group {
-  margin-bottom: 20px;
+.form {
+  display: flex;
+  flex-direction: column;
 }
 
-label {
+.form-group {
+  margin-bottom: 30px;
+}
+
+.texto {
+
   font-weight: bold;
+  color: #333;
 }
 
 .form-control {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  font-size: 13px;
+  transition: border-color 0.3s ease;
   margin-top: 10px;
+
 }
-textarea{
-  resize: none;
+
+.form-control:focus {
+  outline: none;
+  border-color: #007bff;
 }
-.texto{
-  font-family: 'Anybody', sans-serif;
-  font-size: 15px;
-  font-weight: 800;
-}
-input[type="text"],
-input[type="number"],
-textarea {
+
+.dropzone {
+  position: relative;
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  margin-top: 10px;
+  height: 50px;
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
-textarea {
-  height: 150px;
+.dropzone:hover {
+  background-color: #f0f0f0;
 }
 
-.btn {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
+.dropzone span {
+  color: #555;
+  font-size: 16px;
   cursor: pointer;
 }
 
 .btn-primary {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
   background-color: #007bff;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .btn-primary:hover {
   background-color: #0056b3;
 }
-
-/* Estilos para el dropzone */
-.dropzone {
-  position: relative;
-  border: 2px dashed #ccc;
-  border-radius: 4px;
-  padding: 20px;
-  cursor: pointer;
+.star-rating {
   margin-top: 10px;
 }
-
-.dropzone-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #777;
-  text-align: center;
-}
-
-.dropzone-text span {
-  display: block;
-}
-
-/* Style the select dropdown */
-.select-wrapper select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: #fff;
-  cursor: pointer;
-  padding-right: 30px;
-  /* Add space for the arrow */
-}
-
-/* Style the arrow icon */
-.select-wrapper:after {
-  content: '\25BC';
-  /* Downward arrow */
-  font-size: 16px;
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-/* Apply hover and focus styles to the select dropdown */
-.select-wrapper:hover select,
-.select-wrapper select:focus {
-  border-color: #b8daff;
-  /* Light blue border color on hover/focus */
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  /* Light blue shadow on hover/focus */
-}
-
-/* Style select options */
-.select-wrapper select option {
-  padding: 10px;
-}
-
-/* Estilos para las opciones del select */
-.select-wrapper select option {
-  padding: 10px;
+textarea{
+  resize: none;
 }
 </style>

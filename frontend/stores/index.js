@@ -44,6 +44,9 @@ export const useStore = defineStore({
       this.email = null;
       this.user_id = null;
     },
+    logout() {
+      this.clear_user_info();
+    }
   
   },
 });
