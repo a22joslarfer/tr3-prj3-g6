@@ -43,6 +43,18 @@
     </div>
     
     </div>
+    <div class="icons">
+    <div class="icon">
+        <img src="../public/camara.png" alt="Cámara">
+    </div>
+    <div class="icon">
+        <img src="../public/video.png" alt="Video">
+    </div>
+    <div class="icon">
+        <img src=".../public/bola-de-discoteca.png" alt="Bola de discoteca">
+    </div>
+</div>
+
     </div>
   </template>
   
