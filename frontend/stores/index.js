@@ -1,16 +1,19 @@
 // ~/store/index.js
-import {
-  defineStore
-} from 'pinia';
+import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+
+import { defineStore } from 'pinia'
 
 export const useStore = defineStore({
   id: 'main',
   state: () => ({
-    
+    return_path: null,
     user_id: null,
     email: null,
     username: null,
-
   }),
   actions: {
     save_seats(seats) {
@@ -46,6 +49,20 @@ export const useStore = defineStore({
       this.email = null;
       this.user_id = null;
     },
-  
+    set_return_path(path) {
+      this.return_path = path;
+    },
+    return_path() {
+      return this.return_path;
+    },
+
+
   },
-});
+
+  persist: true,
+},
+
+
+
+
+);

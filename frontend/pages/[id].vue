@@ -35,7 +35,7 @@
           <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file"
             accept="image/*">
           <div class="dropzone-text" @click="openFileInput">
-
+            
           </div>
         </div>
       </div>
@@ -83,9 +83,8 @@ export default {
           if (!response.ok) {
             throw new Error(`Error submitting review: ${response.status} - ${response.statusText}`);
           }
-
-          alert('Review submitted successfully!');
-          this.$router.push('/');
+          alert('Tot correcte!');
+          this.$router.push('/reviews');
 
         })
         .catch(error => {
@@ -112,6 +111,16 @@ export default {
         .catch(error => {
           alert('Error fetching categorias: ' + error.message)
         });
+    },
+    checkIfAuth(){
+      const store = useStore();
+      const user_id = store.return_user_id();
+      if(user_id === null){
+        alert('Necesitas estar logueado para crear una review');
+        store.set_return_path('/'+ this.$route.params.id);
+        this.$router.push('/login');
+        localStorage.setItem('return_path', '/'+ this.$route.params.id);
+      }
     }
   },
   created() {
@@ -119,13 +128,16 @@ export default {
     const store = useStore();
     this.usuario_id = store.return_user_id();
 
-    console.log('Disco ID:', this.disco_id);
-    console.log('Usuario ID:', this.usuario_id);
+    
 
+  },
+  computed() {
+    this.checkifAuth();
   },
   mounted() {
     this.fetchCategorias();
     console.log('Categorias:', this.categorias_reviews);
+    this.checkIfAuth();
   },
 };
 </script>
@@ -135,6 +147,7 @@ export default {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+
 }
 
 .form-group {

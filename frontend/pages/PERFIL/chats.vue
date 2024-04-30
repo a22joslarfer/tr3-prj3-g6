@@ -1,28 +1,38 @@
 <template>
     <div id="container">
         <ul>
-            <li v-for="user in this.connectedUserIds.filter(id => id !== userId)" :key="user"
-                @click="storeSendingToId(user)">{{ user }}</li>
+            <li v-for="user in this.usuariosConectadosSocketIds.filter(id => id !== userId)" :key="user"
+                @click="storeSendingToId(user)">
+                {{ user }}
+
+            </li>
         </ul>
 
+        <ol>
+            <h1>AMIGOS</h1>
+            <li v-for="amigo in amigos" :key="amigo.id">
+                {{ amigo.id }}
+            </li>
+        </ol>
+
         <div id="chat">
-            <div v-if="privateChats[receiverId]" class="privateChatBox">
+            <div v-if="chatPrivado[recibidor_id]" class="privateChatBox">
 
 
-                <div v-for="(message, index) in privateChats[receiverId]" :key="index">
+                <div v-for="(message, index) in chatPrivado[recibidor_id]" :key="index">
                     <div v-if="message.senderId === userId" class="senderMessageBox">
                         <p> {{ message.text }}</p>
                     </div>
                     <div v-else class="recieverMessageBox">
-                        <p><strong>DE {{ message.receiverId }} {{ message.text }}</strong></p>
-                        
+                        <p><strong>DE {{ message.recibidor_id }} {{ message.text }}</strong></p>
+
                     </div>
                 </div>
 
             </div>
 
             <form @submit.prevent="sendPrivateMessage">
-                <input v-model="newMessage" type="text" placeholder="Write your message here..." />
+                <input v-model="nuevoMensaje" type="text" placeholder="Write your message here..." />
                 <button type="submit">Send</button>
             </form>
         </div>
@@ -35,11 +45,11 @@ import { socket } from "../socket.js";
 export default {
     data() {
         return {
-            connectedUserIds: [],
-            newMessage: '',
+            usuariosConectadosSocketIds: [],
+            nuevoMensaje: '',
             userId: '',
-            privateChats: {},
-            receiverId: '',
+            chatPrivado: {},
+            recibidor_id: '',
         };
     },
     created() {
@@ -48,19 +58,19 @@ export default {
             socket.emit('userJoined', socket.id);
 
             socket.on('updateConnectedUsers', (userIds) => {
-                this.connectedUserIds = userIds;
+                this.usuariosConectadosSocketIds = userIds;
             });
 
-            socket.on('newMessage', (message) => {
+            socket.on('nuevoMensaje', (message) => {
                 this.messages.push(message);
             });
 
             socket.on('privateMessageReceived', (message, senderId) => {
-                if (!this.privateChats[senderId] || !this.privateChats[senderId].some(chat => chat.text === message && chat.senderId === senderId)) {
-                    if (!this.privateChats[senderId]) {
-                        this.privateChats[senderId] = [];
+                if (!this.chatPrivado[senderId] || !this.chatPrivado[senderId].some(chat => chat.text === message && chat.senderId === senderId)) {
+                    if (!this.chatPrivado[senderId]) {
+                        this.chatPrivado[senderId] = [];
                     }
-                    this.privateChats[senderId].push({ text: message, senderId: senderId });
+                    this.chatPrivado[senderId].push({ text: message, senderId: senderId });
                 }
             });
 
@@ -69,26 +79,62 @@ export default {
     },
     methods: {
         storeSendingToId(id) {
-            this.receiverId = id;
+            this.recibidor_id = id;
         },
         sendPrivateMessage() {
-            if (!this.receiverId || this.newMessage.trim() === '') {
+            if (!this.recibidor_id || this.nuevoMensaje.trim() === '') {
                 alert('Please select a user and enter a non-empty message.');
                 return;
             }
 
-            const message = this.newMessage;
+            const message = this.nuevoMensaje;
 
-            if (!this.privateChats[this.receiverId]) {
-                this.privateChats[this.receiverId] = [];
+            if (!this.chatPrivado[this.recibidor_id]) {
+                this.chatPrivado[this.recibidor_id] = [];
             }
-            this.privateChats[this.receiverId].push({ text: message, senderId: socket.id });
+            this.chatPrivado[this.recibidor_id].push({ text: message, senderId: socket.id });
 
-            socket.emit('sendPrivateMessage', message, this.receiverId, socket.id);
+            socket.emit('sendPrivateMessage', message, this.recibidor_id, socket.id);
 
-            this.newMessage = '';
+            this.nuevoMensaje = '';
+        },
+        fetchAmigos(id) {
+            fetch(`http://localhost:8000/api/amigos/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error fetching amigos');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    this.amigos = data;
+                })
+                .catch(error => {
+                    alert('Error fetching amigos: ' + error.message)
+                });
+        },
+        checkIfAuth() {
+            const store = useStore();
+            const user_id = store.return_user_id();
+            console.log('user_id', user_id);
+            console.log('asdsadasdsad');
+            if (user_id === null) {
+                alert('Necesitas estar logueado para chatear con tus amigos');
+                store.set_return_path('/perfil/chats');
+                this.$router.push('/login');
+                localStorage.setItem('return_path', '/perfil/chats');
+            }
         }
-    }
+    },
+    computed() {
+        this.checkIfAuth();
+    },
+    mounted() {
+        this.fetchAmigos(this.userId);
+    },
+    beforeMount() {
+        this.checkIfAuth();
+    },
 };
 </script>
 
@@ -97,8 +143,6 @@ export default {
 
 
 <style scoped>
-
-
 #container {
     display: flex;
     flex-direction: column;
@@ -112,7 +156,8 @@ export default {
 
 .privateChatBox {
     overflow-y: auto;
-    max-height: calc(100vh - 200px); /* Adjust height as needed */
+    max-height: calc(100vh - 200px);
+    /* Adjust height as needed */
 }
 
 .senderMessageBox,
@@ -129,8 +174,8 @@ export default {
 .senderMessageBox {
     background-color: #ccccccd7;
     color: black;
-    
-   
+
+
 }
 
 .recieverMessageBox {
@@ -147,7 +192,7 @@ input[type="text"] {
 }
 
 button[type="submit"] {
-    width:100%;
+    width: 100%;
     height: 40px;
     background-color: #25D366;
     color: #fff;
@@ -158,11 +203,9 @@ button[type="submit"] {
 
 ul li {
     padding: 10px;
-    
+
     cursor: pointer;
     list-style: none;
     text-align: left;
 }
-
-
 </style>
