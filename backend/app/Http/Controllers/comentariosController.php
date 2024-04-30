@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\comentarios; 
+use App\Models\Comentario; 
 
 class comentariosController extends Controller
 {
