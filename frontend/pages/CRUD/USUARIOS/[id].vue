@@ -58,7 +58,7 @@ export default {
     methods: {
         async editar() {
             try {
-                const response = await fetch(`http://localhost:8000/api/users/${this.user_id}`, {
+                const response = await fetch(`http://viaegis.daw.inspedralbes.cat/backend/public/api/users/${this.user_id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

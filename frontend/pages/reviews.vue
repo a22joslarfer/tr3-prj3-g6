@@ -56,7 +56,7 @@ export default {
     },
     methods: {
         fetchReviews() {
-            fetch('http://localhost:8000/api/reviews')
+            fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/reviews')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Error fetching reviews: ${response.status} - ${response.statusText}`);
@@ -75,7 +75,7 @@ export default {
                 });
         },
         fetchUserById(id) {
-            fetch(`http://localhost:8000/api/users/${id}`)
+            fetch(`http://viaegis.daw.inspedralbes.cat/backend/public/api/users/${id}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Error fetching user: ${response.status} - ${response.statusText}`);

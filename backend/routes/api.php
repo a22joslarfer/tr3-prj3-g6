@@ -33,8 +33,7 @@ Route::post('/users', [userController::class, 'create']);
 Route::delete('/users/{id}', [userController::class, 'delete']);
 // ruta para editar un usuario
 Route::put('/users/{id}', [userController::class, 'update']);
-//ruta para obtener un usuario por id
-Route::get('/users/{id}', [userController::class, 'getUser']);
+
 
 
 
@@ -87,6 +86,16 @@ Route::get('/categorias_reviews/{nombre}', [categoriasReviewController::class, '
 
 
 
+
+// RUTAS DE SEGUIDORES
+// ruta para obtener todos los seguidores de un usuario
+Route::get('/seguidores/{id}', [seguidoresController::class, 'getSeguidores']);
+//ruta para obtener todos los amigos de un usuario
+Route::get('/amigos/{id}', [seguidoresController::class, 'getAmigos']);
+// ruta para añadir un seguidor
+Route::post('/seguidores', [seguidoresController::class, 'addSeguidor']);
+// ruta para comprobar si un usuario sigue a otro usuario
+Route::get('/seguidores/{seguidor_id}/{seguido_id}', [seguidoresController::class, 'checkIfSeguidor']);
 
 // RUTAS DE SEGUIDORES
 // ruta para obtener todos los seguidores de un usuario

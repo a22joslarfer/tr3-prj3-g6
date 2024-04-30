@@ -59,7 +59,7 @@ export default {
     methods: {
         async editar() {
             try {
-                const response = await fetch(`http://localhost:8000/api/discotecas/${this.disco_id}`, {
+                const response = await fetch(`http://viaegis.daw.inspedralbes.cat/backend/public/api/discotecas/${this.disco_id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

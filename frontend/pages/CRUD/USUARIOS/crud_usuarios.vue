@@ -43,7 +43,7 @@ export default {
     methods: {
         async fetchData() {
             try {
-                const response = await fetch('http://localhost:8000/api/users');
+                const response = await fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/users');
                 const data = await response.json();
 
                 if (Array.isArray(data)) {
@@ -63,7 +63,7 @@ export default {
         },
         async eliminar(id) {
             try {
-                const response = await fetch(`http://localhost:8000/api/users/${id}`, {
+                const response = await fetch(`http://viaegis.daw.inspedralbes.cat/backend/public/api/users/${id}`, {
                     method: 'DELETE',
                 });
                 const data = await response.json();

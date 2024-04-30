@@ -1,15 +1,10 @@
 <template>
+    <div>
+        <HeaderGeneral />
     <div class="container">
+        <div id="buscador"></div>
 
-        <nav class="navbar">
-            <ul>
-                <li><nuxt-link to="/"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M168-114v-357l-93 72-80-109 485-379 137 107v-66h175v202l174 136-81 109-93-73v358H496v-243h-32v243H168Zm136-136h34v-233h284v233h34v-328L480-717 304-578v328Zm85-266h182q0-38-26.857-64t-64-26Q443-606 416-580t-27 64Zm-51 266v-233h284v233-233H338v233Z"/></svg></nuxt-link></li>
-                <li><nuxt-link to="/explorar"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-34q-92.49 0-173.68-34.945-81.19-34.945-141.81-95.565-60.62-60.62-95.565-141.81T34-480q0-92.49 34.945-173.68 34.945-81.19 95.565-141.81 60.62-60.62 141.81-95.565T480-926q92.49 0 173.68 34.945 81.19 34.945 141.81 95.565 60.62 60.62 95.565 141.81T926-480q0 92.49-34.945 173.68-34.945 81.19-95.565 141.81-60.62 60.62-141.81 95.565T480-34Zm0-202q48.125-48.968 87-101 32-44 59-97.962 27-53.963 27-105.415Q653-613 602.5-663.5T480-714q-72 0-122.5 50.5T307-540.377q0 51.452 27 105.415Q361-381 393-337q39.438 52.032 87 101Zm0-240q-26 0-45.5-18.882-19.5-18.883-19.5-45.5Q415-567 434.5-586q19.5-19 45.5-19t45.5 19q19.5 19 19.5 45.5T525.5-495Q506-476 480-476Z"/></svg></nuxt-link></li>
-                <li><nuxt-link to="/PERFIL/main"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480.159-502Q395-502 336.5-561 278-620 278-704.5T336.341-847q58.34-58 143.5-58Q565-905 623.5-847.112 682-789.225 682-704q0 84-58.341 143-58.34 59-143.5 59ZM114-86v-159q0-46.774 23.789-84.467Q161.578-367.161 201-387q66-34 136.174-51t142.541-17Q554-455 624-438t135 50q39.422 19.693 63.211 57.111Q846-293.472 846-245.055V-86H114Zm136-136h460v-18q0-10.029-4.875-17.801Q700.25-265.572 692-269q-48-24-102-37t-110.5-13q-54.5 0-110 13T268-269q-8.25 2.428-13.125 10.699Q250-250.029 250-240v18Zm229.965-416Q507-638 526.5-657.465q19.5-19.464 19.5-46.5Q546-731 526.535-750.5q-19.464-19.5-46.5-19.5Q453-770 433.5-750.319 414-730.638 414-704q0 27.05 19.465 46.525Q452.929-638 479.965-638Zm.035-66Zm0 482Z"/></svg></nuxt-link></li>
-                <li><nuxt-link to="/Register"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M472-74v-136h278v-540H472v-136h278q57.125 0 96.562 39.438Q886-807.125 886-750v540q0 57.125-39.438 96.562Q807.125-74 750-74H472ZM348-217l-96-96 99-99H74v-136h277l-99-99 96-96 262 263-262 263Z"/></svg></nuxt-link></li>
-            </ul>
-        </nav>
-       <!---<li id="buscador"></li>--> 
+        <div id="buscador"></div>
 
         <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
 
@@ -30,21 +25,24 @@
                     <NuxtLink :to="'/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
                 </div>
             </div>
-        </div>
-        <footer>
-
-        </footer>
+        </div>       
+        <FooterOptions />
     </div>
+
 </template>
 
-   
+
+
 
 <script>
+import FooterOptions from '@/components/FooterOptions.vue';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-
+import { useStore } from '~/stores';
 export default {
-
+    components: {
+        FooterOptions,
+    },
     head() {
         return {
             link: [
@@ -62,11 +60,11 @@ export default {
             punto_de_interes_seleccionado: false,
             map: null,
             arr_puntos_de_interes: [],
-            marker: null,
             data: [],
+            pin_seleccionado: null,
+            uploadedSongUrl: null,
             icono_llevar_a_barcelona: null,
             supercluster: null,
-            pin_seleccionado: null,
 
         };
     },
@@ -118,41 +116,58 @@ export default {
     },
 
     methods: {
-        async fetchData() {
+        async handleFileUpload() {
+        const file = this.$refs.fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
 
-            const response = await fetch('http://localhost:8000/api/discotecas');
-
+        try {
+            const response = await fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
 
             const data = await response.json();
 
-            this.data = data.map((discoteca) => {
+            if (data.success) {
+                this.uploadedSongUrl = data.fileUrl;
+                this.pin_seleccionado.cancion_mp3 = data.fileUrl;
+            } else {
+                console.error('Error al subir el archivo');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    },
+        async fetchData() {
+    const response = await fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/discotecas');
+    const data = await response.json();
 
-                return {
-                    id: discoteca.id,
-                    titulo: discoteca.nombre_local,
-                    coordenadas: JSON.parse(discoteca.coordenadas),
-                    imgUrl: discoteca.imgUrl,
-                    descripcion: discoteca.descripcion,
-                    telefono: discoteca.telefono,
-                    horario: discoteca.horario,
-                    minEdad: discoteca.minEdad,
-                };
+    this.data = data.map((discoteca) => {
+        return {
+            id: discoteca.id,
+            titulo: discoteca.nombre_local,
+            coordenadas: JSON.parse(discoteca.coordenadas),
+            imgUrl: discoteca.imgUrl,
+            descripcion: discoteca.descripcion,
+            telefono: discoteca.telefono,
+            horario: discoteca.horario,
+            minEdad: discoteca.minEdad,
+            cancion_mp3: discoteca.canciones  // Aquí es donde asignamos el valor de "canciones" al objeto "pin_seleccionado"
+        };
+    });
 
-            });
-
-            this.crear_mostrar_pines_discos();
-            this.añadir_popup_info_de_las_discos();
-
-
-        },
+    this.crear_mostrar_pines_discos();
+    this.añadir_popup_info_de_las_discos();
+},
         initMapaDatosMapBox() {
-            mapboxgl.accessToken = 'pk.eyJ1IjoiYTIyam9zbGFyZmVyIiwiYSI6ImNsczFsbmZrcjBjZ2cyaXF3ZXd6a2JqdHgifQ.cf30m6MLwvix5IxPHsF00A';
+            mapboxgl.accessToken = 'pk.eyJ1IjoiaHVnb3RyaXBpYW5hIiwiYSI6ImNsczFueDBieDBiYngybG1rb2g4bGIyNW0ifQ.EECPYp9RZ_JIpjmlvyy2Hw';
 
             this.map = new mapboxgl.Map({
                 container: this.$refs.map,
-                style: 'mapbox://styles/a22joslarfer/cls1zmqwn00h801qqeeu22coz',
+                style: 'mapbox://styles/hugotripiana/cls1o5thk00xv01pl13ze6ks0',
                 center: [2.0947632393357907, 39.35567342431939],
-                zoom: 5,
+                zoom: 0,
             });
 
             var geocoder = new MapboxGeocoder({
@@ -161,12 +176,12 @@ export default {
             });
 
             this.map.addControl(geocoder);
-            this.$nextTick(() => {
-                var geocoderElement = document.querySelector('.mapboxgl-ctrl-geocoder');
-                var searchBar = document.getElementById('buscador');
-                searchBar.appendChild(geocoderElement);
-            });
-        },
+        this.$nextTick(() => {
+            var geocoderElement = document.querySelector('.mapboxgl-ctrl-geocoder');
+            var searchBar = document.getElementById('buscador');
+            searchBar.appendChild(geocoderElement);
+        });
+    },
         crear_mostrar_pines_discos() {
 
             if (this.map.getSource('points')) {
@@ -348,12 +363,23 @@ export default {
 };
 
 </script>
-  
 
 
-<style scoped>
+
+<style>
 @import url('https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css');
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@700&display=swap');
+.subtitle {
+    font-family: "Anybody", sans-serif;
+    font-size: 25px;
+    font-optical-sizing: auto;
+    font-weight: 800; /* Puedes ajustar este valor según lo necesites */
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+    text-align: center;
+    text-transform: uppercase;
+    background-color:#f0f1f1
+}
 
 .btn-create-review {
     background-color: var(--verde);
@@ -367,15 +393,11 @@ export default {
     justify-content: center;
     text-decoration: none;
     margin-top: 40px;
+    animation: pulse 1s infinite;
 }
 
 * {
-    box-sizing: border-box;
-    font-family: "Antonio", sans-serif;
-    margin: 0;
-    padding: 0px;
     overflow: hidden;
-
 }
 
 :root {
@@ -386,7 +408,7 @@ export default {
     --azul: hsl(226, 64%, 58%);
     --blanco: hsl(0, 0%, 100%);
     --base2: hsl(354, 9%, 5%);
-    --verde2: hsl(124, 9%, 32%);
+    --verde2: hsl(0, 0%, 100%);
     --naranja: hsl(32, 85%, 76%);
     --carne2: hsl(32, 70%, 89%);
     --rojo: hsl(0, 84%, 15%);
@@ -398,20 +420,7 @@ export default {
     min-width: 100vw;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 50px;
-    background-color: #d2d2d2;
-}
 
-svg{
-    width: 50px;
-    height: 50px;
-    fill: black;
-   
-}
 
 * {
     margin: 0;
@@ -423,7 +432,7 @@ svg{
 .navbar {
     width: 100%;
     height: 150px;
-    background-color: whitesmoke;
+    background-color: var(--base);
 }
 
 .navbar ul {
@@ -433,9 +442,8 @@ svg{
     list-style: none;
     height: 100%;
     color: var(--blanco);
-    
+    margin-left: 10%;
 }
-
 
 .navbar>ul>li {
     font-size: 60px;
@@ -461,26 +469,27 @@ svg{
 
 .info-card {
     position: absolute;
-    top: 0px;
-    right: 5px;
-    left: 5px;
-    margin-left: auto;
-    margin-right: auto;
-    height: auto;
+    top: 155px;
+    right: 30px;
     z-index: 1000;
-    max-width: auto;
+    max-width: 450px;
     background-color: var(--base);
     border-radius: 10px;
     color: var(--verde2);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
     animation: fade-in 0.5s ease-in-out;
-   
 }
+.card-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        animation: slideInLeft 1s ease-in-out;
+    }
 
 .card-closer {
     cursor: pointer;
     font-size: 2vw;
-    color: var(--base);
+    color: var(--carne2);
     transition: color 0.2s ease-in-out;
 }
 
@@ -490,60 +499,108 @@ svg{
 
 .card-header {
     display: flex;
-    
-    justify-content: center;
-    background-color: var(--verde2);
+    background-color: var(--base2);
     border-radius: 5px 5px 0 0;
-    padding: 4px;
-    font-size: 2vw;
-    color: var(--base);
+    padding: 7px;
+    font-size: 6vw;
+    color: var(--blanco);
+    flex-direction: column;
+    align-content: space-around;
+    flex-wrap: wrap;
 }
+.audio-player {
+        width: 100%;
+        margin-top: 20px;
+        animation: slideInRight 1s ease-in-out;
+    }
 
 .card-body {
-    text-align: justify;
-    margin: 4px;
-    padding: 10px;
     line-height: 1.1;
-    font-size: 1.2vw;
+    font-size: 5vw;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+.carousel-container {
+    margin-top: 20px;
+    width: 100%;
+    overflow: hidden;
 }
 
-@media only screen and (max-width: 768px) {
-    .navbar {
-        font-size: 20px;
-        height: 100px;
+.carousel-image {
+    width: 100%;
+    height: auto;
+}
+
+p {
+    margin: 5px;
+}
+
+.card {
+    background-color: var(--base2);
+    background-color: hsl(354deg 2.71% 13.94%);
+    color: #fff6f6;
+    border-radius: 16px;
+}
+
+.info-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    width: 400px;
+    animation: fade-in 0.5s ease-in-out;
+
+}
+
+.btn-create-review {
+    background-color: var(--base2);
+    display: flex;
+    border-radius: 8px;
+    color: var(--blanco);
+    font-size: 1.5rem;
+    padding: 1rem 2rem;
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+    text-decoration: none;
+    margin-top: 40px;
+}
+
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
     }
 
-    .navbar ul li {
-        font-size: 30px;
-    }
-
-    .info-card {
-        top: 105px;
-        right: 10px;
-        max-width: 350px;
-    }
-
-    .card-header>h3 {
-        font-size: 30px;
-    }
-
-    .card-body {
-        font-size: 20px;
+    to {
+        opacity: 1;
     }
 }
 
 
 /* Estilos searchbar nav */
-
+.map-container {
+        height: 100%;
+        width: 100%;
+        animation: fadeIn 1s ease-in-out;
+    }
+.mapboxgl-map{
+    position:relative;
+    width: 100%;
+    height: 100%;
+    top:-100px;
+    background-color: #f0f1f1;
+}
 .mapboxgl-ctrl-geocoder {
     position: absolute;
-    top: 40px;
-    left: 10px;
+    bottom:110px;
+    left: 100px;
     z-index: 1000;
     width: auto;
     height: auto;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -552,19 +609,11 @@ svg{
 }
 
 .mapboxgl-ctrl-geocoder input[type="text"] {
-    background-color: var(--base);
-    border: none;
-    color: var(--verde2);
-    font-size: 1.5vw;
+    background-color:rgb(255, 255, 255);
+    border-radius: 30px;
+    border:1px solid rgb(101,101,105);
     padding: 10px;
-}
-
-
-.mapboxgl-ctrl-geocoder button {
-    background-color: var(--verde2);
-    font-size: .5vw;
-    padding: 10px;
-    border-radius: 20px;
+    margin-left:17px;
 }
 
 .mapboxgl-ctrl-geocoder .suggestions {
@@ -582,6 +631,7 @@ svg{
     color: var(--base);
 
 }
+
 
 .mapboxgl-ctrl-geocoder .suggestions li {
     list-style: none;
@@ -607,4 +657,51 @@ svg{
     text-decoration: none;
     font-size: 0;
 }
+.mapboxgl-ctrl-geocoder--icon,
+.mapboxgl-ctrl-geocoder--icon-loading {
+    display: none !important;
+}
+
+@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            transform: translateX(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
 </style>

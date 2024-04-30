@@ -49,7 +49,7 @@ export default {
     methods: {
         async fetchData() {
             try {
-                const response = await fetch('http://localhost:8000/api/discotecas');
+                const response = await fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/discotecas');
                 const data = await response.json();
 
                 if (Array.isArray(data)) {
@@ -72,7 +72,7 @@ export default {
         },
         async eliminar(id) {
             try {
-                const response = await fetch(`http://localhost:8000/api/discotecas/${id}`, {
+                const response = await fetch(`http://viaegis.daw.inspedralbes.cat/backend/public/api/discotecas/${id}`, {
                     method: 'DELETE',
                 });
                 const data = await response.json();

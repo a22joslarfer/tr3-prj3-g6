@@ -42,10 +42,13 @@
 
       <button type="submit" class="btn btn-primary">Submit Review</button>
     </form>
+    <FooterOptions />
   </div>
+  
 </template>
 
 <script>
+import { useStore } from '../stores/index.js';
 export default {
   data() {
     return {
@@ -71,7 +74,7 @@ export default {
         categoria: this.categoria,
       };
 
-      fetch('http://localhost:8000/api/reviews', {
+      fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/reviews', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -98,7 +101,7 @@ export default {
       this.$refs.fileInput.click();
     },
     fetchCategorias() {
-      fetch('http://localhost:8000/api/categorias_reviews')
+      fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
         .then(response => {
           if (!response.ok) {
             throw new Error(`Error fetching categorias: ${response.status} - ${response.statusText}`);
