@@ -4,6 +4,7 @@ use App\Http\Controllers\discoController;
 use App\Http\Controllers\reviewController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\BeRealController;
+use App\Http\Controllers\comentariosController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -84,3 +85,16 @@ Route::get('/bereals', [BeRealController::class, 'index']);
 Route::post('/bereal/{id}/commentari', [BeRealController::class, 'addComentari']);
 //veure comentari
 Route::post('/bereal/{id}/commentaris', [BeRealController::class, 'getComentaris']);
+
+
+//RUTAS PARA COMENTARIOS BEREAL
+//mostrar tots els comentaris apartir de la id de bereal
+Route::get('/comentarios/{id_bereal}', [comentariosController::class, 'index']);
+//crea un nou comentari
+Route::post('/comentarios', [comentariosController::class, 'store']);
+//mostra un comentari especific
+Route::get('/comentarios/show/{id}', [comentariosController::class, 'show']);
+//eliminar comentari
+Route::delete('/comentarios/{id}', [comentariosController::class, 'destroy']);
+
+
