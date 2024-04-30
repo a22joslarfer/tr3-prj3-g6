@@ -30,7 +30,7 @@
         </div>
         <div>
     <button id="signinButton" class="google-signin-button">
-      <img src="../public/google_icon.png" alt="Google Logo" class="google-logo"> Iniciar sesión con Google
+      <img src="../public/img/google_icon.png" alt="Google Logo" class="google-logo"> Iniciar sesión con Google
     </button>
   </div>
       </div>
@@ -71,6 +71,8 @@ export default {
         })
         .then(data => {
           console.log('Sesión iniciada correctamente:', data);
+          alert('Sesión iniciada correctamente');
+          localStorage.setItem('token', data.token);
           const store = useStore();
           store.save_user_info(data.name, data.email, data.id);
 
@@ -182,13 +184,13 @@ export default {
 }
 
 .login-link a {
-  color: #053cf1;
+  color: #f1693f;
   text-decoration: underline;
 }
 
 .login-link a:hover {
   text-decoration: underline;
-  color: #062897;
+  color: #a34427;
 }
 
 .gjmkph {

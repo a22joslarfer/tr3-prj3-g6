@@ -57,6 +57,10 @@ export const useStore = defineStore({
     },
 
 
+    logout() {
+      this.clear_user_info();
+    }
+  
   },
 
   persist: true,

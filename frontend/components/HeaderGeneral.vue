@@ -4,7 +4,6 @@
       <div class="container">
         <div class="logo">
           <!-- Aquí puedes colocar tu logo -->
-          <img src="../public/copas.png" alt="Logo">
         </div>
         <div class="name">
           <h2>VIAEGIS</h2>

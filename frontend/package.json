@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "nuxt": "^3.11.2",
+    "nuxt-rating": "^0.0.15",
     "nuxt-socket-io": "^3.0.13",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",

@@ -79,6 +79,8 @@ class UserController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
+            'phone' => $request->input('phone'),
+            'birthday' => $request->input('birthday'),
             'api_token' => Str::random(60), 
         ]);
         $user->save();
@@ -124,6 +126,12 @@ class UserController extends Controller
         return response()->json(['message' => 'Logged out']);
     }
 
+    public function getUsers($id)
+    {
+        $user = User::find($id);
+        return response()->json($user);
+        
+    }
     public function getUser($id)
     {
         $user = User::find($id);

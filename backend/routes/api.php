@@ -27,6 +27,8 @@ Route::post('login', [userController::class, 'login']);
 Route::post('register', [userController::class, 'register']);
 // ruta para obtener todos los usuarios
 Route::get('/users', [userController::class, 'getUsers']);
+//ruta para obtener un usuario por id
+Route::get('/users/{id}', [userController::class, 'getUser']);
 // ruta para crear un usuario
 Route::post('/users', [userController::class, 'create']);
 // ruta para borrar un usuario

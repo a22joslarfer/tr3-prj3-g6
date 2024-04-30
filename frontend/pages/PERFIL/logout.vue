@@ -1,9 +1,12 @@
 <template>
-  <div>
-    <div class="container">
-      <div class="title">Cerrar Sesión</div>
-      <button @click="logout" class="button">Cerrar Sesión</button>
+  <HeaderPerfil :pageTitle="pageTitle" />
+  <div class="logout-container">
+    <div class="logout-content">
+      <button @click="logout" class="logout-button">Cerrar Sesión</button>
+      <!--crea un aviso para preguntar si realmente quiere cerrar sesion -->
+
     </div>
+    <FooterOptions />
   </div>
 </template>
 
@@ -11,23 +14,22 @@
 import { useStore } from '../stores/index.js';
 
 export default {
-  mounted() {
-    const store = useStore();
-    console.log(store); // Verifica que la tienda se esté utilizando correctamente
-  },
   methods: {
     logout() {
       const store = useStore();
-      store.reset_booking_info();
+      store.logout(); 
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      // Eliminar información de usuario en local storage
+      
       this.$router.push('/login');
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
-.container {
+.logout-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,15 +37,18 @@ export default {
   background-color: #eff4f3;
 }
 
-.title {
+.logout-content {
+  text-align: center;
+}
+
+.logout-title {
   font-size: 28px;
   font-weight: bold;
   color: #333;
   margin-bottom: 20px;
-  text-align: center;
 }
 
-.button {
+.logout-button {
   width: 200px;
   height: 50px;
   border: none;
@@ -53,5 +58,10 @@ export default {
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #ff6252;
 }
 </style>
