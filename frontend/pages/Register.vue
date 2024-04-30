@@ -64,7 +64,7 @@
                 </div>
                 <div class="login-form-container">
                     <button id="signinButton" class="google-signin-button">
-                        <img src="../public/google_icon.png" alt="Google Logo" class="google-logo"> Iniciar sesión con
+                        <img src="../public/img/google_icon.png" alt="Google Logo" class="google-logo"> Iniciar sesión con
                         Google
                     </button>
                 </div>

@@ -30,7 +30,7 @@
         </div>
         <div>
     <button id="signinButton" class="google-signin-button">
-      <img src="../public/google_icon.png" alt="Google Logo" class="google-logo"> Iniciar sesión con Google
+      <img src="../public/img/google_icon.png" alt="Google Logo" class="google-logo"> Iniciar sesión con Google
     </button>
   </div>
       </div>

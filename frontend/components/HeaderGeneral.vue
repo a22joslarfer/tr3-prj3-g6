@@ -3,7 +3,6 @@
       <div class="container">
         <div class="logo">
           <!-- Aquí puedes colocar tu logo -->
-          <img src="../public/copas.png" alt="Logo">
         </div>
         <nav class="nav">
           <ul>

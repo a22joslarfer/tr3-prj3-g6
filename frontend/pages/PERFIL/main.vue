@@ -45,7 +45,7 @@ export default {
     padding: 20px;
 }
 input{
-    background-image: url('../../public/search_FILL1_wght100_GRAD-25_opsz20.svg');
+    background-image: url('../../public/img/search_FILL1_wght100_GRAD-25_opsz20.svg');
     width: calc(100% - 30px); /* Ajusta el ancho del input para que quepa el ícono */
     padding: 10px 40px 10px 10px; /* Ajusta el padding derecho para dejar espacio al ícono */
     margin-top: 20px;
