@@ -6,9 +6,16 @@
         <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
         <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
         <p>ID de Usuario: {{ bereal.id_usuari }}</p>
+        
+        <input type="text" v-model="nuevoComentario" placeholder="Escribeix un comentari">
+        <button @click="subirComentario(bereal.id)">Penja</button>
+        
+        <ul>
+          <li v-for="comentario in bereal.comentarios" :key="comentario.id">
+            {{ comentario.comentario }}
+          </li>
+        </ul>
 
-        <input type="text" v-model="nuevoComentario" placeholder="Escribe un comentario">
-        <button @click="subirComentario(bereal.id)">Enviar</button>
       </li>
     </ul>
     <p v-else>No se encontraron Bereals.</p>
@@ -34,6 +41,15 @@ export default {
           throw new Error('Error al obtener los Bereals');
         }
         const data = await response.json();
+        // Obtindre comentaris per cada Bereal
+        for (const bereal of data) {
+          const comentariosResponse = await fetch(`http://localhost:8000/api/comentarios/${bereal.id}`);
+          if (!comentariosResponse.ok) {
+            throw new Error('Error al obtener los comentarios');
+          }
+          const comentariosData = await comentariosResponse.json();
+          bereal.comentarios = comentariosData;
+        }
         this.bereals = data;
       } catch (error) {
         console.error(error);
@@ -41,12 +57,11 @@ export default {
     },
     // Método para construir la URL completa de la imagen
     getImagenUrl(rutaRelativaImagen) {
-      // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
       return `http://localhost:8000/${rutaRelativaImagen}`;
     },
-    async subirComentario(idBereal){
-      try{
-        const response = await fetch('http://localhost:8000/api/comentarios',{
+    async subirComentario(idBereal) {
+      try {
+        const response = await fetch('http://localhost:8000/api/comentarios', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -56,12 +71,12 @@ export default {
             id_bereal: idBereal
           })
         });
-        if(!response.ok){
-          throw new Error('Error al penjar el comentari');
+        if (!response.ok) {
+          throw new Error('Error al subir el comentario');
         }
         this.nuevoComentario = "";
         this.obtenerBereals();
-      }catch(error) {
+      } catch (error) {
         console.error(error);
       }
     }
