@@ -1,14 +1,13 @@
 <template>
     <div class="container">
         <h2>Lista de reviews</h2>
-        <div class="btn-group" role="group">
-            <div class="button-wrapper">
-                <button v-for="reviews_categoria in reviews" :key="reviews_categoria.id" type="button"
-                    class="btn btn-secondary">
-                    {{ reviews_categoria.categoria }}
-                </button>
-            </div>
-
+        <div class="dropdown-categorias">
+            <select v-model="selectedCategory" class="mobile-select">
+                <option disabled value="">Please select one</option>
+                <option v-for="categoria in categorias_reviews" :key="categoria.id" :value="categoria.id">
+                    {{ categoria.nombre }}
+                </option>
+            </select>
         </div>
 
         <div class="row">
@@ -25,6 +24,15 @@
                     </div>
                     <div class="card-footer">
                         <small class="text-muted">Review de {{ getUserById(review.usuario_id) }}</small>
+                        <div v-if="review.usuario_id != client_id">
+                            <button @click="follow(review.usuario_id)">Follow</button>
+                        </div>
+
+                        <div v-else>
+                            <button @click="deleteReview(review.id)">Eliminar review</button>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
@@ -37,9 +45,13 @@ export default {
     data() {
         return {
             reviews: [],
-            userMap: {}, // Using an object instead of array to store user data
+            userMap: {},
             search: '',
             imageSrc: null,
+            categorias_reviews: [],
+            client_id: null,
+            selectedCategory: '',
+
         };
     },
     methods: {
@@ -83,29 +95,134 @@ export default {
             return user ? user.name : 'Usuario Desconocido';
         },
         getImagenUrl(rutaRelativaImagen) {
-            // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
+
             return `http://localhost:8000/${rutaRelativaImagen}`;
+        },
+        fetchCategoriasReviews() {
+            fetch('http://localhost:8000/api/categorias_reviews')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error fetching categorias_reviews: ${response.status} - ${response.statusText}`);
+                    }
+                    return response.json(); // Return the parsed JSON
+                })
+                .then(categorias => {
+                    this.categorias_reviews = categorias;
+
+                })
+                .catch(error => {
+                    console.error('Error fetching categorias_reviews:', error);
+                    alert('Error fetching categorias_reviews');
+                });
+        },
+        checkIfAuth() {
+            const store = useStore();
+            const user_id = store.return_user_id();
+            if (user_id == null) {
+                alert('Necesitas estar logueado para crear una review');
+                this.$router.push('/login');
+                store.set_return_path('/reviews');
+            }
+            this.client_id = user_id;
+
+        },
+        deleteReview(review_id) {
+            fetch(`http://localhost:8000/api/reviews/${review_id}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error deleting review: ${response.status} - ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(review => {
+                    alert('Review eliminada');
+                    this.fetchReviews();
+                })
+                .catch(error => {
+                    console.error('Error deleting review:', error);
+                    alert('Error deleting review');
+                });
+        },
+        follow(seguido_id) {
+            fetch('http://localhost:8000/api/seguidores', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    seguidor: this.client_id,
+                    seguido: seguido_id,
+                }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error adding friend: ${response.status} - ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(friend => {
+                    alert('Amigo añadido');
+                })
+                .catch(error => {
+                    console.error('Error adding friend:', error);
+                    alert('Error adding friend');
+                });
+        },
+        unfollow(seguido_id) {
+
+        },
+        checkIfSeguidor(seguidor_id, seguido_id) {
+            fetch(`http://localhost:8000/api/seguidores/${seguidor_id}/${seguido_id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error fetching seguidores');
+                    }
+                    return response.json();
+
+                })
+                .then(data => {
+                    if (data.status) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                })
+
+                .catch(error => {
+                    console.error('Error fetching seguidores:', error);
+                    alert('Error fetching seguidores catch error');
+                });
         }
     },
     mounted() {
         this.fetchReviews();
-    },
-    computed: {
-        filteredReviews() {
+        this.fetchCategoriasReviews();
+        this.checkIfAuth();
 
-            return this.reviews.filter(review => review.categoria.includes(this.search));
-        },
     },
+
 };
 </script>
 
 <style scoped>
-/* Bootstrap-like CSS */
+/*normazile*/
+* {
+    box-sizing: border-box;
+    font-family: "Antonio", sans-serif;
+    margin: 0;
+    padding: 0px;
+    overflow: hidden;
+    color: #ccc;
+
+}
+
+
+
 .container {
-    margin-right: auto;
-    margin-left: auto;
-    padding-right: 15px;
-    padding-left: 15px;
+    padding: 8px;
+    background-color: #30355ade;
 }
 
 .btn {
@@ -124,17 +241,6 @@ export default {
     cursor: pointer;
 }
 
-.btn-secondary {
-    color: #fff;
-    background-color: #6c757d;
-    border-color: #6c757d;
-}
-
-.btn-secondary:hover {
-    color: #fff;
-    background-color: #5a6268;
-    border-color: #545b62;
-}
 
 .card {
     position: relative;
@@ -142,10 +248,10 @@ export default {
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
-    background-color: #fff;
+    background-color: #30355a;
     background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 0.25rem;
+    border: 1px solid #23284b;
+    border-radius: 1rem;
     margin: 40px 0;
 }
 
@@ -171,24 +277,65 @@ export default {
 
 .card-footer {
     padding: 0.75rem 1.25rem;
-    background-color: rgba(0, 0, 0, 0.03);
-    border-top: 1px solid rgba(0, 0, 0, 0.125);
+    background-color: rgba(0, 0, 0, 0.301);
+    border-top: 1px solid rgba(252, 252, 252, 0.212);
     border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.text-muted {
-    color: #539ddf !important;
+
+.dropdown-categorias {
+    width: 100%;
+    padding: 0;
+
 }
 
 button {
-    margin: 5px;
-    padding: 20px;
-    font-size: 20px;
+    background-color: #30355a;
+    transition: background-color 0.2s ease-in-out;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.button-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+button:hover {
+    background-color: #121322a8;
+
+}
+
+h2 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+
+.mobile-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #30355a;
+    border: 1px solid #ccc;
+
+    border-radius: 4px;
+}
+
+option {
+    background-color: #30355a;
+    color: #ccc;
+    border: 2px solid #ccc;
+}
+
+.dropdown-categorias:focus,
+.mobile-select:focus,
+.dropdown-categorias:active,
+.mobile-select:active {
+    outline: none;
+}
+
+body {
+    margin: 0px;
 }
 </style>

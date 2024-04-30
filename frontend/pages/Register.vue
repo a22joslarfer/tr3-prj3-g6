@@ -67,10 +67,10 @@ export default {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    name: this.name.trim(),
-                    email: this.email.trim(),
-                    password: this.password.trim(),
-
+                    name: this.name,
+                    email: this.email,
+                    password: this.password,
+                   
                 }),
             })
                 .then(response => {
@@ -104,11 +104,11 @@ export default {
                         alert('Usuario registrado correctamente!');
                         // Almacena solo la información necesaria del usuario
                         localStorage.setItem('user', JSON.stringify({
-                            nombre: this.nombre.trim(),
-                            email: this.email.trim(),
+                            nombre: this.name,
+                            email: this.email,
                             token: data.access_token,
                         }));
-                        navigateTo('/login');
+                        this.$router.push('/login');
                     }
                 })
 

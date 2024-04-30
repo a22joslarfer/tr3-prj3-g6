@@ -1,33 +1,31 @@
 <template>
-    <div>
-        <HeaderGeneral />
+
+    <HeaderGeneral />
     <div class="container">
         <div id="buscador"></div>
 
         <div id="buscador"></div>
 
-<div id="map" ref="map" style="height: 100%; width: 100%;"></div>
+        <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
 
-<div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
-    <div class="card">
-        <div class="card-header">
-            <h3>{{ pin_seleccionado.titulo }}</h3>
-            <div class="card-closer" @click="cerrarPopUp">X</div>
-        </div>
-        <div class="card-body">
-<img :src="pin_seleccionado.imgUrl" alt="imagen de la discoteca"
-style="width: 100%; height: 200px; object-fit: cover;">
+        <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{{ pin_seleccionado.titulo }}</h3>
+                    <div class="card-closer" @click="cerrarPopUp">X</div>
+                </div>
+                <div class="card-body">
+                    <img :src="'https://via.placeholder.com/200'" alt="imagen de la discoteca"
+                        style="width: 100%; height: 200px; object-fit: cover;">
 
-<p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
-<p>Horario: {{ pin_seleccionado.horario }}</p>
-<p>Telefono: {{ pin_seleccionado.telefono }}</p>
-<p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
-<audio :src="pin_seleccionado.cancion_mp3" controls></audio>
-                        <NuxtLink :to="'/CRUD/REVIEWS/Crear-Review/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
-                    </div>
+                    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
+                    <p>Horario: {{ pin_seleccionado.horario }}</p>
+                    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
+                    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+                    <NuxtLink :to="'/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
                 </div>
             </div>
-        </div>       
+        </div>
         <FooterOptions />
     </div>
 
@@ -119,49 +117,49 @@ export default {
 
     methods: {
         async handleFileUpload() {
-        const file = this.$refs.fileInput.files[0];
-        const formData = new FormData();
-        formData.append('file', file);
+            const file = this.$refs.fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
 
-        try {
-            const response = await fetch('http://localhost:8000/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
+            try {
+                const response = await fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
 
+                const data = await response.json();
+
+                if (data.success) {
+                    this.uploadedSongUrl = data.fileUrl;
+                    this.pin_seleccionado.cancion_mp3 = data.fileUrl;
+                } else {
+                    console.error('Error al subir el archivo');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        },
+        async fetchData() {
+            const response = await fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/discotecas');
             const data = await response.json();
 
-            if (data.success) {
-                this.uploadedSongUrl = data.fileUrl;
-                this.pin_seleccionado.cancion_mp3 = data.fileUrl;
-            } else {
-                console.error('Error al subir el archivo');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    },
-        async fetchData() {
-    const response = await fetch('http://localhost:8000/api/discotecas');
-    const data = await response.json();
+            this.data = data.map((discoteca) => {
+                return {
+                    id: discoteca.id,
+                    titulo: discoteca.nombre_local,
+                    coordenadas: JSON.parse(discoteca.coordenadas),
+                    imgUrl: discoteca.imgUrl,
+                    descripcion: discoteca.descripcion,
+                    telefono: discoteca.telefono,
+                    horario: discoteca.horario,
+                    minEdad: discoteca.minEdad,
+                    cancion_mp3: discoteca.canciones  // Aquí es donde asignamos el valor de "canciones" al objeto "pin_seleccionado"
+                };
+            });
 
-    this.data = data.map((discoteca) => {
-        return {
-            id: discoteca.id,
-            titulo: discoteca.nombre_local,
-            coordenadas: JSON.parse(discoteca.coordenadas),
-            imgUrl: discoteca.imgUrl,
-            descripcion: discoteca.descripcion,
-            telefono: discoteca.telefono,
-            horario: discoteca.horario,
-            minEdad: discoteca.minEdad,
-            cancion_mp3: discoteca.canciones  // Aquí es donde asignamos el valor de "canciones" al objeto "pin_seleccionado"
-        };
-    });
-
-    this.crear_mostrar_pines_discos();
-    this.añadir_popup_info_de_las_discos();
-},
+            this.crear_mostrar_pines_discos();
+            this.añadir_popup_info_de_las_discos();
+        },
         initMapaDatosMapBox() {
             mapboxgl.accessToken = 'pk.eyJ1IjoiaHVnb3RyaXBpYW5hIiwiYSI6ImNsczFueDBieDBiYngybG1rb2g4bGIyNW0ifQ.EECPYp9RZ_JIpjmlvyy2Hw';
 
@@ -178,12 +176,12 @@ export default {
             });
 
             this.map.addControl(geocoder);
-        this.$nextTick(() => {
-            var geocoderElement = document.querySelector('.mapboxgl-ctrl-geocoder');
-            var searchBar = document.getElementById('buscador');
-            searchBar.appendChild(geocoderElement);
-        });
-    },
+            this.$nextTick(() => {
+                var geocoderElement = document.querySelector('.mapboxgl-ctrl-geocoder');
+                var searchBar = document.getElementById('buscador');
+                searchBar.appendChild(geocoderElement);
+            });
+        },
         crear_mostrar_pines_discos() {
 
             if (this.map.getSource('points')) {
@@ -371,16 +369,18 @@ export default {
 <style>
 @import url('https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css');
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@700&display=swap');
+
 .subtitle {
     font-family: "Anybody", sans-serif;
     font-size: 25px;
     font-optical-sizing: auto;
-    font-weight: 800; /* Puedes ajustar este valor según lo necesites */
+    font-weight: 800;
+    /* Puedes ajustar este valor según lo necesites */
     font-style: normal;
     font-variation-settings: "wdth" 100;
     text-align: center;
     text-transform: uppercase;
-    background-color:#f0f1f1
+    background-color: #f0f1f1
 }
 
 .btn-create-review {
@@ -481,12 +481,13 @@ export default {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
     animation: fade-in 0.5s ease-in-out;
 }
+
 .card-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        animation: slideInLeft 1s ease-in-out;
-    }
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    animation: slideInLeft 1s ease-in-out;
+}
 
 .card-closer {
     cursor: pointer;
@@ -510,11 +511,12 @@ export default {
     align-content: space-around;
     flex-wrap: wrap;
 }
+
 .audio-player {
-        width: 100%;
-        margin-top: 20px;
-        animation: slideInRight 1s ease-in-out;
-    }
+    width: 100%;
+    margin-top: 20px;
+    animation: slideInRight 1s ease-in-out;
+}
 
 .card-body {
     line-height: 1.1;
@@ -523,6 +525,7 @@ export default {
     flex-direction: column;
     text-align: center;
 }
+
 .carousel-container {
     margin-top: 20px;
     width: 100%;
@@ -584,20 +587,22 @@ p {
 
 /* Estilos searchbar nav */
 .map-container {
-        height: 100%;
-        width: 100%;
-        animation: fadeIn 1s ease-in-out;
-    }
-.mapboxgl-map{
-    position:relative;
+    height: 100%;
+    width: 100%;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.mapboxgl-map {
+    position: relative;
     width: 100%;
     height: 100%;
-    top:-100px;
+    top: -100px;
     background-color: #f0f1f1;
 }
+
 .mapboxgl-ctrl-geocoder {
     position: absolute;
-    bottom:110px;
+    bottom: 110px;
     left: 100px;
     z-index: 1000;
     width: auto;
@@ -611,11 +616,11 @@ p {
 }
 
 .mapboxgl-ctrl-geocoder input[type="text"] {
-    background-color:rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
     border-radius: 30px;
-    border:1px solid rgb(101,101,105);
+    border: 1px solid rgb(101, 101, 105);
     padding: 10px;
-    margin-left:17px;
+    margin-left: 17px;
 }
 
 .mapboxgl-ctrl-geocoder .suggestions {
@@ -659,51 +664,57 @@ p {
     text-decoration: none;
     font-size: 0;
 }
+
 .mapboxgl-ctrl-geocoder--icon,
 .mapboxgl-ctrl-geocoder--icon-loading {
     display: none !important;
 }
 
 @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
+    from {
+        opacity: 0;
     }
 
-    @keyframes slideInLeft {
-        from {
-            transform: translateX(-50px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-50px);
+        opacity: 0;
     }
 
-    @keyframes slideInRight {
-        from {
-            transform: translateX(50px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(50px);
+        opacity: 0;
     }
 
-    @keyframes pulse {
-        0% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.05);
-        }
-        100% {
-            transform: scale(1);
-        }
+    to {
+        transform: translateX(0);
+        opacity: 1;
     }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
 </style>

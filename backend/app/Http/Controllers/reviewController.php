@@ -35,7 +35,12 @@ class reviewController extends Controller
             if ($request->hasFile('photo')) {
                 $photoPath = $request->file('photo')->store('photos', 'public');
                 $review->photo = $photoPath;
+            } elseif ($request->exists('photo')) {
+                $review->photo = $request->photo;
+            } else {
+                return response()->json(['error' => 'No photo was provided.'], 400);
             }
+
 
             $review->save();
 

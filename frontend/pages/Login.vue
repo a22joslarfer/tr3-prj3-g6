@@ -71,13 +71,21 @@ export default {
         })
         .then(data => {
           console.log('Sesión iniciada correctamente:', data);
-          localStorage.setItem('token', data.token);
           const store = useStore();
           store.save_user_info(data.name, data.email, data.id);
-          console.log('Usuari:', store.return_user_username());
-          console.log('Email:', store.return_user_email());
-          console.log('Id:', store.return_user_id());
-          this.$router.push('/');
+
+          if (store.return_path === null) {
+            this.$router.push('/');
+          } else {
+            const path = store.return_path;
+            store.set_return_path(null);
+            this.$router.push(path);
+
+          }
+
+          
+        
+     
         })
         .catch(error => {
           console.error('Error al iniciar sesión:', error);

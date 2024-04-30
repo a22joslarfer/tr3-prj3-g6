@@ -5,7 +5,8 @@ use App\Http\Controllers\reviewController;
 use App\Http\Controllers\userController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\categoriasReviewController;
-    
+use App\Http\Controllers\friendController;
+use App\Http\Controllers\seguidoresController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,11 +21,9 @@ Route::get('/csrf-token', function () {
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
-
-
+// ruta para hacer login
 Route::post('login', [userController::class, 'login']);
+// ruta para hacer logout
 Route::post('register', [userController::class, 'register']);
 // ruta para obtener todos los usuarios
 Route::get('/users', [userController::class, 'getUsers']);
@@ -78,3 +77,32 @@ Route::get('/reviews/disco/{id}', [reviewController::class, 'getReviewsByDisco']
 // ruta para obtener las reviews por puntuacion
 Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getReviewsByPuntuacion']);
 
+
+// RUTAS DE CATEGORIAS_REVIEWS
+// ruta para obtener todas las categorias
+Route::get('/categorias_reviews', [categoriasReviewController::class, 'getCategorias']);
+// ruta para obtener una categoria por nombre
+Route::get('/categorias_reviews/{nombre}', [categoriasReviewController::class, 'getCategoria']);
+
+
+
+
+// RUTAS DE SEGUIDORES
+// ruta para obtener todos los seguidores de un usuario
+Route::get('/seguidores/{id}', [seguidoresController::class, 'getSeguidores']);
+//ruta para obtener todos los amigos de un usuario
+Route::get('/amigos/{id}', [seguidoresController::class, 'getAmigos']);
+// ruta para añadir un seguidor
+Route::post('/seguidores', [seguidoresController::class, 'addSeguidor']);
+// ruta para comprobar si un usuario sigue a otro usuario
+Route::get('/seguidores/{seguidor_id}/{seguido_id}', [seguidoresController::class, 'checkIfSeguidor']);
+
+// RUTAS DE SEGUIDORES
+// ruta para obtener todos los seguidores de un usuario
+Route::get('/seguidores/{id}', [seguidoresController::class, 'getSeguidores']);
+//ruta para obtener todos los amigos de un usuario
+Route::get('/amigos/{id}', [seguidoresController::class, 'getAmigos']);
+// ruta para añadir un seguidor
+Route::post('/seguidores', [seguidoresController::class, 'addSeguidor']);
+// ruta para comprobar si un usuario sigue a otro usuario
+Route::get('/seguidores/{seguidor_id}/{seguido_id}', [seguidoresController::class, 'checkIfSeguidor']);
