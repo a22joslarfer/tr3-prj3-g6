@@ -11,8 +11,10 @@
         <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
             <div class="card">
                 <div class="card-header">
-                    <h3>{{ pin_seleccionado.titulo }}</h3>
+
                     <div class="card-closer" @click="cerrarPopUp">X</div>
+
+                    <h3>{{ pin_seleccionado.titulo }}</h3>
                 </div>
                 <div class="card-body">
                     <img :src="'https://via.placeholder.com/200'" alt="imagen de la discoteca"
@@ -171,7 +173,8 @@ export default {
 
             var geocoder = new MapboxGeocoder({
                 accessToken: mapboxgl.accessToken,
-                mapboxgl: mapboxgl
+                mapboxgl: mapboxgl,
+                marker:false
             });
 
             this.map.addControl(geocoder);
@@ -468,17 +471,17 @@ export default {
     color: var(--blanco);
 }
 
+
 .info-card {
     position: absolute;
-    top: 155px;
-    right: 30px;
-    z-index: 1000;
-    max-width: 450px;
-    background-color: var(--base);
-    border-radius: 10px;
-    color: var(--verde2);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.87);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    width: 400px;
     animation: fade-in 0.5s ease-in-out;
+    z-index: 1000;
+
 }
 
 .card-image {
@@ -489,10 +492,18 @@ export default {
 }
 
 .card-closer {
-    cursor: pointer;
-    font-size: 2vw;
+    font-size: 7vw;
     color: var(--carne2);
     transition: color 0.2s ease-in-out;
+    /* align-self: flex-end; */
+    position: absolute;
+    /* left: 22px; */
+    background-color: grey;
+    border-radius: 50%;
+    width: 36px;
+    display: grid;
+    justify-items: center;
+
 }
 
 .card-closer:hover {
@@ -541,22 +552,12 @@ p {
 }
 
 .card {
-    background-color: var(--base2);
     background-color: hsl(354deg 2.71% 13.94%);
     color: #fff6f6;
     border-radius: 16px;
 }
 
-.info-card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    width: 400px;
-    animation: fade-in 0.5s ease-in-out;
 
-}
 
 .btn-create-review {
     background-color: var(--base2);

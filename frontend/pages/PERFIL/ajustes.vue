@@ -8,29 +8,15 @@
 
       <div class="input">
         <label for="username">Nombre de usuario:</label>
-        <input type="text" id="username" class="user_info" v-model="username" placeholder="HugoTripiana03">
+        <input type="text" id="username" class="user_info" v-model="username">
       </div>
 
       <div class="input">
         <label for="email">Correo electrónico:</label>
-        <input type="email" id="email" class="user_info" v-model="email" placeholder="hugo@gmail.com">
+        <input type="email" id="email" class="user_info" v-model="email" >
       </div>
       
-      <div class="input">
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" class="user_info" v-model="password" placeholder="********">
-      </div>
-
-      <div class="input">
-        <label for="birthdate">Fecha de nacimiento:</label>
-        <input type="date" id="birthdate" class="user_info" v-model="birthdate">
-      </div>
-
-      <div class="input">
-        <label for="phone">Número de teléfono:</label>
-        <input type="tel" id="phone" class="user_info" v-model="phone" placeholder="123456789">
-      </div>
-
+     
       <button type="submit" class="button">Guardar cambios</button>
 
     </form>
@@ -47,9 +33,7 @@ export default {
     return {
       username: '',
       email: '',
-      password: '',
-      birthdate: '',
-      phone: ''
+      pageTitle: 'Ajustes de perfil'
     }
   },
   created() {
@@ -67,19 +51,16 @@ export default {
 
       // Envía los datos al servidor (API) para actualizar la base de datos
       fetch(`http://localhost:8000/users/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          username: this.username,
-          email: this.email,
-          password: this.password,
-          birthdate: this.birthdate,
-          phone: this.phone
-        }),
-      })
+    method: 'PUT',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    },
+    body: JSON.stringify({
+        username: this.username,
+        email: this.email
+    }),
+})
       .then(response => {
         if (!response.ok) {
           throw new Error(`Error al actualizar usuario: ${response.status} - ${response.statusText}`);
