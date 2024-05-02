@@ -161,27 +161,90 @@ export default {
             this.añadir_popup_info_de_las_discos();
         },
         initMapaDatosMapBox() {
-            mapboxgl.accessToken = 'pk.eyJ1IjoiaHVnb3RyaXBpYW5hIiwiYSI6ImNsczFueDBieDBiYngybG1rb2g4bGIyNW0ifQ.EECPYp9RZ_JIpjmlvyy2Hw';
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaHVnb3RyaXBpYW5hIiwiYSI6ImNsczFueDBieDBiYngybG1rb2g4bGIyNW0ifQ.EECPYp9RZ_JIpjmlvyy2Hw';
 
-            this.map = new mapboxgl.Map({
-                container: this.$refs.map,
-                style: 'mapbox://styles/hugotripiana/cls1o5thk00xv01pl13ze6ks0',
-                center: [2.0947632393357907, 39.35567342431939],
-                zoom: 0,
-            });
+    this.map = new mapboxgl.Map({
+        container: this.$refs.map,
+        style: 'mapbox://styles/hugotripiana/cls1o5thk00xv01pl13ze6ks0',
+        center: [2.0947632393357907, 39.35567342431939],
+        zoom: 0,
+    });
 
-            var geocoder = new MapboxGeocoder({
-                accessToken: mapboxgl.accessToken,
-                mapboxgl: mapboxgl
-            });
+    var geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl,
+        marker: false
+    });
 
-            this.map.addControl(geocoder);
-            this.$nextTick(() => {
-                var geocoderElement = document.querySelector('.mapboxgl-ctrl-geocoder');
-                var searchBar = document.getElementById('buscador');
-                searchBar.appendChild(geocoderElement);
-            });
-        },
+    // Agregamos un listener para el evento keyup en el campo de búsqueda
+    var searchBar = document.getElementById('buscador');
+    searchBar.addEventListener('keyup', (event) => {
+        const placeName = event.target.value.toLowerCase();
+        if (placeName.includes('mya valencia')) {
+            this.mostrarMarcador([-0.3527186, 39.453452]);
+        } else if (placeName.includes('sala santana')) {
+            this.mostrarMarcador([-2.8999824, 43.2502984]);
+        } else if (placeName.includes('pacha')) {
+            this.mostrarMarcador([2.1971997, 41.3853718]);
+        } else if (placeName.includes('fabrik')) {
+            this.mostrarMarcador([-3.8405653, 40.2653008]);
+        } else if (placeName.includes('joy eslava')) {
+            this.mostrarMarcador([-3.7026, 40.4165]);
+        } else if (placeName.includes('granada 10')) {
+            this.mostrarMarcador([-3.5978761, 37.1774842]);
+        } else if (placeName.includes('kenbo')) {
+            this.mostrarMarcador([-0.8801567, 41.6528379]);
+        } else if (placeName.includes("roca's")) {
+            this.mostrarMarcador([-3.1215182, 39.4024346]);
+        } else if (placeName.includes('sala gold')) {
+            this.mostrarMarcador([-4.421322, 36.7220776]);
+        } else if (placeName.includes('indara')) {
+            this.mostrarMarcador([-1.6463764, 42.8124524]);
+        } else if (placeName.includes('bambu club')) {
+            this.mostrarMarcador([-4.7813695, 37.8865709]);
+        } else if (placeName.includes("sithon's")) {
+            this.mostrarMarcador([-4.0217139, 39.8587244]);
+        } else if (placeName.includes('sala apolo')) {
+            this.mostrarMarcador([2.1663458, 41.3714059]);
+        } else if (placeName.includes("d'lio")) {
+            this.mostrarMarcador([-0.9874309, 37.601202]);
+        } else if (placeName.includes('papagayo')) {
+            this.mostrarMarcador([-16.7310521, 28.0675977]);
+        } else if (placeName.includes('play club')) {
+            this.mostrarMarcador([-0.3774, 39.4698]);
+        } else if (placeName.includes('florida 135')) {
+            this.mostrarMarcador([0.3489, 41.5229]);
+        } else if (placeName.includes('la isla')) {
+            this.mostrarMarcador([-7.8624218, 42.3362141]);
+        } else if (placeName.includes('amnesia')) {
+            this.mostrarMarcador([1.3104134, 38.9944471]);
+        }
+    });
+
+    this.map.addControl(geocoder);
+    this.$nextTick(() => {
+        var geocoderElement = document.querySelector('.mapboxgl-ctrl-geocoder');
+        searchBar.appendChild(geocoderElement);
+    });
+},
+
+mostrarMarcador(coordenadas) {
+    // Redirigir al lugar específico
+    this.map.flyTo({
+        center: coordenadas,
+        zoom: 14,
+    });
+
+    // Remover el marcador existente, si hay uno
+    if (this.marker) {
+        this.marker.remove();
+    }
+
+    // Agregar un nuevo marcador en las coordenadas especificadas
+    this.marker = new mapboxgl.Marker()
+        .setLngLat(coordenadas)
+        .addTo(this.map);
+},
         crear_mostrar_pines_discos() {
 
             if (this.map.getSource('points')) {
