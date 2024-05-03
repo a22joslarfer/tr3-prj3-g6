@@ -612,6 +612,8 @@ p {
     justify-content: center;
     align-items: center;
     padding: 10px;
+    left: 0;
+    right: 0;
 
 }
 

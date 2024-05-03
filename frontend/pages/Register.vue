@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import { useStore } from '../stores/index.js';
 
 export default {
 
@@ -125,23 +126,23 @@ export default {
                 .then(data => {
 
                     if (data.error) {
+                        console.error('Error:', data.error);
                         localStorage.setItem('authToken', data.access_token);
                         // Almacena solo la información necesaria del usuario
-                        localStorage.setItem('user', JSON.stringify({
-                            nombre: data.user.nombre,
-                            email: data.user.email,
-                            token: data.access_token,
+                        
 
-                        }));
-
+                     
                         alert(data.error);
                     } else {
                         alert('Usuario registrado correctamente!');
+                        const store = useStore();
+                        store.save_user_info_register(data.name, data.email, data.id,data.phone, data.birthday, data.token);
                         // Almacena solo la información necesaria del usuario
                         localStorage.setItem('user', JSON.stringify({
                             nombre: this.name,
                             email: this.email,
                             token: data.access_token,
+                            
                         }));
                         this.$router.push('/login');
                     }
