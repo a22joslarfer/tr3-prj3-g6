@@ -13,6 +13,9 @@
           <input type="text" id="phone" v-model="newPhone">
           <label for="birthday">Fecha de nacimiento:</label>
           <input type="date" id="birthday" v-model="newBirthday">
+          <!-- contraseña anterior -->
+          <label for="currentPassword">Contraseña actual:</label>
+<input type="password" id="currentPassword" v-model="currentPassword">
           <label for="password">Contraseña:</label>
           <input type="password" id="password" v-model="newPassword">
           <button @click="updateUser">Actualizar datos</button>
@@ -39,7 +42,8 @@ export default {
       userId: null,
       newPhone: '',
       newBirthday: '',
-      newPassword: ''
+      newPassword: '',
+      currentPassword: ''
     };
   },
   async mounted() {
@@ -57,6 +61,19 @@ export default {
     async updateUser() {
       console.log('Updating user...');
       const store = useStore();
+  // Verificar si se ha proporcionado la contraseña anterior
+  if (!this.currentPassword) {
+    console.error('Debe proporcionar la contraseña anterior.');
+    return;
+  }
+  
+  // Verificar que la contraseña anterior coincida con la almacenada
+  if (this.currentPassword !== this.user.password) {
+    console.error('La contraseña anterior es incorrecta.');
+    return;
+  }
+
+
       // Actualizar el usuario en el store
       store.save_user_info_register(this.newName, this.newEmail, this.userId, this.newPhone, this.newBirthday, this.newPassword);
       console.log('New user data:', store.return_user_info_register());
@@ -119,7 +136,9 @@ export default {
 
 h1 {
   font-size: 2rem;
-  margin-bottom: 1rem;
+    position: relative;
+    top: -25px;
+  margin-bottom: -11px;
 }
 
 .user-info {
