@@ -226,7 +226,7 @@ label {
   z-index: 2000; /* Asegura que esté por encima de otros elementos */
 }
 input {
-  background-image: url('../../public/search_FILL1_wght100_GRAD-25_opsz20.svg');
+  background-image: url('../public/search_FILL1_wght100_GRAD-25_opsz20.svg');
   width: calc(100% - 30px);
   padding: 10px 40px 10px 10px;
   margin-top: 20px;

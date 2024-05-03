@@ -1,3 +1,5 @@
+
+import FooterOptions from '~/components/FooterOptions.vue';
 <template>
     <div class="social-profile">
       <div class="profile-header">
@@ -54,7 +56,7 @@
         <img src=".../public/img/bola-de-discoteca.png" alt="Bola de discoteca">
     </div>
 </div>
-
+<FooterOptions  />
     </div>
   </template>
   

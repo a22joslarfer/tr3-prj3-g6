@@ -3,12 +3,14 @@
 
     <div class="login-container">
         <div class="content">
-            <!-- Add multi-step progress bar -->
-            <div class="step-progress-content"> 
-                            <button type="radio" class="boton-atras" @click="step--"><</button>
-                            <UProgress :value="3" :max="3" />
+          <!-- Add multi-step progress bar -->
+          <div class="step-progress-content">    
+            <button type="radio" class="boton-atras" @click="step--"><</button>
 
-                        </div>
+                <div class="progress-bar">
+                    <div class="progress" :style="{ width: (step * 33.33) + '%' }"></div>
+                </div>
+            </div>
 
             <div class="company-info">
                 <img src="https://static.vecteezy.com/system/resources/previews/029/938/250/non_2x/planet-earth-globe-world-map-ai-generative-free-png.png"
@@ -38,8 +40,6 @@
                                 required />
                         </div>
                         <div class="botones">
-                            <button type="button" class="button back-button" @click="step--"></button>
-
                             <button type="button" class="button next-button" @click="step++">Siguiente</button>
                         </div>
                     </div>
@@ -52,22 +52,21 @@
                                 placeholder="Fecha de Nacimiento" />
                         </div>
                         <div class="botones">
-                            <button type="button" class="button back-button" @click="step--"></button>
-
                             <button type="submit" class="button">Regístrate</button>
                         </div>
                     </div>
                 </form>
-                <div class="sc-18d118e1-0 gjmkph">
+                 <!-- GOOGLE
+                    <div class="sc-18d118e1-0 gjmkph">
                     <hr class="sc-1a86d6e9-0 doHtqb"><span class="sc-7b9b9acb-0 bMZrBT">or</span>
                     <hr class="sc-1a86d6e9-0 doHtqb">
                 </div>
-                <div class="login-form-container">
+               <div class="login-form-container">
                     <button id="signinButton" class="google-signin-button">
                         <img src="../public/img/google_icon.png" alt="Google Logo" class="google-logo"> Iniciar sesión con
                         Google
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -76,6 +75,7 @@
 </template>
 
 <script>
+import { useStore } from '../stores/index.js';
 
 export default {
 
@@ -126,23 +126,23 @@ export default {
                 .then(data => {
 
                     if (data.error) {
+                        console.error('Error:', data.error);
                         localStorage.setItem('authToken', data.access_token);
                         // Almacena solo la información necesaria del usuario
-                        localStorage.setItem('user', JSON.stringify({
-                            nombre: data.user.nombre,
-                            email: data.user.email,
-                            token: data.access_token,
+                        
 
-                        }));
-
+                     
                         alert(data.error);
                     } else {
                         alert('Usuario registrado correctamente!');
+                        const store = useStore();
+                        store.save_user_info_register(data.name, data.email, data.id,data.phone, data.birthday, data.token);
                         // Almacena solo la información necesaria del usuario
                         localStorage.setItem('user', JSON.stringify({
                             nombre: this.name,
                             email: this.email,
                             token: data.access_token,
+                            
                         }));
                         this.$router.push('/login');
                     }
@@ -159,6 +159,32 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap');
+/* Contenedor de la barra de progreso */
+.progress-bar {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 10px; /* Altura de la barra de progreso */
+    background-color: #ddd; /* Color de fondo de la barra de progreso */
+    border-radius: 5px; /* Borde redondeado de la barra de progreso */
+}
+
+.progress {
+    height: 100%;
+    background-color: #ff806d; /* Color de la barra de progreso */
+    border-radius: 5px; /* Borde redondeado de la barra de progreso */
+    transition: width 0.3s ease; /* Transición suave del ancho */
+}
+
+/* Contenedor de la barra de progreso */
+.step-progress-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
 .login-container {
     background-color: #eff4f3;
@@ -242,15 +268,26 @@ export default {
     font-size: 18px;
 }
 
-.back-button {
-    background-color: #f1693f;
-    color: #333;
-}
 
-.next-button,
-.submit-button {
-    background-color: #f0663c;
-    color: #fff;
+.next-button{
+    background-color: #f1693f;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 18px;
+    margin-top: 10px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+
+
+}
+ 
+.button[type="submit"]{
+    background-color: #f1693f;
+    color: white;
+
+
+
 }
 
 .login-link {
@@ -308,15 +345,12 @@ export default {
 }
 
 .boton-atras{
-    background-color: #4c4d4caf;
+    background-color: #cbc5c5af;
     color: #333;
     border: none;
-    border-radius: 25px;
-    font-size: 25px;
+    border-radius: 26px;
+    font-size: 28px;
     margin-right: 10px;
-    padding: 10px 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 10px;
+    padding: 0px 13px;  
 }
 </style>

@@ -45,23 +45,29 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function update(Request $request, $id)
+
+public function update(Request $request, $id)
     {
         // Validar los datos del formulario
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'required|string|min:8',
+            'phone' => 'required|string',
+            'birthday' => 'required|string',
         ]);
 
         // Actualizar un usuario existente
         $user = User::findOrFail($id);
         $user->name = $request->input('name');
         $user->email = $request->input('email');
+        $user->password = Hash::make($request->input('password'));
+        $user->phone = $request->input('phone');
+        $user->birthday = $request->input('birthday');
         $user->save();
 
         return response()->json($user);
     }
-
     public function destroy($id)
     {
         // Eliminar un usuario
