@@ -12,5 +12,7 @@ class Comentario extends Model
     protected $fillable = [
         'id_bereal',
         'comentario',
+        'id_usuari',
+        'hora',
     ];
 }

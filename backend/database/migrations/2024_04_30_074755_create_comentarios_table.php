@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_bereal');
             $table->foreign('id_bereal')->references('id')->on('bereal')->onDelete('cascade');
+            $table->unsignedBigInteger('id_usuari');
+            $table->foreign('id_usuari')->references('id')->on('usuarios')->onDelete('cascade');
             $table->text('comentario');
             $table->timestamp('hora')->useCurrent(); 
             $table->timestamps();

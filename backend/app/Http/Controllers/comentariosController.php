@@ -17,12 +17,14 @@ class comentariosController extends Controller
     {
         $request->validate([
             'comentario' => 'required',
-            'id_bereal' => 'required|exists:bereal,id'
+            'id_bereal' => 'required|exists:bereal,id',
+            'id_usuari' => 'required'
         ]);
 
         $comentario = new Comentario();
         $comentario->comentario = $request->comentario;
         $comentario->id_bereal = $request->id_bereal;
+        $comentario->id_usuari = $request->id_usuari;
         $comentario->save();
 
         return response()->json(['message' => 'Comentari creat'], 201);

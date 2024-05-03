@@ -11,8 +11,9 @@
         <button @click="subirComentario(bereal.id)">Penja</button>
         
         <ul>
+          
           <li v-for="comentario in bereal.comentarios" :key="comentario.id">
-            {{ comentario.comentario }}
+            {{ comentario.hora}} {{ comentario.comentario}}  
           </li>
         </ul>
 
@@ -27,7 +28,7 @@ export default {
   data() {
     return {
       bereals: [],
-      nuevoComentario: ""
+      nuevoComentario: "",
     }
   },
   async mounted() {
@@ -35,31 +36,42 @@ export default {
   },
   methods: {
     async obtenerBereals() {
-      try {
-        const response = await fetch('http://localhost:8000/api/bereals');
-        if (!response.ok) {
-          throw new Error('Error al obtener los Bereals');
-        }
-        const data = await response.json();
-        // Obtindre comentaris per cada Bereal
-        for (const bereal of data) {
-          const comentariosResponse = await fetch(`http://localhost:8000/api/comentarios/${bereal.id}`);
-          if (!comentariosResponse.ok) {
-            throw new Error('Error al obtener los comentarios');
-          }
-          const comentariosData = await comentariosResponse.json();
-          bereal.comentarios = comentariosData;
-        }
-        this.bereals = data;
-      } catch (error) {
-        console.error(error);
+  try {
+    const response = await fetch('http://localhost:8000/api/bereals');
+    if (!response.ok) {
+      throw new Error('Error al obtener los Bereals');
+    }
+    const data = await response.json();
+    // Obtener comentarios para cada Bereal
+    for (const bereal of data) {
+      const comentariosResponse = await fetch(`http://localhost:8000/api/comentarios/${bereal.id}`);
+      if (!comentariosResponse.ok) {
+        throw new Error('Error al obtener los comentarios');
       }
-    },
+      const comentariosData = await comentariosResponse.json();
+      bereal.comentarios = comentariosData;
+
+      // Obtener el nombre del usuario asociado al id_usuari para cada comentario
+      for (const comentario of comentariosData) {
+        const usuarioResponse = await fetch(`http://localhost:8000/api/users`);
+        if (!usuarioResponse.ok) {
+          throw new Error('Error al obtener el usuario');
+        }
+        const usuarioData = await usuarioResponse.json();
+        comentario.nombreUsuario = usuarioData.nombre;
+      }
+    }
+    this.bereals = data;
+  } catch (error) {
+    console.error(error);
+  }
+},
+
     // Método para construir la URL completa de la imagen
     getImagenUrl(rutaRelativaImagen) {
       return `http://localhost:8000/${rutaRelativaImagen}`;
     },
-    async subirComentario(idBereal) {
+    async subirComentario(idBereal ) {
       try {
         const response = await fetch('http://localhost:8000/api/comentarios', {
           method: 'POST',
@@ -68,7 +80,8 @@ export default {
           },
           body: JSON.stringify({
             comentario: this.nuevoComentario,
-            id_bereal: idBereal
+            id_bereal: idBereal,
+            id_usuari: 1,
           })
         });
         if (!response.ok) {
