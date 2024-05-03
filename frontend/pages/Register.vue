@@ -40,8 +40,6 @@
                                 required />
                         </div>
                         <div class="botones">
-                            <button type="button" class="button back-button" @click="step--"></button>
-
                             <button type="button" class="button next-button" @click="step++">Siguiente</button>
                         </div>
                     </div>
@@ -54,17 +52,16 @@
                                 placeholder="Fecha de Nacimiento" />
                         </div>
                         <div class="botones">
-                            <button type="button" class="button back-button" @click="step--"></button>
-
                             <button type="submit" class="button">Regístrate</button>
                         </div>
                     </div>
                 </form>
-                <div class="sc-18d118e1-0 gjmkph">
+                 <!-- GOOGLE
+                    <div class="sc-18d118e1-0 gjmkph">
                     <hr class="sc-1a86d6e9-0 doHtqb"><span class="sc-7b9b9acb-0 bMZrBT">or</span>
                     <hr class="sc-1a86d6e9-0 doHtqb">
                 </div>
-                <!-- <div class="login-form-container">
+               <div class="login-form-container">
                     <button id="signinButton" class="google-signin-button">
                         <img src="../public/img/google_icon.png" alt="Google Logo" class="google-logo"> Iniciar sesión con
                         Google
@@ -270,15 +267,26 @@ export default {
     font-size: 18px;
 }
 
-.back-button {
-    background-color: #f1693f;
-    color: #333;
-}
 
-.next-button,
-.submit-button {
-    background-color: #f0663c;
-    color: #fff;
+.next-button{
+    background-color: #f1693f;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 18px;
+    margin-top: 10px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+
+
+}
+ 
+.button[type="submit"]{
+    background-color: #f1693f;
+    color: white;
+
+
+
 }
 
 .login-link {
@@ -336,15 +344,12 @@ export default {
 }
 
 .boton-atras{
-    background-color: #4c4d4caf;
+    background-color: #cbc5c5af;
     color: #333;
     border: none;
-    border-radius: 25px;
-    font-size: 25px;
+    border-radius: 26px;
+    font-size: 28px;
     margin-right: 10px;
-    padding: 10px 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 10px;
+    padding: 0px 13px;  
 }
 </style>

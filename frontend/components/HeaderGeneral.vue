@@ -61,7 +61,6 @@ export default {
         { id: 5, name: 'Login', route: '/Login' },
         { id: 6, name: 'Register', route: '/Register' },
         { id: 7, name: 'Cerrar sesión', route: '/PERFIL/logout' },
-        { id: 8, name: 'PruebaAjustes', route: '/PERFIL/pruebaajustes'}
       ],
     };
   },

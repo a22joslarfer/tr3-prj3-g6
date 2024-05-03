@@ -1,124 +1,103 @@
 <template>
-  <div class="container">
-    <HeaderPerfil :pageTitle="pageTitle" />
-
-    <h1 class="title">Editar perfil</h1>
-
-    <form class="form" @submit.prevent="submitForm">
-
-      <div class="input">
-        <label for="username">Nombre de usuario:</label>
-        <input type="text" id="username" class="user_info" v-model="username">
-      </div>
-
-      <div class="input">
-        <label for="email">Correo electrónico:</label>
-        <input type="email" id="email" class="user_info" v-model="email" >
-      </div>
-      
-     
-      <button type="submit" class="button">Guardar cambios</button>
-
-    </form>
-
-    <FooterOptions />
+  <HeaderPerfil />
+  <div>
+    <h1>User Profile</h1>
+    <div v-if="user">
+      <p><strong>Name:</strong> {{ user.username }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>ID:</strong> {{ user.user_id }}</p>
+      <label for="name">New Name:</label>
+      <input type="text" id="name" v-model="newName">
+      <label for="email">New Email:</label>
+      <input type="email" id="email" v-model="newEmail">
+      <button @click="updateUser">Update</button>
+    </div>
+    <div v-else>
+      <p>Loading...</p>
+    </div>
   </div>
+  <FooterOptions />
 </template>
 
 <script>
-import { useStore } from '@/stores/index.js';
+import FooterOptions from '~/components/FooterOptions.vue';
+import { useStore } from '../stores/index.js';
 
 export default {
   data() {
     return {
-      username: '',
-      email: '',
-      pageTitle: 'Ajustes de perfil'
-    }
+      newName: '',
+      newEmail: '',
+      user: null,
+      userId: null
+    };
   },
-  created() {
+  async mounted() {
     const store = useStore();
-    const userInfo = store.return_user_info(); // Obtén los datos del usuario desde tu tienda Pinia
-
-    // Asigna los valores de usuario y correo electrónico a las variables locales
-    this.username = userInfo.username;
-    this.email = userInfo.email;
+    this.user = store.return_user_info();
+    console.log('User data:', this.user);
+    this.newName = this.user.username;
+    this.newEmail = this.user.email;
   },
   methods: {
-    submitForm() {
+    async updateUser() {
+      console.log('Updating user...');
       const store = useStore();
-      const userId = store.return_user_id(); // Obtén el ID del usuario desde tu tienda Pinia
+      // Actualizar el usuario en el store
+      store.save_user_info(this.newName, this.newEmail);
+      console.log('New user data:', store.return_user_info());
 
-      // Envía los datos al servidor (API) para actualizar la base de datos
-      fetch(`http://localhost:8000/users/${userId}`, {
-    method: 'PUT',
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      // Lógica para enviar la actualización al backend
+      this.sendUpdateToBackend();
     },
-    body: JSON.stringify({
-        username: this.username,
-        email: this.email
-    }),
-})
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Error al actualizar usuario: ${response.status} - ${response.statusText}`);
-        }
-        return response.json();
+    async sendUpdateToBackend() {
+console.log('Sending update to backend...');
+
+const store = useStore();
+const userId = this.user ? this.user.user_id : null;// Obtener el ID del usuario
+
+if (userId) { // Verificar si userId es null o no
+  try {
+    const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
+      method: 'PUT', // Utilizar el método PUT para actualizar el usuario
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: this.newName, // Enviar el nuevo nombre
+        email: this.newEmail // Enviar el nuevo email
       })
-      .then(data => {
-        console.log('Usuario actualizado:', data);
-        alert('Cambios guardados exitosamente');
-      })
-      .catch(error => {
-        console.error('Error al actualizar usuario:', error);
-        alert('Error al guardar cambios. Por favor, inténtalo de nuevo.');
-      });
-    }
+    });
+    const data = await response.json();
+    console.log('Response from server:', data);
+  } catch (error) {
+    console.error('Error updating user:', error);
   }
+} else {
+  console.error('User ID is null. Cannot send update request.');
 }
+}
+  }
+};
 </script>
 
 <style scoped>
-.user_info {
-  margin-top: 10px;
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
-
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
+input {
+  margin-bottom: 1rem;
 }
-
-.title {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-}
-
-.input {
-  margin-bottom: 10px;
-  padding: 10px;
-  font-size: 16px;
-  display: grid;
-  grid-template-columns: max-content;
-}
-
-.button {
-  padding: 10px 20px;
-  font-size: 16px;
+button {
+  padding: 0.5rem 1rem;
   background-color: #007bff;
-  color: #fff;
+  color: white;
   border: none;
+  border-radius: 0.25rem;
   cursor: pointer;
 }
-
-.button:hover {
+button:hover {
   background-color: #0056b3;
 }
 </style>
