@@ -2,7 +2,7 @@
 
     <HeaderGeneral />
     <div class="container">
-        <div id="buscador"></div>
+
 
         <div id="buscador"></div>
 
