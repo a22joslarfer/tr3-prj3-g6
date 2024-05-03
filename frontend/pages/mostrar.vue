@@ -1,30 +1,33 @@
 <template>
-  <div>
-    <h1>Lista de Bereals</h1>
-    <ul v-if="bereals.length">
-      <li v-for="bereal in bereals" :key="bereal.id">
+  <div class="bereals-container">
+    <h1>BEREALS</h1>
+    <div v-if="bereals.length" class="bereals-list">
+      <div v-for="bereal in bereals" :key="bereal.id" class="bereal-item">
         <h2>{{ bereal.usuarioNombre }}</h2>
-        <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
-        <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
-        <br>
-        <!-- Input para añadir un comentario -->
-        <input type="text" v-model="nuevoComentario" placeholder="Escribe un comentario">
-        <button @click="subirComentario(bereal.id)">Añadir Comentario</button>
+        <div class="bereal-images">
+          <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
+          <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
+        </div>
+        <div class="comment-section">
+          <!-- Input para añadir un comentario -->
+          <input type="text" v-model="nuevoComentario" placeholder="Escribe un comentario" class="comment-input">
+          <button @click="subirComentario(bereal.id)" class="comment-button">Añadir Comentario</button>
 
-        <!-- Lista de comentarios -->
-        <ul>
-          <li v-for="comentario in bereal.comentarios" :key="comentario.id">
-            <p>
-              {{ comentario.hora.slice(11, 19) }} - {{ comentario.usuarioNombre }}: {{ comentario.comentario }}
-            </p>
-          </li>
-        </ul>
-
-      </li>
-    </ul>
+          <!-- Lista de comentarios -->
+          <div class="comment-list">
+            <div v-for="comentario in bereal.comentarios" :key="comentario.id" class="comment-item">
+              <p>
+                {{ comentario.hora.slice(11, 19) }} - {{ comentario.usuarioNombre }}: {{ comentario.comentario }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <p v-else>No se encontraron Bereals.</p>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -107,9 +110,75 @@ export default {
 }
 </script>
 
-<style>
+
+<style scoped>
+.bereals-container {
+  padding: 20px;
+}
+
+.bereal-item {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.bereal-images {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
 .bereal-image {
-  width: 200px;
+  width: 45%;
+  max-width: 150px;
   height: auto;
+  border-radius: 5px;
+}
+
+.comment-section {
+  margin-top: 10px;
+}
+
+.comment-input {
+  width: calc(100% - 90px);
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.comment-button {
+  width: 80px;
+  padding: 5px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.comment-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.comment-item {
+  border-bottom: 1px solid #ddd;
+  padding: 5px 0;
+}
+
+@media (min-width: 768px) {
+  .bereal-item {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .bereal-image {
+    width: 100%;
+    max-width: none;
+    height: 150px;
+  }
 }
 </style>
