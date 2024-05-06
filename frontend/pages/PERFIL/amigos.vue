@@ -1,29 +1,88 @@
 <template>
-    <div>
-<HeaderPerfil :pageTitle="pageTitle"/>
-<div class="container">
-    <aside>
-        <li>
-            <i class="material-icons">search</i>
-        </li>
-        <input type="text" class="searchbar" placeholder="Buscar amigos">
-    </aside>
-</div>
+    <div id="container">
+
+        <div v-for="amigo in amigos" :key="amigo.id" @click="startChatWith(amigo.id)">
+            {{ amigo.name }}
+        </div>
+
+
     </div>
 </template>
 
 <script>
-    export default {
-        data() {
-    return {
-      pageTitle: 'Amigos', // Definir el título aquí en el objeto data
-    }
-  }
-    }
+import { socket } from "../socket.js";
+
+export default {
+    data() {
+        return {
+            amigos: [],
+            clientId: null,
+
+        };
+    },
+    mounted() {
+        this.checkIfAuth();
+        this.getAmigos(this.clientId);
+        socket.emit('userJoined', this.clientId);
+    },
+    methods: {
+        startChatWith(chattingWithId) {
+            const store = useStore();
+            store.set_chattingWithId(chattingWithId);
+            socket.emit('joinRoomWith', chattingWithId, this.clientId);
+
+            this.$router.push(`/perfil/chat`);
+        },
+        checkIfAuth() {
+            const store = useStore();
+            this.clientId = store.return_user_id();
+            store.set_return_path('/perfil/amigos');
+            if (this.clientId === undefined || this.clientId === null) {
+                alert('Necesitas  logueado para chatear con tus amigos');
+                this.$router.push('/login');
+            }
+
+        },
+        getAmigos(id) {
+            fetch(`http://localhost:8000/api/amigos/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error fetching amigos');
+                    }
+                    return response.json();
+
+                })
+                .then(data => {
+                    this.amigos = data;
+                    if (data.length == 0) {
+                        alert('No tienes amigos');
+                    }
+                })
+
+                .catch(error => {
+                    console.error('Error fetching amigos:', error);
+                    alert('Error fetching amigos catch error');
+                });
+
+        }
+
+    },
+}
 </script>
+<style scoped>
+#container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
 
-
-<style lang="scss" scoped>
-
-
+div {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+}
 </style>
