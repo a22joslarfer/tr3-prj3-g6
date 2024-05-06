@@ -5,7 +5,7 @@
         <div class="content">
             <!-- Add multi-step progress bar -->
             <div class="step-progress-content"> 
-                            <button type="radio" class="boton-atras" @click="step--"><</button>
+                            <button type="radio" class="boton-atras" @click="step--"></button>
                             <UProgress :value="3" :max="3" />
 
                         </div>
@@ -23,6 +23,8 @@
                 <form @submit.prevent="register" class="form">
                     <div class="input-group" v-if="step === 1">
                         <input type="text" v-model.trim="name" class="input" placeholder="Nombre Completo" required />
+                        <input type="file" @change="handleFileUpload" accept="image/*" />
+
                         <div class="botones">
 
                             <button type="button" class="button next-button" @click="step++">Siguiente</button>
@@ -76,9 +78,7 @@
 </template>
 
 <script>
-
 export default {
-
     data() {
         return {
             step: 1,
@@ -87,75 +87,52 @@ export default {
             password: '',
             phone: '',
             birthday: '',
-
-
+            profile_photo: null // Cambiado de 'photo' a 'profile_photo'
         };
     },
-
     methods: {
+        handleFileUpload(event) {
+            this.profile_photo = event.target.files[0]; // Cambiado de 'this.photo' a 'this.profile_photo'
+        },
         register() {
+            const formData = new FormData();
+            formData.append('name', this.name.trim());
+            formData.append('email', this.email.trim());
+            formData.append('password', this.password.trim());
+            formData.append('phone', this.phone.trim());
+            formData.append('birthday', this.birthday.trim());
+            formData.append('profile_photo', this.profile_photo); // Cambiado de 'this.photo' a 'this.profile_photo'
+
             fetch('http://localhost:8000/api/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: this.name.trim(),
-                    email: this.email.trim(),
-                    password: this.password.trim(),
-                    phone: this.phone.trim(),
-                    birthday: this.birthday.trim(),
-
-
-                }),
+                body: formData
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.text();
-                })
-                .then(text => {
-                    try {
-                        return JSON.parse(text);
-                    } catch (error) {
-                        console.error('Could not parse JSON:', text);
-                        throw error;
-                    }
-                })
-                .then(data => {
-
-                    if (data.error) {
-                        localStorage.setItem('authToken', data.access_token);
-                        // Almacena solo la información necesaria del usuario
-                        localStorage.setItem('user', JSON.stringify({
-                            nombre: data.user.nombre,
-                            email: data.user.email,
-                            token: data.access_token,
-
-                        }));
-
-                        alert(data.error);
-                    } else {
-                        alert('Usuario registrado correctamente!');
-                        // Almacena solo la información necesaria del usuario
-                        localStorage.setItem('user', JSON.stringify({
-                            nombre: this.name,
-                            email: this.email,
-                            token: data.access_token,
-                        }));
-                        this.$router.push('/login');
-                    }
-                })
-
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    alert('Usuario registrado correctamente!');
+                    localStorage.setItem('user', JSON.stringify({
+                        nombre: this.name,
+                        email: this.email,
+                        token: data.access_token
+                    }));
+                    this.$router.push('/login');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
     }
 };
 </script>
-
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap');

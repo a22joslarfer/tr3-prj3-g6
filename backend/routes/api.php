@@ -24,8 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // ruta para hacer login
 Route::post('login', [userController::class, 'login']);
 // ruta para hacer logout
-Route::post('register', [userController::class, 'register']);
-// ruta para obtener todos los usuarios
+Route::post('register', [userController::class, 'store']);
 Route::get('/users', [userController::class, 'getUsers']);
 //ruta para obtener un usuario por id
 Route::get('/users/{id}', [userController::class, 'getUser']);
