@@ -4,7 +4,9 @@
       <h1>BeReal</h1>
       <div v-if="bereals.length" class="bereals-list">
         <div v-for="bereal in bereals" :key="bereal.id" class="bereal-item">
-          <h2>{{ bereal.usuarioNombre }}</h2>
+          <h2>{{ bereal.usuarioNombre }} </h2>
+          <p>{{ bereal.hora.slice(11, 19)  }}</p>
+          
           <div class="bereal-images">
             <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
             <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
@@ -73,8 +75,18 @@ body {
   background-color: black;
 }
 
-h1, h2 {
+h1 {
   color: white;
+  text-align: center;
+}
+
+h2 {
+  color: white;
+}
+
+p{
+  color: grey;
+  margin-bottom: 20px;
 }
 
 .bereals-container {
@@ -104,7 +116,7 @@ h1, h2 {
 .comment-button {
   width: 100%;
   padding: 5px;
-  background-color: #007bff;
+  background-color: grey;
   color: #fff;
   border: none;
   border-radius: 5px;

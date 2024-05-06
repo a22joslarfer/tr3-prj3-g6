@@ -12,7 +12,8 @@ class Bereal extends Model
     protected $fillable = [
       'img_del',
       'img_tra',
-      'id_usuari'
+      'id_usuari',
+      'hora'
   ];
   protected $table ='bereal';
 
