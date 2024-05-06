@@ -125,6 +125,7 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Logged out']);
     }
+<<<<<<< HEAD
 
     public function getUsers($id)
     {
@@ -139,3 +140,24 @@ class UserController extends Controller
         
     }
 }
+=======
+    public function getUserById($id)
+    {
+        $user = usuarioModel::find($id);
+    
+        if (!$user) {
+            return response()->json([
+                "status" => 0,
+                "msg" => "Usuario no encontrado",
+            ], 404);
+        }
+    
+        return response()->json([
+            "status" => 1,
+            "msg" => "Nombre del usuario",
+            "data" => $user->nombre, // Devolver solo el nombre del usuario
+        ]);
+    }    
+
+}
+>>>>>>> origin/bereal-fotos
