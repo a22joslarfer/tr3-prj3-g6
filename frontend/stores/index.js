@@ -13,7 +13,11 @@ export const useStore = defineStore({
     return_path: null,
     user_id: null,
     email: null,
+    password: null,
+    birthday: null,
+    phone: null,
     username: null,
+    profile_picture: null,
   }),
   actions: {
     save_seats(seats) {
@@ -26,8 +30,17 @@ export const useStore = defineStore({
       this.username = username;
       this.email = email;
       this.user_id = id;
-    },
+     this.profile_picture = profile_picture;
 
+    },
+    save_user_info_register(username, email, id, phone, birthday, password) {
+      this.username = username;
+      this.email = email;
+      this.user_id = id;
+      this.phone = phone;
+      this.birthday = birthday;
+      this.password = password;
+    },
     return_user_id() {
       return this.user_id;
     },
@@ -37,17 +50,45 @@ export const useStore = defineStore({
     return_user_username() {
       return this.username;
     },
+    return_user_phone() {
+      return this.phone;
+    },
+    return_user_birthday() {
+      return this.birthday;
+    },
+    return_user_password() {
+      return this.password;
+    },
+    return_user_profile_picture() {
+      return this.profile_picture;
+    },
     return_user_info() {
       return {
         username: this.username,
         email: this.email,
-        user_id: this.user_id
+        user_id: this.user_id,
+       profile_picture: this.profile_picture,
+
+      };
+    },
+    return_user_info_register() {
+      return {
+        username: this.username,
+        email: this.email,
+        user_id: this.user_id,
+        phone: this.phone,
+        birthday: this.birthday,
+        password: this.password,
       };
     },
     clear_user_info() {
       this.username = null;
       this.email = null;
       this.user_id = null;
+      this.phone = null;
+      this.birthday = null;
+      this.password = null;
+      this.profile_picture = null;
     },
     set_return_path(path) {
       this.return_path = path;

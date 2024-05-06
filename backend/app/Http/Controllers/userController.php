@@ -138,4 +138,10 @@ class UserController extends Controller
         return response()->json($user);
         
     }
+    // return profile_photo from user
+    public function getProfilePhoto($id)
+    {
+        $user = User::find($id);
+        return response()->json($user->profile_photo);
+    }
 }
