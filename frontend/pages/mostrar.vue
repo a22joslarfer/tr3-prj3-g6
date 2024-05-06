@@ -1,21 +1,20 @@
 <template>
   <body>
-    
-  <div class="bereals-container">
-    <h1>BeReal</h1>
-    <div v-if="bereals.length" class="bereals-list">
-      <div v-for="bereal in bereals" :key="bereal.id" class="bereal-item">
-        <h2>{{ bereal.usuarioNombre }}</h2>
-        <div class="bereal-images">
-          <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
-          <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
+    <div class="bereals-container">
+      <h1>BeReal</h1>
+      <div v-if="bereals.length" class="bereals-list">
+        <div v-for="bereal in bereals" :key="bereal.id" class="bereal-item">
+          <h2>{{ bereal.usuarioNombre }}</h2>
+          <div class="bereal-images">
+            <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
+            <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
+          </div>
+          <button @click="irAComentarios(bereal.id)" class="comment-button">Afegir Comentaris</button>
         </div>
-        <button @click="irAComentarios(bereal.id)" class="comment-button">Afegir Comentaris</button>
       </div>
+      <p v-else>No se encontraron Bereals.</p>
     </div>
-    <p v-else>No se encontraron Bereals.</p>
-  </div>
-</body>
+  </body>
 </template>
 
 <script>
@@ -63,10 +62,15 @@ export default {
 </script>
 
 <style scoped>
-body {
-  background-color: black;
+html, body {
   margin: 0;
   padding: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+body {
+  background-color: black;
 }
 
 h1, h2 {
