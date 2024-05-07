@@ -36,6 +36,8 @@ Route::delete('/users/{id}', [userController::class, 'delete']);
 Route::put('/users/{id}', [userController::class, 'update']);
 //ruta para acceder a la profile_photo de un usuario
 Route::get('/users/profile_photo/{id}', [userController::class, 'getProfilePhoto']);
+Route::get('users/seguidores/{id}', [userController::class, 'getFollowers']);
+
 
 
 

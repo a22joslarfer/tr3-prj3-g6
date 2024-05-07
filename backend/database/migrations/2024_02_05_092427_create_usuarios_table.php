@@ -13,18 +13,29 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('phone')->nullable();
-            $table->date('birthday')->nullable();
-            $table->string('profile_photo')->nullable();
-            $table->string('api_token', 80)->unique()->nullable()->default(null); // Campo para el token de API
+            $table->string('nombre');
+            $table->string('correo_electronico')->unique();
+            $table->timestamp('correo_verificado_en')->nullable();
+            $table->string('contraseña');
+            $table->string('telefono')->nullable();
+            $table->date('fecha_nacimiento')->nullable();
+            $table->string('foto_perfil')->nullable();
+            $table->string('token_api', 80)->unique()->nullable()->default(null); // Campo para el token de API
             $table->rememberToken();
             $table->timestamps();
+        });
+
+        Schema::create('seguidores', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('usuario_id');
+            $table->unsignedBigInteger('seguidor_id');
+            $table->timestamps();
+
+            // Claves foráneas
+            $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
+            $table->foreign('seguidor_id')->references('id')->on('usuarios')->onDelete('cascade');
         });
     }
 
@@ -35,6 +46,7 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('seguidores');
+        Schema::dropIfExists('usuarios');
     }
 }

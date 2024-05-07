@@ -27,6 +27,7 @@ class seguidoresController extends Controller
 
         return response()->json($friends);
     }
+    
 
 
 

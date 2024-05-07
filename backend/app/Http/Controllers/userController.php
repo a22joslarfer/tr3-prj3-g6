@@ -56,7 +56,6 @@ class UserController extends Controller
 
     return response()->json($user, 201);
 }
-
     public function show($id)
     {
         // Mostrar un usuario específico
@@ -143,9 +142,26 @@ class UserController extends Controller
 
     // return profile_photo from user
     public function getProfilePhoto($id)
+{
+    $user = User::find($id);
+    if ($user) {
+        // Construir la URL completa de la imagen de perfil
+        $profilePhotoUrl = url($user->profile_photo);
+        return response()->json($profilePhotoUrl);
+    }
+    return response()->json(['error' => 'User not found'], 404);
+}
+public function getFollowers($id)
     {
         $user = User::find($id);
-        return response()->json($user->profile_photo);
+        
+        if ($user) {
+            $followersCount = $user->seguidores;
+            return response()->json(['seguidores' => $followersCount]);
+        }
+
+        return response()->json(['error' => 'User not found'], 404);
     }
+
 }
 
