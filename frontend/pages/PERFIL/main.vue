@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="edit-profile">
-      <button>Editar perfil</button>
+      <button onclick="window.location.href='/PERFIL/ajustes'">Editar perfil</button>
     </div>
     <div class="instagram-stories">
 <div class="story" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_zqXfEtVU1TPQeQX4MgJ4wjqBDLEVH2okT5Vbgs5ZsJ869wAmvk1MWJsWX4WqG4j-W1w&usqp=CAU');">
