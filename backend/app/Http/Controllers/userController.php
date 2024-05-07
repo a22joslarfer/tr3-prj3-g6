@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\usuarioModel;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use \Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -21,7 +21,7 @@ class userController extends Controller
             'birthdate' => 'required',
         ]);
 
-        $user = new usuarioModel();
+        $user = new User();
         $user->nombre = $request->nombre;
         $user->email = $request->email;
         $user->phone = $request->phone;
@@ -45,7 +45,7 @@ class userController extends Controller
 
     public function delete($id)
     {
-        $user = usuarioModel::find($id);
+        $user = User::find($id);
 
         if (!$user) {
             return response()->json([
@@ -64,7 +64,7 @@ class userController extends Controller
 
     public function update(Request $request, $id)
     {
-        $user = usuarioModel::find($id);
+        $user = User::find($id);
         $user->nombre = $request->nombre;
         $user->email = $request->email;
         $user->phone = $request->phone;
@@ -88,7 +88,7 @@ class userController extends Controller
             'birthdate' => 'required',
         ]);
 
-        $user = new usuarioModel();
+        $user = new User();
         $user->nombre = $request->nombre;
         $user->email = $request->email;
         $user->phone = $request->phone;
@@ -112,7 +112,7 @@ class userController extends Controller
             'password' => 'required'
 
         ]);
-        $user = usuarioModel::where("email", "=", $request->email)->first();
+        $user = User::where("email", "=", $request->email)->first();
 
         if (isset($user->id)) {
             if (Hash::check($request->password, $user->password)) {
@@ -183,14 +183,14 @@ class userController extends Controller
     }
     public function getUsers()
     {
-        $users = usuarioModel::all();
+        $users = User::all();
         return response()->json(
             $users
         );
     }
     public function getUserById($id)
     {
-        $user = usuarioModel::find($id);
+        $user = User::find($id);
     
         if (!$user) {
             return response()->json([

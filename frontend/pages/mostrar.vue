@@ -14,7 +14,7 @@
           <button @click="irAComentarios(bereal.id)" class="comment-button">Afegir Comentaris</button>
         </div>
       </div>
-      <p v-else>No se encontraron Bereals.</p>
+      <p v-else>No s'ha pujat cap Bereal encara.</p>
     </div>
   </body>
 </template>
