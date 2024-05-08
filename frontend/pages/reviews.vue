@@ -20,7 +20,6 @@
                         <h5 class="card-title">{{ review.titulo }}</h5>
                         <p class="card-text">{{ review.content }}</p>
                         <p class="card-text">Puntuación: {{ review.puntuacion }}</p>
-
                     </div>
                     <div class="card-footer">
                         <small class="text-muted">Review de {{ getUserById(review.usuario_id) }}</small>
@@ -31,8 +30,6 @@
                         <div v-else>
                             <button @click="deleteReview(review.id)">Eliminar review</button>
                         </div>
-
-
                     </div>
                 </div>
             </div>
