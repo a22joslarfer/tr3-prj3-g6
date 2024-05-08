@@ -1,6 +1,4 @@
 <template>
-<<<<<<< HEAD
-
     <HeaderGeneral />
     <div class="container">
         <div id="buscador"></div>
@@ -17,20 +15,19 @@
                 </div>
                 <div class="card-body">
                     <img :src="pin_seleccionado.imgUrl" alt="imagen de la discoteca"
-style="width: 100%; height: 200px; object-fit: cover;">
+                        style="width: 100%; height: 200px; object-fit: cover;">
 
-<p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
-<p>Horario: {{ pin_seleccionado.horario }}</p>
-<p>Telefono: {{ pin_seleccionado.telefono }}</p>
-<p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
-<audio :src="pin_seleccionado.cancion_mp3" controls></audio>
+                    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
+                    <p>Horario: {{ pin_seleccionado.horario }}</p>
+                    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
+                    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+                    <audio :src="pin_seleccionado.cancion_mp3" controls></audio>
                     <NuxtLink :to="'/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
                 </div>
             </div>
         </div>
         <FooterOptions />
     </div>
-
 </template>
 
 
@@ -112,6 +109,6 @@ export default {
                     );
                 }
             }
-        }
+        })
     }
 }
