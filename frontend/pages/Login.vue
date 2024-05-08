@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { useStore } from '../stores/index.js';
+
 export default {
   data() {
     return {
@@ -58,8 +58,8 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: this.email.trim(),
-          password: this.password.trim(),
+          email: this.email,
+          password: this.password,
 
         }),
       })
@@ -72,21 +72,13 @@ export default {
         .then(data => {
           console.log('Sesión iniciada correctamente:', data);
           alert('Sesión iniciada correctamente');
-          localStorage.setItem('token', data.token);
+         
           const store = useStore();
           store.save_user_info(data.name, data.email, data.id);
+         
 
-          if (store.return_path === null) {
-            this.$router.push('/');
-          } else {
-            const path = store.return_path;
-            store.set_return_path(null);
-            this.$router.push(path);
-
-          }
-
-          
-        
+          console.log('BBBBBBBBBBBBBBBBBBB');
+          this.$router.push('/');
      
         })
         .catch(error => {
