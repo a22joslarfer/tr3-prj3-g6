@@ -186,8 +186,7 @@ class UserController extends Controller
     
         return response()->json([
             "status" => 1,
-            "msg" => "Nombre del usuario",
-            "data" => $user->nombre, // Devolver solo el nombre del usuario
+            "data" => $user->name, // Devolver solo el nombre del usuario
         ]);
     }    
 

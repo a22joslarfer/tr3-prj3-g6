@@ -364,7 +364,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 @import url('https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css');
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@700&display=swap');
 
@@ -397,7 +397,7 @@ export default {
 }
 
 * {
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 :root {
@@ -527,7 +527,7 @@ export default {
 .carousel-container {
     margin-top: 20px;
     width: 100%;
-    overflow: hidden;
+   
 }
 
 .carousel-image {
