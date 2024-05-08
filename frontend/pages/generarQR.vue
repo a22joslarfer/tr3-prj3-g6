@@ -1,20 +1,24 @@
 <template>
-  <div class="container"> 
-    <div class="avatar">
-        <img class="profile-picture" src="https://static-00.iconduck.com/assets.00/profile-circle-icon-2048x2048-cqe5466q.png" alt="Profile Picture">
+  <div class="container">
+    <div class="qr-container">
+      <div class="avatar">
+        <img class="profile-picture"
+          src="https://static-00.iconduck.com/assets.00/profile-circle-icon-2048x2048-cqe5466q.png"
+          alt="Profile Picture">
       </div>
-    <div class="qr-card">
-     
-      <!-- name user -->
-      <h1>{{name}}</h1>
-      <div v-if="qrImageUrl" class="qr-code">
-        <div v-html="qrImageUrl"></div>
+      <div class="qr-card">
+
+        <!-- name user -->
+        <h1>{{ name }}</h1>
+        <div v-if="qrImageUrl" class="qr-code">
+          <div v-html="qrImageUrl"></div>
+        </div>
+        <div v-else>
+          <p>Cargando código QR...</p>
+        </div>
+        <!-- titulo -->
+        <h1 class="title_company">🥂 ELYSIUM</h1>
       </div>
-      <div v-else>
-        <p>Cargando código QR...</p>
-      </div>
-      <!-- titulo -->
-      <h1 class="title_company">🥂 ELYSIUM</h1>
     </div>
   </div>
 </template>
@@ -59,16 +63,15 @@ export default {
   },
   created() {
     this.fetchQRCode();
-    const store=useStore();
-  this.name = store.return_user_username();
+    const store = useStore();
+    this.name = store.return_user_username();
     console.log(this.name);
   },
 
 };
 </script>
 <style scoped>
-
-.title_company{
+.title_company {
   font-size: 20px;
   color: #000;
   font-weight: bold;
@@ -77,6 +80,7 @@ export default {
 
 
 }
+
 .container {
   display: flex;
   justify-content: center;
@@ -84,6 +88,7 @@ export default {
   height: 100vh;
   background-color: #ebe5e4;
 }
+
 .qr-card {
   max-width: 500px;
   margin: 0 auto;
@@ -93,6 +98,14 @@ export default {
   background-color: #ffffff;
   text-align: center;
   width: 80%;
+}
+
+.qr-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
 }
 
 .qr-card h1 {
@@ -126,9 +139,11 @@ export default {
 .follow-button:hover {
   background-color: #45a049;
 }
+
 .user-profile {
   position: absolute;
-  top: -50px; /* Desplazamiento negativo para que la mitad de la imagen sobresalga */
+  top: -50px;
+  /* Desplazamiento negativo para que la mitad de la imagen sobresalga */
   left: 50%;
   transform: translateX(-50%);
   width: 100px;
@@ -136,11 +151,20 @@ export default {
   overflow: hidden;
 }
 
+.avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+
+}
+
 .profile-picture {
-  width: 100%;
+  width: 100px;
   height: auto;
   border-radius: 50%;
   border: 2px solid #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
 </style>

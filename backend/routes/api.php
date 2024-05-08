@@ -42,7 +42,6 @@ Route::get('/generate-qr-code/{user}', [UserController::class, 'generateQRCode']
 
 
 
-
 // RUTAS DE DISCOTECAS
 // ruta para obtener todas las discotecas
 Route::get('/discotecas', [discoController::class, 'getDiscotecas']);

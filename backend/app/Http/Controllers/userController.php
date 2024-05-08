@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\File;
 
+
 class UserController extends Controller
 {
     public function index()
@@ -144,44 +145,32 @@ class UserController extends Controller
         $user = User::find($id);
         return response()->json($user);
     }
-    public function generateQRCode(User $user)
-    {
-        try {
-            //mostrar datos de usuario
-            $userData = [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                // Otros datos relevantes del usuario
-            ];
-            $qrContent = json_encode($userData);
+  public function generateQRCode(User $user)
+{
+    try {
+      
+        // Generar el contenido para el código QR (puede ser dinámico) llevar a http://localhost:3000/
+        $qrContent = 'http://viaegis.daw.inspedralbes.cat/';
 
-            // Contenido para el código QR (puede ser dinámico)
-            $qrContent = json_encode([
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                // Otros datos relevantes del usuario
-            ]);
+        // Generar el código QR con Simple-QRCode
+        $qrCode = QrCode::size(200)->generate($qrContent);
 
-            // Genera el código QR con Simple-QRCode
-            $qrCode = QrCode::size(200)->generate($qrContent);
+        // Nombre del archivo
+        $fileName = 'qr_code_' . time() . '.svg';
 
-            // Nombre del archivo
-            $fileName = 'qr_code_' . time() . '.svg';
+        // Ruta de destino para guardar el código QR
+        $qrPath = public_path('qr_codes/' . $fileName);
 
-            // Ruta de destino para guardar el código QR
-            $qrPath = public_path('qr_codes/' . $fileName);
+        // Guardar el código QR en la carpeta de destino
+        File::put($qrPath, $qrCode);
 
-            // Guarda el código QR en la carpeta de destino
-            File::put($qrPath, $qrCode);
-
-            // Devuelve la URL del código QR guardado
-            $qrUrl = asset('qr_codes/' . $fileName);
-            return response()->file($qrPath);
-        } catch (\Exception $e) {
-            // Manejar el error de generación del código QR
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        // Devolver la URL del código QR guardado
+        return response()->file($qrPath);
+        
+    } catch (\Exception $e) {
+        // Manejar el error de generación del código QR
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
 }
