@@ -14,6 +14,11 @@ export const useStore = defineStore({
     user_id: null,
     email: null,
     username: null,
+<<<<<<< HEAD
+=======
+    chattingWithId: null,
+    roomId: null,
+>>>>>>> origin/bereal-fotos
   }),
   actions: {
     save_seats(seats) {
@@ -26,8 +31,25 @@ export const useStore = defineStore({
       this.username = username;
       this.email = email;
       this.user_id = id;
+<<<<<<< HEAD
     },
 
+=======
+
+    },
+    set_roomId(roomId) {
+      this.roomId = roomId;
+    },
+    return_roomId(){
+      return this.roomId;
+    },
+    set_chattingWithId(amigoId) {
+      this.chattingWithId = amigoId;
+    },
+    return_chattingWithId() {
+      return this.chattingWithId;
+    },
+>>>>>>> origin/bereal-fotos
     return_user_id() {
       return this.user_id;
     },
@@ -60,7 +82,11 @@ export const useStore = defineStore({
     logout() {
       this.clear_user_info();
     }
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> origin/bereal-fotos
   },
 
   persist: true,
