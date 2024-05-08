@@ -2,5 +2,5 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@pinia/nuxt', 'nuxt-socket-io', '@pinia-plugin-persistedstate/nuxt',],
-  
+  telemetry: false,
 })

@@ -655,12 +655,19 @@
     }
 
     .card-closer {
-        cursor: pointer;
-        font-size: 2vw;
-        color: var(--carne2);
-        transition: color 0.2s ease-in-out;
-    }
+    font-size: 7vw;
+    color: var(--carne2);
+    transition: color 0.2s ease-in-out;
+    /* align-self: flex-end; */
+    position: absolute;
+    /* left: 22px; */
+    background-color: grey;
+    border-radius: 50%;
+    width: 36px;
+    display: grid;
+    justify-items: center;
 
+}
     .card-closer:hover {
         color: #ffffff;
     }
@@ -905,7 +912,6 @@
         }
 
         .info-card {
-            top: 60px;
             right: 10px;
             width: 90%;
             max-width: 90%;
