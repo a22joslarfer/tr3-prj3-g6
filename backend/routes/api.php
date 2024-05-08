@@ -3,6 +3,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\discoController;
 use App\Http\Controllers\reviewController;
 use App\Http\Controllers\userController;
+<<<<<<< HEAD
+=======
+use App\Http\Controllers\BeRealController;
+use App\Http\Controllers\comentariosController;
+use Illuminate\Support\Facades\Auth;
+>>>>>>> origin/bereal-fotos
 use Illuminate\Http\Request;
 use App\Http\Controllers\categoriasReviewController;
 use App\Http\Controllers\friendController;
@@ -35,6 +41,8 @@ Route::post('/users', [userController::class, 'create']);
 Route::delete('/users/{id}', [userController::class, 'delete']);
 // ruta para editar un usuario
 Route::put('/users/{id}', [userController::class, 'update']);
+
+
 
 
 
@@ -79,6 +87,7 @@ Route::get('/reviews/disco/{id}', [reviewController::class, 'getReviewsByDisco']
 // ruta para obtener las reviews por puntuacion
 Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getReviewsByPuntuacion']);
 
+<<<<<<< HEAD
 
 // RUTAS DE CATEGORIAS_REVIEWS
 // ruta para obtener todas las categorias
@@ -108,3 +117,29 @@ Route::get('/amigos/{id}', [seguidoresController::class, 'getAmigos']);
 Route::post('/seguidores', [seguidoresController::class, 'addSeguidor']);
 // ruta para comprobar si un usuario sigue a otro usuario
 Route::get('/seguidores/{seguidor_id}/{seguido_id}', [seguidoresController::class, 'checkIfSeguidor']);
+=======
+//RUTAS PARA BEREAL
+//ruta para crear 
+Route::post('/bereal', [BeRealController::class, 'createBereal']);
+//ruta para obtener y mostrar
+Route::get('/bereals/{id}', [BeRealController::class, 'show']);
+//mostrar todos
+Route::get('/bereals', [BeRealController::class, 'index']);
+//crear comentari 
+Route::post('/bereal/{id}/commentari', [BeRealController::class, 'addComentari']);
+//veure comentari
+Route::post('/bereal/{id}/commentaris', [BeRealController::class, 'getComentaris']);
+
+
+//RUTAS PARA COMENTARIOS BEREAL
+//mostrar tots els comentaris apartir de la id de bereal
+Route::get('/comentarios/{id_bereal}', [comentariosController::class, 'index']);
+//crea un nou comentari
+Route::post('/comentarios', [comentariosController::class, 'store']);
+//mostra un comentari especific
+Route::get('/comentarios/show/{id}', [comentariosController::class, 'show']);
+//eliminar comentari
+Route::delete('/comentarios/{id}', [comentariosController::class, 'destroy']);
+
+
+>>>>>>> origin/bereal-fotos

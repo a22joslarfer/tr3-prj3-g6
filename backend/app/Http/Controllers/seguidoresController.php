@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\seguidorModel;
 use Illuminate\Support\Facades\Log;
+use App\Models\User;
 
 class seguidoresController extends Controller
 {
@@ -21,15 +22,20 @@ class seguidoresController extends Controller
 
     public function getAmigos($id)
     {
-        $seguidorModel = new seguidorModel();
 
-        $friends = $seguidorModel->getFriendsOfUser($id);
+        // Get the ids of the users who are following the given user
+        $seguidorIds = seguidorModel::where('seguido', $id)->pluck('seguidor');
 
-        return response()->json($friends);
+        // Get the users who are following the given user and are also being followed by the given user
+        $amigos = seguidorModel::where('seguidor', $id)->whereIn('seguido', $seguidorIds)->get('seguido');
+
+        // Get the ids and names of the users with the ids in $amigos
+        $users = User::whereIn('id', $amigos)->select('id', 'name')->get();
+
+        return response()->json($users);
     }
-
-
-
+  
+  
     public function addSeguidor(Request $request)
     {
         try {

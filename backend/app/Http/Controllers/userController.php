@@ -21,18 +21,21 @@ class UserController extends Controller
     {
         // Validar los datos del formulario
         $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
+            'nombre' => 'required',
+            'email' => 'required|email|unique:usuarios,email',
+            'password' => 'required',
+            'password2' => 'required|same:password',
+            'phone' => 'required',
+            'birthdate' => 'required',
         ]);
 
-        // Crear un nuevo usuario
-        $user = new User([
-            'name' => $request->input('nombre'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-            'api_token' => Str::random(60), // Generar un token aleatorio
-        ]);
+        $user = new User();
+        $user->nombre = $request->nombre;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->birthdate = $request->birthdate;
+        $user->password = Hash::make($request->password);
+
         $user->save();
 
         return response()->json($user, 201);
@@ -40,23 +43,30 @@ class UserController extends Controller
 
     public function show($id)
     {
-        // Mostrar un usuario específico
-        $user = User::findOrFail($id);
-        return response()->json($user);
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                "status" => 0,
+                "msg" => "Usuario no encontrado",
+            ], 404);
+        }
+
+        $user->delete();
+        return response()->json([
+            "status" => 1,
+            "msg" => "Usuario eliminado exitosamente",
+        ]);
     }
 
     public function update(Request $request, $id)
     {
-        // Validar los datos del formulario
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email,' . $id,
-        ]);
-
-        // Actualizar un usuario existente
-        $user = User::findOrFail($id);
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
+        $user = User::find($id);
+        $user->nombre = $request->nombre;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->birthdate = $request->birthdate;
+        $user->password = Hash::make($request->password);
         $user->save();
 
         return response()->json($user);
@@ -74,15 +84,22 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-       
-        $user = new User([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-            'phone' => $request->input('phone'),
-            'birthday' => $request->input('birthday'),
-            'api_token' => Str::random(60), 
+        $request->validate([
+            'nombre' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+            'password2' => 'required|same:password',
+            'phone' => 'required',
+            'birthdate' => 'required',
         ]);
+
+        $user = new User();
+        $user->nombre = $request->nombre;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->birthdate = $request->birthdate;
+        $user->password = Hash::make($request->password);
+
         $user->save();
 
         return response()->json($user, 201);
@@ -94,11 +111,31 @@ class UserController extends Controller
         // Validar los datos del formulario
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+            'password' => 'required'
 
-        // Intentar autenticar al usuario
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        ]);
+        $user = User::where("email", "=", $request->email)->first();
+
+        if (isset($user->id)) {
+            if (Hash::check($request->password, $user->password)) {
+
+                $token = $user->createToken("auth_token")->plainTextToken;
+
+                //si esta todo bien
+                return response()->json([
+                    "status" => 1,
+                    "msg" => "Usuario logeado  exitosamente",
+                    "access_token" => $token
+
+                ]);
+            } else {
+                return response()->json([
+                    "status" => 0,
+                    "msg" => "La password es incorrecta",
+
+                ], 404);
+            }
+        } else {
             return response()->json([
                 'message' => 'Invalid credentials',
             ], 401);
@@ -125,6 +162,7 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Logged out']);
     }
+<<<<<<< HEAD
 
     public function getUsers($id)
     {
@@ -134,8 +172,45 @@ class UserController extends Controller
     }
     public function getUser($id)
     {
-        $user = User::find($id);
-        return response()->json($user);
-        
+        $users = User::all();
+        return response()->json(
+            $users
+        );
     }
+    public function getUser($id)
+    {
+        $user = User::find($id);
+    
+        if (!$user) {
+            return response()->json([
+                "status" => 0,
+                "msg" => "Usuario no encontrado",
+            ], 404);
+        }
+    
+        return response()->json([
+            "status" => 1,
+            "msg" => "Nombre del usuario",
+            "data" => $user->name,
+        ]);
+    }
+    public function getUserById($id)
+    {
+        $user = User::find($id);
+    
+        if (!$user) {
+            return response()->json([
+                "status" => 0,
+                "msg" => "Usuario no encontrado",
+            ], 404);
+        }
+    
+        return response()->json([
+            "status" => 1,
+            "msg" => "Nombre del usuario",
+            "data" => $user->nombre, // Devolver solo el nombre del usuario
+        ]);
+    }    
+
 }
+>>>>>>> origin/bereal-fotos
