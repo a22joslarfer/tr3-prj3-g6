@@ -1,7 +1,7 @@
 <template>
     <div id="container">
 
-        <div v-for="amigo in amigos" :key="amigo.id" @click="startChatWith(amigo.id)">
+        <div v-for="amigo in amigos" :key="amigo.id" @click="startChatWith(amigo.id, amigo.name)">
             {{ amigo.name }}
         </div>
 
@@ -26,9 +26,11 @@ export default {
         socket.emit('userJoined', this.clientId);
     },
     methods: {
-        startChatWith(chattingWithId) {
+        startChatWith(chattingWithId, chattingWithIdName) {
             const store = useStore();
             store.set_chattingWithId(chattingWithId);
+            store.set_chattingWithIdName(chattingWithIdName);
+            
             console.log('guardando chattingWithId ' + chattingWithId + ' en store ' + store.return_chattingWithId());
             socket.emit('joinRoomWith', chattingWithId, this.clientId);
 

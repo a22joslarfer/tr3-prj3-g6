@@ -1,8 +1,11 @@
 <template>
     <div id="container">
+        <div>
+            <header>{{ chattingWithIdName }}</header>
+        </div>
         <div class="chatbox">
             <div class="message" v-for="message in messages" :key="message.id">
-                <p><strong>De {{ message.from }}:</strong> {{ message.text }}</p>
+                <p>{{ message.text }}</p>
             </div>
             <input type="text" v-model="newMessage" @keyup.enter="sendPrivateMessage">
         </div>
@@ -18,12 +21,14 @@ export default {
             newMessage: '',
             userId: null,
             chattingWithId: null,
+            chattingWithIdName: null,
         };
     },
     created() {
         this.checkIfAuth();
         const store = useStore();
         this.chattingWithId = store.return_chattingWithId();
+        this.chattingWithIdName = store.return_chattingWithIdName();
         console.log('HABLANDO CON ' + this.chattingWithId + ' SOY ' + this.userId + ' ' + socket.id);
 
         this.userId = store.return_user_id();

@@ -16,6 +16,7 @@ export const useStore = defineStore({
     username: null,
     chattingWithId: null,
     roomId: null,
+    chattingWithIdName: null,
   }),
   actions: {
     save_seats(seats) {
@@ -35,6 +36,12 @@ export const useStore = defineStore({
     },
     return_roomId(){
       return this.roomId;
+    },
+    set_chattingWithIdName(name) {
+      this.chattingWithIdName = name;
+    },
+    return_chattingWithIdName() {
+      return this.chattingWithIdName;
     },
     set_chattingWithId(amigoId) {
       this.chattingWithId = amigoId;
