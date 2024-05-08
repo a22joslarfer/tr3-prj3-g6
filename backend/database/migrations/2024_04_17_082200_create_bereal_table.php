@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('img_del')->nullable();
             $table->string('img_tra')->nullable();
             $table->unsignedBigInteger('id_usuari');
-            $table->foreign('id_usuari')->references('id')->on('usuarios')->onDelete('cascade');
+            $table->foreign('id_usuari')->references('id')->on('users')->onDelete('cascade');
             $table->timestamp('hora')->useCurrent(); 
             $table->timestamps();
         });

@@ -51,6 +51,8 @@ Route::get('/users/{id}', [userController::class, 'getUserById']);
 
 
 
+
+
 // RUTAS DE DISCOTECAS
 // ruta para obtener todas las discotecas
 Route::get('/discotecas', [discoController::class, 'getDiscotecas']);
