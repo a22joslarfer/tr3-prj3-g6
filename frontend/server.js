@@ -27,13 +27,15 @@ const io = new Server(server, {
   cors: corsOptions,
 });
 
-let users = {}; // Store users with their socket IDs
+let users = {}; 
 let rooms = {};
 let socket_senderId = null;
 let current_p2p_room = null;
 let index = 0;
 let chattingWithIdSocket = null;
 let chattingWithIdIsConnected = false;
+
+
 io.on('connection', (socket) => {
   console.log('A user connected with socket ID:', socket.id);
 
@@ -47,7 +49,8 @@ io.on('connection', (socket) => {
     chattingWithIdSocket = users[chattingWithId];
     // guardar el id del usuario que envia el evento
     socket_senderId = socket_userId;
-    
+    console.log('test socket_senderId ' + socket_senderId + ' test socket_userId ' + socket_userId + '\n\n');
+    console.log('chattingWithIdSocket: ', chattingWithIdSocket, '\n\n');
     // si el usuario con el que se va a chatear esta conectado
     if (chattingWithIdSocket) {
       // buscar o crear la sala de chat
@@ -70,6 +73,9 @@ io.on('connection', (socket) => {
     if (socket === chattingWithIdSocket && chattingWithIdIsConnected === false) {
       io.to(chattingWithIdSocket).emit('getRoomId', current_p2p_room);
     }
+
+    console.log('users: ', users, '\n\n');
+    console.log('rooms: ', rooms, '\n\n');
   });
 
   function findOrCreateRoom(userId1, userId2) {
@@ -90,15 +96,15 @@ io.on('connection', (socket) => {
 
     return roomId;
   }
-
-  socket.on('privateMessage', ({ chattingWithId, text }) => {
-    if (!users[chattingWithId]) {
-      console.log('User', chattingWithId, 'is not currently connected. Storing message in database...');
-      storeMessageInDatabase(socket.id, chattingWithId, text);
-    }
-    io.to(current_p2p_room).emit('privateMessageReceived', { text, from: socket.id });
-    console.log('message from user: ' + socket_senderId + ' with socket:' + socket.id, ' to room: ', current_p2p_room, 'to', chattingWithId);
-  });
+  
+    socket.on('privateMessage', ({ from, to, text }) => {
+      if (!users[to]) {
+        console.log('User', to, 'is not currently connected. Storing message in database...');
+        storeMessageInDatabase(socket.id, to, text);
+      }
+      io.to(current_p2p_room).emit('privateMessageReceived', { text, from: from });
+      console.log('message from user: ' + from + ' with socket:' + socket.id, ' to room: ', current_p2p_room, 'to', to + '\n\n');
+    });
 
   socket.on('leaveRoom', () => {
     socket.leave(current_p2p_room);

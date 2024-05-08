@@ -34,9 +34,8 @@ class seguidoresController extends Controller
 
         return response()->json($users);
     }
-
-
-
+  
+  
     public function addSeguidor(Request $request)
     {
         try {

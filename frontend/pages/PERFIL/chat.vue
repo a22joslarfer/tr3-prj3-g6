@@ -2,13 +2,12 @@
     <div id="container">
         <div class="chatbox">
             <div class="message" v-for="message in messages" :key="message.id">
-                <p>{{ message.text }}</p>
+                <p><strong>De {{ message.from }}:</strong> {{ message.text }}</p>
             </div>
             <input type="text" v-model="newMessage" @keyup.enter="sendPrivateMessage">
         </div>
     </div>
 </template>
-
 <script>
 import { socket } from "../socket.js";
 
@@ -17,7 +16,6 @@ export default {
         return {
             messages: [],
             newMessage: '',
-            roomId: null,
             userId: null,
             chattingWithId: null,
         };
@@ -26,30 +24,22 @@ export default {
         this.checkIfAuth();
         const store = useStore();
         this.chattingWithId = store.return_chattingWithId();
-        console.log('DATA FROM PINIA, CHAT WITH ' + this.chattingWithId);
-        
-        socket.on('getRoomId', (roomId) => {
-            this.roomId = roomId;
-            console.log('ROOM ID ' + this.roomId);
-        });
+        console.log('HABLANDO CON ' + this.chattingWithId + ' SOY ' + this.userId + ' ' + socket.id);
 
         this.userId = store.return_user_id();
-
         socket.on('privateMessageReceived', ({ text, from }) => {
-            this.messages.push({ text, from });
-        });
 
-        console.log(this.userId + ' USERID  ' + socket.id + ' SOCKETID');
+        console.log('mensaje: ' + text + ' de: ' + from);
+        this.messages.push({ text, from });
+        });
     },
     methods: {
         sendPrivateMessage() {
             if (this.newMessage.trim() !== '') {
-                console.log(this.chattingWithId + ' is sending ' + this.newMessage + ' to ' + this.userId+ ' in room ' + this.roomId);
 
-                socket.emit('privateMessage', { to: this.chattingWithId, text: this.newMessage });
+                socket.emit('privateMessage', { from: this.userId, to: this.chattingWithId, text: this.newMessage });
                 this.newMessage = '';
             }
-            console.log('SENDING MESSAGE TO ROOM ' + this.roomId + ' ' + this.userId + ' USERID  ' + socket.id + ' SOCKETID');
         },
         checkIfAuth() {
             const store = useStore();
@@ -60,6 +50,7 @@ export default {
                 store.set_return_path('/perfil/amigos');
             }
         },
+
     },
 };
 </script>

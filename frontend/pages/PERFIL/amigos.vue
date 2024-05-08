@@ -29,6 +29,7 @@ export default {
         startChatWith(chattingWithId) {
             const store = useStore();
             store.set_chattingWithId(chattingWithId);
+            console.log('guardando chattingWithId ' + chattingWithId + ' en store ' + store.return_chattingWithId());
             socket.emit('joinRoomWith', chattingWithId, this.clientId);
 
             this.$router.push(`/perfil/chat`);
