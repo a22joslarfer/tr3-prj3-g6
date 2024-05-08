@@ -1,7 +1,7 @@
 <template>
   <body>
     <h1>BeReal</h1>
-    <div v-if="isLoggedIn" class="container">
+    <div class="container">
     <input type="file" @change="handleFileChange('img_del')" accept="image/*" />
     <input type="file" @change="handleFileChange('img_tra')" accept="image/*" />
     <button @click="uploadImages" class="upload-button">Pujar Imágenes</button>
@@ -10,6 +10,7 @@
 </template>
 
 <script>
+//import { useStore } from '../stores/index';
 export default {
   data() {
     return {
@@ -18,7 +19,7 @@ export default {
     }
   }, 
   created() {
-    this.checkIfAuth();
+   // this.checkIfAuth();
   },
   methods: {
     handleFileChange(type) {
@@ -28,7 +29,7 @@ export default {
       const formData = new FormData();
       formData.append('img_del', this.img_del);
       formData.append('img_tra', this.img_tra);
-      formData.append('id_usuari', 1);
+      formData.append('id_usuari', 23 );    //aqui hay que poner el id del usuario / pinia /////////////////////////////////////////////////////////
       try {
         const response = await fetch('http://localhost:8000/api/bereal', {
           method: 'POST',
@@ -43,7 +44,7 @@ export default {
         console.error('Error al subir imágenes:', error);
         alert('Error al subir imágenes');
       }
-    },
+    },/*
     checkIfAuth() {
             const store = useStore();
             this.userId = store.return_user_id();
@@ -51,6 +52,7 @@ export default {
               navigateTo('/login')
             }
         },
+        */
   },
 }
 </script>

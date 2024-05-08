@@ -85,7 +85,7 @@ export default {
           body: JSON.stringify({
             comentario: this.nuevoComentario,
             id_bereal: this.$route.params.id,
-            id_usuari: 1, 
+            id_usuari: 23, //aqui hay que poner el id del usuario / pinia /////////////////////////////////////////////////////////
           })
         });
         if (!response.ok) {

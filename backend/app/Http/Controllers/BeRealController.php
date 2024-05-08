@@ -16,7 +16,7 @@ class BeRealController extends Controller
         $validatedData = $request->validate([
             'img_del' => 'required|file',
             'img_tra' => 'required|file',
-            'id_usuari' => 'required|exists:usuarios,id'
+            'id_usuari' => 'required|exists:users,id'
         ]);
 
         $img_del = $request->file('img_del')->store('public/img');
