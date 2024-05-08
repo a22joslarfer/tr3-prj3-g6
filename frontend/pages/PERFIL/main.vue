@@ -1,3 +1,4 @@
+
 <template>
     <div class="social-profile">
       <div class="profile-header">
@@ -45,16 +46,16 @@
     </div>
     <div class="icons">
     <div class="icon">
-        <img src="../public/camara.png" alt="Cámara">
+        <img src="../public/img/camara.png" alt="Cámara">
     </div>
     <div class="icon">
-        <img src="../public/video.png" alt="Video">
+        <img src="../public/img/video.png" alt="Video">
     </div>
     <div class="icon">
-        <img src=".../public/bola-de-discoteca.png" alt="Bola de discoteca">
+        <img src=".../public/img/bola-de-discoteca.png" alt="Bola de discoteca">
     </div>
 </div>
-
+<FooterOptions  />
     </div>
   </template>
   

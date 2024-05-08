@@ -38,11 +38,8 @@ Route::post('/users', [userController::class, 'create']);
 Route::delete('/users/{id}', [userController::class, 'delete']);
 // ruta para editar un usuario
 Route::put('/users/{id}', [userController::class, 'update']);
-//ruta para coger un usuario
-
-
-
-
+//ruta de qr
+Route::get('/generate-qr-code/{user}', [UserController::class, 'generateQRCode']);
 
 
 
@@ -114,7 +111,6 @@ Route::get('/amigos/{id}', [seguidoresController::class, 'getAmigos']);
 Route::post('/seguidores', [seguidoresController::class, 'addSeguidor']);
 // ruta para comprobar si un usuario sigue a otro usuario
 Route::get('/seguidores/{seguidor_id}/{seguido_id}', [seguidoresController::class, 'checkIfSeguidor']);
-//RUTAS PARA BEREAL
 //ruta para crear 
 Route::post('/bereal', [BeRealController::class, 'createBereal']);
 //ruta para obtener y mostrar

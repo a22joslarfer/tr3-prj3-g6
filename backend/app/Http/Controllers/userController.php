@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\File;
+
 
 class UserController extends Controller
 {
@@ -59,19 +62,29 @@ class UserController extends Controller
         ]);
     }
 
+
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
-        $user->nombre = $request->nombre;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->birthdate = $request->birthdate;
-        $user->password = Hash::make($request->password);
+        // Validar los datos del formulario
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'required|string|min:8',
+            'phone' => 'required|string',
+            'birthday' => 'required|string',
+        ]);
+
+        // Actualizar un usuario existente
+        $user = User::findOrFail($id);
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = Hash::make($request->input('password'));
+        $user->phone = $request->input('phone');
+        $user->birthday = $request->input('birthday');
         $user->save();
 
         return response()->json($user);
     }
-
     public function destroy($id)
     {
         // Eliminar un usuario
@@ -84,13 +97,14 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
-            'nombre' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required',
-            'password2' => 'required|same:password',
-            'phone' => 'required',
-            'birthdate' => 'required',
+
+        $user = new User([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+            'phone' => $request->input('phone'),
+            'birthday' => $request->input('birthday'),
+            'api_token' => Str::random(60),
         ]);
 
         $user = new User();
@@ -169,7 +183,6 @@ class UserController extends Controller
     {
         $user = User::find($id);
         return response()->json($user);
-        
     }
   
    
@@ -187,8 +200,39 @@ class UserController extends Controller
         return response()->json([
             "status" => 1,
             "data" => $user->name, // Devolver solo el nombre del usuario
-        ]);
+        ]);        return response()->json($user);
+
     }    
 
+
+
+    
+  public function generateQRCode(User $user)
+{
+    try {
+      
+        // Generar el contenido para el código QR (puede ser dinámico) llevar a http://localhost:3000/
+        $qrContent = 'http://viaegis.daw.inspedralbes.cat/';
+
+        // Generar el código QR con Simple-QRCode
+        $qrCode = QrCode::size(200)->generate($qrContent);
+
+        // Nombre del archivo
+        $fileName = 'qr_code_' . time() . '.svg';
+
+        // Ruta de destino para guardar el código QR
+        $qrPath = public_path('qr_codes/' . $fileName);
+
+        // Guardar el código QR en la carpeta de destino
+        File::put($qrPath, $qrCode);
+
+        // Devolver la URL del código QR guardado
+        return response()->file($qrPath);
+        
+    } catch (\Exception $e) {
+        // Manejar el error de generación del código QR
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
 }
 

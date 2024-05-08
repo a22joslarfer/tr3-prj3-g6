@@ -58,8 +58,8 @@ export default {
         { id: 2, name: 'Amigos', route: '/PERFIL/amigos' },
         { id: 3, name: 'Chats', route: '/PERFIL/chats' },
         { id: 4, name: 'Notificaciones', route: '/PERFIL/notificaciones' },
-        { id: 5, name: 'Privacidad', route: '/PERFIL/privacidad' },
-        { id: 6, name: 'Seguridad', route: '/PERFIL/seguridad' },
+        { id: 5, name: 'Login', route: '/Login' },
+        { id: 6, name: 'Register', route: '/Register' },
         { id: 7, name: 'Cerrar sesión', route: '/PERFIL/logout' },
       ],
     };
@@ -226,7 +226,7 @@ label {
   z-index: 2000; /* Asegura que esté por encima de otros elementos */
 }
 input {
-  background-image: url('../../public/search_FILL1_wght100_GRAD-25_opsz20.svg');
+  background-image: url('../public/img/search_FILL1_wght100_GRAD-25_opsz20.svg');
   width: calc(100% - 30px);
   padding: 10px 40px 10px 10px;
   margin-top: 20px;

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button @click="follow(userId)">Follow</button>
+        <button @click="follow(seguidoId)">Follow</button>
     </div>
 </template>
 
@@ -11,7 +11,7 @@ export default {
             type: Number,
             required: true
         },
-        userId: {
+        seguidoId: {
             type: Number,
             required: true
         }

@@ -1,143 +1,197 @@
 <template>
-  <div class="container">
-    <HeaderPerfil :pageTitle="pageTitle" />
-
-    <h1 class="title">Editar perfil</h1>
-
-    <form class="form" @submit.prevent="submitForm">
-
-      <div class="input">
-        <label for="username">Nombre de usuario:</label>
-        <input type="text" id="username" class="user_info" v-model="username" placeholder="HugoTripiana03">
+  <div class="user-profile">
+    <HeaderPerfil />
+    <div class="content">
+      <h1>User Profile</h1>
+      <div v-if="user" class="user-info">
+        <div class="update-form">
+          <label for="name">Usuario:</label>
+          <input type="text" id="name" v-model="newName">
+          <label for="email">Correo electronico:</label>
+          <input type="email" id="email" v-model="newEmail">
+          <label for="phone">Teléfono:</label>
+          <input type="text" id="phone" v-model="newPhone">
+          <label for="birthday">Fecha de nacimiento:</label>
+          <input type="date" id="birthday" v-model="newBirthday">
+          <!-- contraseña anterior -->
+          <label for="currentPassword">Contraseña actual:</label>
+<input type="password" id="currentPassword" v-model="currentPassword">
+          <label for="password">Contraseña:</label>
+          <input type="password" id="password" v-model="newPassword">
+          <button @click="updateUser">Actualizar datos</button>
+        </div>
       </div>
-
-      <div class="input">
-        <label for="email">Correo electrónico:</label>
-        <input type="email" id="email" class="user_info" v-model="email" placeholder="hugo@gmail.com">
+      <div v-else>
+        <p>Loading...</p>
       </div>
-      
-      <div class="input">
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" class="user_info" v-model="password" placeholder="********">
-      </div>
-
-      <div class="input">
-        <label for="birthdate">Fecha de nacimiento:</label>
-        <input type="date" id="birthdate" class="user_info" v-model="birthdate">
-      </div>
-
-      <div class="input">
-        <label for="phone">Número de teléfono:</label>
-        <input type="tel" id="phone" class="user_info" v-model="phone" placeholder="123456789">
-      </div>
-
-      <button type="submit" class="button">Guardar cambios</button>
-
-    </form>
-
+    </div>
     <FooterOptions />
   </div>
 </template>
 
 <script>
-import { useStore } from '@/stores/index.js';
+import FooterOptions from '~/components/FooterOptions.vue';
+import { useStore } from '../stores/index.js';
 
 export default {
   data() {
     return {
-      username: '',
-      email: '',
-      password: '',
-      birthdate: '',
-      phone: ''
-    }
+      newName: '',
+      newEmail: '',
+      user: null,
+      userId: null,
+      newPhone: '',
+      newBirthday: '',
+      newPassword: '',
+      currentPassword: ''
+    };
   },
-  created() {
+  async mounted() {
     const store = useStore();
-    const userInfo = store.return_user_info(); // Obtén los datos del usuario desde tu tienda Pinia
-
-    // Asigna los valores de usuario y correo electrónico a las variables locales
-    this.username = userInfo.username;
-    this.email = userInfo.email;
+    this.user = store.return_user_info_register();
+    console.log('User data:', this.user);
+    this.newName = this.user.username;
+    this.newEmail = this.user.email;
+    this.userId = this.user.user_id;
+    this.newPhone = this.user.phone;
+    this.newBirthday = this.user.birthday;
+    this.newPassword = this.user.password;
   },
   methods: {
-    submitForm() {
+    async updateUser() {
+      console.log('Updating user...');
       const store = useStore();
-      const userId = store.return_user_id(); // Obtén el ID del usuario desde tu tienda Pinia
+  // Verificar si se ha proporcionado la contraseña anterior
+  if (!this.currentPassword) {
+    console.error('Debe proporcionar la contraseña anterior.');
+    return;
+  }
+  
+  // Verificar que la contraseña anterior coincida con la almacenada
+  if (this.currentPassword !== this.user.password) {
+    console.error('La contraseña anterior es incorrecta.');
+    return;
+  }
 
-      // Envía los datos al servidor (API) para actualizar la base de datos
-      fetch(`http://localhost:8000/users/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          username: this.username,
-          email: this.email,
-          password: this.password,
-          birthdate: this.birthdate,
-          phone: this.phone
-        }),
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Error al actualizar usuario: ${response.status} - ${response.statusText}`);
+
+      // Actualizar el usuario en el store
+      store.save_user_info_register(this.newName, this.newEmail, this.userId, this.newPhone, this.newBirthday, this.newPassword);
+      console.log('New user data:', store.return_user_info_register());
+
+      // Lógica para enviar la actualización al backend
+      this.sendUpdateToBackend();
+    },
+    async sendUpdateToBackend() {
+      console.log('Sending update to backend...');
+
+      const store = useStore();
+      const userId = this.user ? this.user.user_id : null;// Obtener el ID del usuario
+
+      if (userId) { // Verificar si userId es null o no
+        try {
+          const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
+            method: 'PUT', // Utilizar el método PUT para actualizar el usuario
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              name: this.newName, // Enviar el nuevo nombre
+              email: this.newEmail, // Enviar el nuevo email
+              password: this.newPassword, // Enviar la nueva contraseña
+              phone: this.newPhone,
+              birthday: this.newBirthday
+            })
+          });
+          const data = await response.json();
+          console.log('Response from server:', data);
+        } catch (error) {
+          console.error('Error updating user:', error);
         }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Usuario actualizado:', data);
-        alert('Cambios guardados exitosamente');
-      })
-      .catch(error => {
-        console.error('Error al actualizar usuario:', error);
-        alert('Error al guardar cambios. Por favor, inténtalo de nuevo.');
-      });
+      } else {
+        console.error('User ID is null. Cannot send update request.');
+      }
     }
   }
-}
+};
 </script>
 
+
 <style scoped>
-.user_info {
-  margin-top: 10px;
-}
-
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.title {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.form {
+.user-profile {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  background-color: aliceblue;
 }
 
-.input {
+.content {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: calc(100vh - 110px); /* Restar la altura del pie de página */
+  overflow-y: auto; /* Permite el desplazamiento vertical */
+}
+
+h1 {
+  font-size: 2rem;
+    position: relative;
+    top: -25px;
+  margin-bottom: -11px;
+}
+
+.user-info {
+  width: 100%;
+  max-width: 600px;
+  overflow-y: auto  ;
+}
+
+.user-info-item {
   margin-bottom: 10px;
+}
+
+.update-form {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 20px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.update-form h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.update-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.update-form input {
+  width: 100%;
   padding: 10px;
-  font-size: 16px;
-  display: grid;
-  grid-template-columns: max-content;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
-.button {
-  padding: 10px 20px;
-  font-size: 16px;
+.update-form button {
+  width: 100%;
+  padding: 10px;
   background-color: #007bff;
-  color: #fff;
+  color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  
 }
 
-.button:hover {
+.update-form button:hover {
   background-color: #0056b3;
 }
 </style>
