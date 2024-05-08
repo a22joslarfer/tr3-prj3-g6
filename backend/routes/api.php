@@ -3,12 +3,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\discoController;
 use App\Http\Controllers\reviewController;
 use App\Http\Controllers\userController;
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\BeRealController;
 use App\Http\Controllers\comentariosController;
 use Illuminate\Support\Facades\Auth;
->>>>>>> origin/bereal-fotos
 use Illuminate\Http\Request;
 use App\Http\Controllers\categoriasReviewController;
 use App\Http\Controllers\friendController;
@@ -42,7 +39,7 @@ Route::delete('/users/{id}', [userController::class, 'delete']);
 // ruta para editar un usuario
 Route::put('/users/{id}', [userController::class, 'update']);
 //ruta para coger un usuario
-Route::get('/users/{id}', [userController::class, 'getUserById']);
+
 
 
 
@@ -88,7 +85,6 @@ Route::get('/reviews/disco/{id}', [reviewController::class, 'getReviewsByDisco']
 // ruta para obtener las reviews por puntuacion
 Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getReviewsByPuntuacion']);
 
-<<<<<<< HEAD
 
 // RUTAS DE CATEGORIAS_REVIEWS
 // ruta para obtener todas las categorias
@@ -118,7 +114,6 @@ Route::get('/amigos/{id}', [seguidoresController::class, 'getAmigos']);
 Route::post('/seguidores', [seguidoresController::class, 'addSeguidor']);
 // ruta para comprobar si un usuario sigue a otro usuario
 Route::get('/seguidores/{seguidor_id}/{seguido_id}', [seguidoresController::class, 'checkIfSeguidor']);
-=======
 //RUTAS PARA BEREAL
 //ruta para crear 
 Route::post('/bereal', [BeRealController::class, 'createBereal']);
@@ -143,4 +138,3 @@ Route::get('/comentarios/show/{id}', [comentariosController::class, 'show']);
 Route::delete('/comentarios/{id}', [comentariosController::class, 'destroy']);
 
 
->>>>>>> origin/bereal-fotos
