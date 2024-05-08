@@ -1,25 +1,32 @@
 <template>
-  <div class="bereals-container">
-    <h1>BEREAL</h1>
-    <div class="bereal-item">
-      <h2>{{ bereal.usuarioNombre }}</h2>
-      <div class="bereal-images">
-        <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
-        <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
-      </div>
-    </div>
-    <div class="comentarios-container">
-      <h1>Comentaris</h1>
-      <div class="comentario-item" v-for="comentario in comentarios" :key="comentario.id">
-        <p>{{ comentario.hora.slice(11, 19) }} - {{ comentario.usuarioNombre }}: {{ comentario.comentario }}</p>
-      </div>
-      <div class="agregar-comentario">
-        <input type="text" v-model="nuevoComentario" placeholder="Escriu un comentari" class="comment-input">
-        <button @click="agregarComentario" class="comment-button">Afegir Comentari</button>
-      </div>
-   
+  <body>
+    
+
+  <div v-if="loading" class="bereals-container">
+    <img src="../../public/img/carga.gif" alt="Loading GIF" class="loading-gif">
+  </div>
+  <div v-else class="bereals-container">
+  <h1>BEREAL</h1>
+  <div class="bereal-item">
+    <h2>{{ bereal.usuarioNombre }}</h2>
+    <div class="bereal-images">
+      <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
+      <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
     </div>
   </div>
+  <div class="comentarios-container">
+    <h1>Comentaris</h1>
+    <div class="comentario-item" v-for="comentario in comentarios" :key="comentario.id">
+      <p>{{ comentario.hora.slice(11, 19) }} - {{ comentario.usuarioNombre }}: {{ comentario.comentario }}</p>
+    </div>
+    <div class="agregar-comentario">
+      <input type="text" v-model="nuevoComentario" placeholder="Escriu un comentari" class="comment-input">
+      <button @click="agregarComentario" class="comment-button">Afegir Comentari</button>
+    </div>
+
+  </div>
+</div>
+</body>
 </template>
   
 <script>
@@ -29,11 +36,13 @@ export default {
       bereal: {},
       comentarios: [],
       nuevoComentario: "",
+      loading: true
     };
   },
   async mounted() {
     await this.obtenerBereal();
     await this.obtenerComentarios();
+    this.loading = false;
   },
   methods: {
     async obtenerBereal() {
@@ -105,6 +114,24 @@ export default {
 </script>
   
 <style scoped>
+body{
+  background-color: black;
+  height: 100vh;
+  width: 100vw;
+}
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loading-gif {
+  width: 200px;
+  height: 200px;
+  margin-top: 200px;
+}
+
 .bereals-container {
   display: flex;
   flex-direction: column;
@@ -117,7 +144,8 @@ h1 {
   text-align: center;
 }
 
-h2, p {
+h2,
+p {
   color: white;
 }
 

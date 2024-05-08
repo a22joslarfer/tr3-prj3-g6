@@ -85,6 +85,7 @@ input{
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 20px;
   transition: background-color 0.3s;
 }
 h1 {
