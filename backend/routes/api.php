@@ -41,9 +41,8 @@ Route::post('/users', [userController::class, 'create']);
 Route::delete('/users/{id}', [userController::class, 'delete']);
 // ruta para editar un usuario
 Route::put('/users/{id}', [userController::class, 'update']);
-
-
-
+//ruta para coger un usuario
+Route::get('/users/{id}', [userController::class, 'getUserById']);
 
 
 
