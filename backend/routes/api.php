@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\categoriasReviewController;
 use App\Http\Controllers\friendController;
 use App\Http\Controllers\seguidoresController;
+use App\Http\Controllers\CiudadController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -110,3 +112,9 @@ Route::get('/amigos/{id}', [seguidoresController::class, 'getAmigos']);
 Route::post('/seguidores', [seguidoresController::class, 'addSeguidor']);
 // ruta para comprobar si un usuario sigue a otro usuario
 Route::get('/seguidores/{seguidor_id}/{seguido_id}', [seguidoresController::class, 'checkIfSeguidor']);
+
+
+
+//ciudades
+Route::get('/ciudades', [CiudadController::class, 'index']);
+

@@ -2,6 +2,17 @@
 
     <HeaderGeneral />
     <div class="container">
+        <button class="filter-button" @click="toggleFiltro">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                <path d="M440-160q-17 0-28.5-11.5T400-200v-240L168-736q-15-20-4.5-42t36.5-22h560q26 0 36.5 22t-4.5 42L560-440v240q0 17-11.5 28.5T520-160h-80Zm40-308 198-252H282l198 252Zm0 0Z"/>
+            </svg>
+        </button>
+        <div class="filter-indicator" v-if="filtroActivo">
+            <select v-model="ciudadSeleccionada" @change="handleChangeCiudadSeleccionada">
+            <option disabled value="">Selecciona una ciudad</option>
+            <option v-for="(ciudad, index) in ciudades" :key="index" :value="ciudad.id">{{ ciudad.nombre }}</option>
+        </select>
+        </div>
 
 
         <div id="buscador"></div>
@@ -55,21 +66,24 @@ export default {
             ],
         };
     },
-    data() {
-        return {
-            punto_de_interes_seleccionado: false,
-            map: null,
-            arr_puntos_de_interes: [],
-            data: [],
-            pin_seleccionado: null,
-            uploadedSongUrl: null,
-            icono_llevar_a_barcelona: null,
-            supercluster: null,
-
-        };
-    },
+data() {
+    return {
+        punto_de_interes_seleccionado: false,
+        map: null,
+        arr_puntos_de_interes: [],
+        data: [],
+        pin_seleccionado: null,
+        uploadedSongUrl: null,
+        icono_llevar_a_barcelona: null,
+        supercluster: null,
+        filtroActivo: false,
+        ciudadSeleccionada: null, // Agregar ciudadSeleccionada
+        ciudades: []
+    };
+},
     mounted() {
         this.fetchData();
+        this.fetchCiudades();
         this.initMapaDatosMapBox();
 
         Notification.requestPermission().then((permission) => {
@@ -116,6 +130,12 @@ export default {
     },
 
     methods: {
+        handleChangeCiudadSeleccionada(event) {
+                this.ciudadSeleccionada = event.target.value;
+
+                console.log('Ciudad seleccionada:', this.ciudadSeleccionada);
+                this.fetchData(); // Llamar a fetchData para obtener datos actualizados según la ciudad seleccionada
+        },
         async handleFileUpload() {
             const file = this.$refs.fileInput.files[0];
             const formData = new FormData();
@@ -140,26 +160,64 @@ export default {
             }
         },
         async fetchData() {
-            const response = await fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/discotecas');
-            const data = await response.json();
+                    try {
+                        console.log("ahora hare un fetch")
+                        const response = await fetch('http://viaegis.daw.inspedralbes.cat/backend/public/api/discotecas');
+                        const data = await response.json();
 
-            this.data = data.map((discoteca) => {
-                return {
-                    id: discoteca.id,
-                    titulo: discoteca.nombre_local,
-                    coordenadas: JSON.parse(discoteca.coordenadas),
-                    imgUrl: discoteca.imgUrl,
-                    descripcion: discoteca.descripcion,
-                    telefono: discoteca.telefono,
-                    horario: discoteca.horario,
-                    minEdad: discoteca.minEdad,
-                    cancion_mp3: discoteca.canciones  // Aquí es donde asignamos el valor de "canciones" al objeto "pin_seleccionado"
-                };
-            });
+                        if (this.ciudadSeleccionada) {
+                            console.log('Recuperando info de la ciudad:', this.ciudadSeleccionada);
+                            console.table(data);
+                            this.data = data
+                                .filter(discoteca => discoteca.id_ciudad == this.ciudadSeleccionada) // Filtrar por id_ciudad
+                               .map(discoteca => ({
+                                    id: discoteca.id,
+                                    titulo: discoteca.nombre_local,
+                                    coordenadas: JSON.parse(discoteca.coordenadas),
+                                    imgUrl: discoteca.imgUrl,
+                                    descripcion: discoteca.descripcion,
+                                    telefono: discoteca.telefono,
+                                    horario: discoteca.horario,
+                                    minEdad: discoteca.minEdad,
+                                    cancion_mp3: discoteca.canciones
+                                }));
+                            console.log("datos filtrados=========================");
+                             console.table(this.data);
 
-            this.crear_mostrar_pines_discos();
-            this.añadir_popup_info_de_las_discos();
-        },
+                        } else {
+                            this.data = data.map(discoteca => ({
+                                id: discoteca.id,
+                                titulo: discoteca.nombre_local,
+                                coordenadas: JSON.parse(discoteca.coordenadas),
+                                imgUrl: discoteca.imgUrl,
+                                descripcion: discoteca.descripcion,
+                                telefono: discoteca.telefono,
+                                horario: discoteca.horario,
+                                minEdad: discoteca.minEdad,
+                                cancion_mp3: discoteca.canciones
+                            }));
+                        }
+
+                        this.crear_mostrar_pines_discos();
+                        this.añadir_popup_info_de_las_discos();
+                    } catch (error) {
+                        console.error('Error al obtener los datos de las discotecas:', error);
+                    }
+},
+async fetchCiudades() {
+    const response = await fetch('http://localhost:8000/api/ciudades');
+    const data = await response.json();
+
+    this.ciudades = data.map((ciudad) => {
+        return {
+            id: ciudad.id,
+            nombre: ciudad.nombre,
+        };
+    });
+//console.log de la ciudad seleccionada
+
+    console.log('Ciudades:', this.ciudades);
+},
         initMapaDatosMapBox() {
     mapboxgl.accessToken = 'pk.eyJ1IjoiaHVnb3RyaXBpYW5hIiwiYSI6ImNsczFueDBieDBiYngybG1rb2g4bGIyNW0ifQ.EECPYp9RZ_JIpjmlvyy2Hw';
 
@@ -239,102 +297,120 @@ mostrarMarcador(coordenadas) {
     if (this.marker) {
         this.marker.remove();
     }
+    if (this.map.getLayer('unclustered-point')) {
+        this.map.removeLayer('unclustered-point');
+    }
 
     // Agregar un nuevo marcador en las coordenadas especificadas
     this.marker = new mapboxgl.Marker()
         .setLngLat(coordenadas)
         .addTo(this.map);
 },
-        crear_mostrar_pines_discos() {
+crear_mostrar_pines_discos() {
+    // Eliminar las capas existentes si utilizan la fuente "points"
+    if (this.map.getLayer('clusters')) {
+        this.map.removeLayer('clusters');
+    }
+    if (this.map.getLayer('cluster-count')) {
+        this.map.removeLayer('cluster-count');
+    }
+    if (this.map.getLayer('unclustered-point')) {
+        this.map.removeLayer('unclustered-point');
+    }
 
-            if (this.map.getSource('points')) {
-                this.map.removeSource('points');
+    // Eliminar la fuente "points" si existe
+    if (this.map.getSource('points')) {
+        this.map.removeSource('points');
+    }
+
+    // Crear la fuente "points" y agregar las capas nuevamente
+    const features = this.data.map((punto, index) => {
+        const coordinates = [punto.coordenadas.lng, punto.coordenadas.lat];
+
+        return {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'Point',
+                'coordinates': coordinates,
+            },
+            'properties': {
+                'id': index,
+                'titulo': punto.titulo,
+                'horario': punto.horario,
+                'imagen': punto.imgUrl,
+                'descripcion': punto.descripcion,
+                'telefono': punto.telefono,
+                'minEdad': punto.minEdad,
             }
+        };
+    });
 
-            const features = this.data.map((punto, index) => {
-                const coordinates = [punto.coordenadas.lng, punto.coordenadas.lat];
-
-                return {
-                    'type': 'Feature',
-                    'geometry': {
-                        'type': 'Point',
-                        'coordinates': coordinates,
-                    },
-                    'properties': {
-                        'id': index,
-                        'titulo': punto.titulo,
-                        'horario': punto.horario,
-                        'imagen': punto.imgUrl,
-                        'descripcion': punto.descripcion,
-                        'telefono': punto.telefono,
-                        'minEdad': punto.minEdad,
-                    }
-                };
-            });
-
-            this.map.addSource('points', {
-                'type': 'geojson',
-                'data': {
-                    'type': 'FeatureCollection',
-                    'features': features
-                },
-                'cluster': true,
-                'clusterMaxZoom': 14,
-                'clusterRadius': 50
-            });
-
-            this.map.addLayer({
-                'id': 'clusters',
-                'type': 'circle',
-                'source': 'points',
-                'filter': ['has', 'point_count'],
-                'paint': {
-                    'circle-color': [
-                        'step',
-                        ['get', 'point_count'],
-                        '#51bbd6',
-                        100,
-                        '#f1f075',
-                        750,
-                        '#f28cb1',
-                    ],
-                    'circle-radius': [
-                        'step',
-                        ['get', 'point_count'],
-                        20,
-                        100,
-                        30,
-                        750,
-                        40,
-                    ],
-                },
-            });
-
-            this.map.addLayer({
-                'id': 'cluster-count',
-                'type': 'symbol',
-                'source': 'points',
-                'filter': ['has', 'point_count'],
-                'layout': {
-                    'text-field': '{point_count_abbreviated}',
-                    'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                    'text-size': 12,
-                },
-            });
-
-            this.map.addLayer({
-                'id': 'unclustered-point',
-                'type': 'circle',
-                'source': 'points',
-                'filter': ['!', ['has', 'point_count']],
-                'paint': {
-                    'circle-color': '#11b4da',
-                    'circle-radius': 8,
-                    'circle-stroke-width': 1,
-                    'circle-stroke-color': '#fff',
-                },
-            });
+    this.map.addSource('points', {
+        'type': 'geojson',
+        'data': {
+            'type': 'FeatureCollection',
+            'features': features
         },
+        'cluster': true,
+        'clusterMaxZoom': 14,
+        'clusterRadius': 50
+    });
+
+
+    // Agregar las capas nuevamente
+    this.map.addLayer({
+        'id': 'clusters',
+        'type': 'circle',
+        'source': 'points',
+        'filter': ['has', 'point_count'],
+        'paint': {
+            'circle-color': [
+                'step',
+                ['get', 'point_count'],
+                '#51bbd6',
+                100,
+                '#f1f075',
+                750,
+                '#f28cb1',
+            ],
+            'circle-radius': [
+                'step',
+                ['get', 'point_count'],
+                20,
+                100,
+                30,
+                750,
+                40,
+            ],
+        },
+    });
+
+    this.map.addLayer({
+        'id': 'cluster-count',
+        'type': 'symbol',
+        'source': 'points',
+        'filter': ['has', 'point_count'],
+        'layout': {
+            'text-field': '{point_count_abbreviated}',
+            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+            'text-size': 12,
+        },
+    });
+
+    this.map.addLayer({
+        'id': 'unclustered-point',
+        'type': 'circle',
+        'source': 'points',
+        'filter': ['!', ['has', 'point_count']],
+        'paint': {
+            'circle-color': '#11b4da',
+            'circle-radius': 8,
+            'circle-stroke-width': 1,
+            'circle-stroke-color': '#fff',
+        },
+    });
+},
+
         añadir_popup_info_de_las_discos() {
             this.map.on('click', 'clusters', (e) => {
                 const features = this.map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
@@ -422,9 +498,12 @@ mostrarMarcador(coordenadas) {
             new Notification("¡HORA DE BEREAL!", opcionesNotificacion);
         },
 
-    },
+        toggleFiltro() {
+            // Cambiar el estado del filtro al hacer clic en el icono del mapa
+            this.filtroActivo = !this.filtroActivo;
+        }
+    }
 };
-
 </script>
 
 
@@ -445,7 +524,16 @@ mostrarMarcador(coordenadas) {
     text-transform: uppercase;
     background-color: #f0f1f1
 }
-
+.filter-button {
+    width:28px;
+    position: absolute;
+    top: 110px; /* Ajusta el valor según sea necesario */
+    right: 20px; /* Ajusta el valor según sea necesario */
+    background-color: rgba(255, 255, 255, 0.7); /* Fondo semi-transparente para que el texto sea legible */
+    border-radius: 5px;
+    font-size: 16px;
+    z-index: 1000; /* Asegura que el texto esté por encima del mapa */
+}
 .btn-create-review {
     background-color: var(--verde);
     display: flex;
@@ -459,6 +547,16 @@ mostrarMarcador(coordenadas) {
     text-decoration: none;
     margin-top: 40px;
     animation: pulse 1s infinite;
+}
+.filter-indicator {
+    position: absolute;
+    left: 20px; /* Ajusta la posición según sea necesario */
+    top: 19%; /* Ajusta la posición según sea necesario */
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 1000;
 }
 
 * {
