@@ -1,5 +1,4 @@
 
-import FooterOptions from '~/components/FooterOptions.vue';
 <template>
     <div class="social-profile">
       <div class="profile-header">

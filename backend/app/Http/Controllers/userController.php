@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
@@ -46,7 +48,7 @@ class UserController extends Controller
     }
 
 
-public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         // Validar los datos del formulario
         $request->validate([
@@ -80,14 +82,14 @@ public function update(Request $request, $id)
 
     public function register(Request $request)
     {
-       
+
         $user = new User([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
             'phone' => $request->input('phone'),
             'birthday' => $request->input('birthday'),
-            'api_token' => Str::random(60), 
+            'api_token' => Str::random(60),
         ]);
         $user->save();
 
@@ -136,12 +138,50 @@ public function update(Request $request, $id)
     {
         $user = User::find($id);
         return response()->json($user);
-        
     }
     public function getUser($id)
     {
         $user = User::find($id);
         return response()->json($user);
-        
+    }
+    public function generateQRCode(User $user)
+    {
+        try {
+            //mostrar datos de usuario
+            $userData = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                // Otros datos relevantes del usuario
+            ];
+            $qrContent = json_encode($userData);
+
+            // Contenido para el código QR (puede ser dinámico)
+            $qrContent = json_encode([
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                // Otros datos relevantes del usuario
+            ]);
+
+            // Genera el código QR con Simple-QRCode
+            $qrCode = QrCode::size(200)->generate($qrContent);
+
+            // Nombre del archivo
+            $fileName = 'qr_code_' . time() . '.svg';
+
+            // Ruta de destino para guardar el código QR
+            $qrPath = public_path('qr_codes/' . $fileName);
+
+            // Guarda el código QR en la carpeta de destino
+            File::put($qrPath, $qrCode);
+
+            // Devuelve la URL del código QR guardado
+            $qrUrl = asset('qr_codes/' . $fileName);
+            return response()->file($qrPath);
+        } catch (\Exception $e) {
+            // Manejar el error de generación del código QR
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }
