@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <button class="follow-btn" @click="follow(lectorId)">Follow</button>
-    </div>
+
+    <button class="follow-btn" @click="follow(lectorId)">Follow</button>
+
 </template>
 
 <script>
@@ -24,7 +24,7 @@ export default {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    seguidor: this.client_id,
+                    seguidor: this.clientId,
                     seguido: seguido_id,
                 }),
             })
@@ -48,18 +48,19 @@ export default {
 
 <style scoped>
 .follow-btn {
-    background-color: #ff806d;
-    color: #fff;
-    padding: 14px;
-    border: none;
-    border-radius: 4px;
+    background-color: #ccc;
+    color: #1c1c1c;
+    height: 10vh;
+    font-size: 4rem;
+    width: 100vw;
     cursor: pointer;
     transition: background-color 0.3s;
-    
-
+    border: none;
 }
 
+
 .follow-btn:hover {
-    background-color: #f3634d;
+    background-color: #549419;
+  
 }
 </style>

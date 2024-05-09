@@ -17,10 +17,10 @@
         </div>
         <form @submit.prevent="login" class="form">
           <div class="input-group">
-            <input type="text" v-model.trim="email" class="input" placeholder="Correo Electrónico" required />
+            <input type="text" v-model="email" class="input" placeholder="Correo Electrónico" required />
           </div>
           <div class="input-group">
-            <input type="password" v-model.trim="password" class="input" placeholder="Contraseña" required />
+            <input type="password" v-model="password" class="input" placeholder="Contraseña" required />
           </div>
           <button type="submit" class="button">Iniciar Sesión</button>
         </form>
@@ -74,14 +74,14 @@ export default {
         .then(data => {
           console.log('Sesión iniciada correctamente:', data);
           alert('Sesión iniciada correctamente');
-         
+
           const store = useStore();
           store.save_user_info(data.name, data.email, data.id);
-         
 
-          console.log('BBBBBBBBBBBBBBBBBBB');
+
+
           this.$router.push('/');
-     
+
         })
         .catch(error => {
           console.error('Error al iniciar sesión:', error);
@@ -89,7 +89,7 @@ export default {
 
     },
   },
-  }
+}
 
 </script>
 <style scoped>
@@ -163,12 +163,12 @@ export default {
 
 .button {
   width: 47%;
-    height: 50px;
-    border: none;
-    border-radius: 25px;
-    background-color: #ff806d;
-    color: white;
-    font-size: 18px;
+  height: 50px;
+  border: none;
+  border-radius: 25px;
+  background-color: #ff806d;
+  color: white;
+  font-size: 18px;
 }
 
 .login-link {
@@ -188,37 +188,40 @@ export default {
 }
 
 .gjmkph {
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    justify-content: center;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
 }
+
 .doHtqb {
-    border-top: 0.5px solid rgb(205, 214, 223);
-    border-bottom: 0.5px solid rgb(205, 214, 223);
-    width: 64px;
+  border-top: 0.5px solid rgb(205, 214, 223);
+  border-bottom: 0.5px solid rgb(205, 214, 223);
+  width: 64px;
 }
 
 .bMZrBT {
-    display: block;
-    text-transform: uppercase;
-    margin: 0px 12px;
-    color: rgb(105, 119, 134);
-    padding: 24px 12px;
-    font-size: 0.75rem;
-    letter-spacing: 0px;
-    line-height: 1.5;
-    font-weight: 600;
+  display: block;
+  text-transform: uppercase;
+  margin: 0px 12px;
+  color: rgb(105, 119, 134);
+  padding: 24px 12px;
+  font-size: 0.75rem;
+  letter-spacing: 0px;
+  line-height: 1.5;
+  font-weight: 600;
 }
-.google-logo{
+
+.google-logo {
   width: 20px;
   margin-right: 10px;
 }
-.google-signin-button{
+
+.google-signin-button {
   border-radius: 25px;
   padding: 10px 20px;
   font-size: 16px;
-  
+
 }
-</style>
+</style>./login.vue

@@ -14,7 +14,7 @@ export const useStore = defineStore({
     user_id: null,
     email: null,
     password: null,
-    birthday: null,
+    birthdate: null,
     phone: null,
     username: null,
     profile_picture: null,
@@ -30,16 +30,15 @@ export const useStore = defineStore({
       this.username = username;
       this.email = email;
       this.user_id = id;
-     this.profile_picture = profile_picture;
-
+     
     },
-    save_user_info_register(username, email, id, phone, birthday, password) {
+    save_user_info_register(username, email, id, phone, birthdate) {
       this.username = username;
       this.email = email;
       this.user_id = id;
       this.phone = phone;
-      this.birthday = birthday;
-      this.password = password;
+      this.birthdate = birthdate;
+   
     },
     return_user_id() {
       return this.user_id;

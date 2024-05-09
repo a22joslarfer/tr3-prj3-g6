@@ -3,13 +3,13 @@
 
     <div class="login-container">
         <div class="content">
-          <!-- Add multi-step progress bar -->
-          <div class="step-progress-content">    
-            <button type="radio" class="boton-atras" @click="step--">atras</button>
-
-                <div class="progress-bar">
-                    <div class="progress" :style="{ width: (step * 33.33) + '%' }"></div>
-                </div>
+            <!-- Add multi-step progress bar -->
+            <div class="step-progress-content">
+                <button type="radio" class="boton-atras" @click="step--">
+                    <div class="progress-bar">
+                        <div class="progress" :style="{ width: (step * 33.33) + '%' }"></div>
+                    </div>
+                </button>
             </div>
 
             <div class="company-info">
@@ -34,12 +34,11 @@
                     </div>
                     <div v-if="step === 2">
                         <div class="input-group">
-                            <input type="email" v-model.trim="email" class="input" placeholder="Correo Electrónico"
+                            <input type="email" v-model="email" class="input" placeholder="Correo Electrónico"
                                 required />
                         </div>
                         <div class="input-group">
-                            <input type="password" v-model.trim="password" class="input" placeholder="Contraseña"
-                                required />
+                            <input type="password" v-model="password" class="input" placeholder="Contraseña" required />
                         </div>
                         <div class="botones">
                             <button type="button" class="button next-button" @click="step++">Siguiente</button>
@@ -47,18 +46,17 @@
                     </div>
                     <div v-if="step === 3">
                         <div class="input-group">
-                            <input type="text" v-model.trim="phone" class="input" placeholder="Teléfono" />
+                            <input type="text" v-model="phone" class="input" placeholder="Teléfono" />
                         </div>
                         <div class="input-group">
-                            <input type="date" v-model.trim="birthday" class="input"
-                                placeholder="Fecha de Nacimiento" />
+                            <input type="date" v-model="birthday" class="input" placeholder="Fecha de Nacimiento" />
                         </div>
                         <div class="botones">
                             <button type="submit" class="button">Regístrate</button>
                         </div>
                     </div>
                 </form>
-                 <!-- GOOGLE
+                <!-- GOOGLE
                     <div class="sc-18d118e1-0 gjmkph">
                     <hr class="sc-1a86d6e9-0 doHtqb"><span class="sc-7b9b9acb-0 bMZrBT">or</span>
                     <hr class="sc-1a86d6e9-0 doHtqb">
@@ -106,7 +104,18 @@ export default {
 
             fetch('http://localhost:8000/api/register', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: this.name,
+                    email: this.email,
+                    password: this.password,
+                    phone: this.phone,
+                    birthday: this.birthday,
+
+
+                }),
             })
                 .then(response => {
                     if (!response.ok) {
@@ -126,23 +135,12 @@ export default {
 
                     if (data.error) {
                         console.error('Error:', data.error);
-                        localStorage.setItem('authToken', data.access_token);
-                        // Almacena solo la información necesaria del usuario
-                        
-
-                     
                         alert(data.error);
                     } else {
                         alert('Usuario registrado correctamente!');
                         const store = useStore();
-                        store.save_user_info_register(data.name, data.email, data.id,data.phone, data.birthday, data.token);
-                        // Almacena solo la información necesaria del usuario
-                        localStorage.setItem('user', JSON.stringify({
-                            nombre: this.name,
-                            email: this.email,
-                            token: data.access_token,
-                            
-                        }));
+                        store.save_user_info_register(data.name, data.email, data.id, data.phone, data.birthday, data.token);
+
                         this.$router.push('/login');
                     }
                 })
@@ -157,22 +155,29 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap');
+
 /* Contenedor de la barra de progreso */
 .progress-bar {
     width: 80%;
     margin: 0 auto;
     margin-top: 10px;
     margin-bottom: 10px;
-    height: 10px; /* Altura de la barra de progreso */
-    background-color: #ddd; /* Color de fondo de la barra de progreso */
-    border-radius: 5px; /* Borde redondeado de la barra de progreso */
+    height: 10px;
+    /* Altura de la barra de progreso */
+    background-color: #ddd;
+    /* Color de fondo de la barra de progreso */
+    border-radius: 5px;
+    /* Borde redondeado de la barra de progreso */
 }
 
 .progress {
     height: 100%;
-    background-color: #ff806d; /* Color de la barra de progreso */
-    border-radius: 5px; /* Borde redondeado de la barra de progreso */
-    transition: width 0.3s ease; /* Transición suave del ancho */
+    background-color: #ff806d;
+    /* Color de la barra de progreso */
+    border-radius: 5px;
+    /* Borde redondeado de la barra de progreso */
+    transition: width 0.3s ease;
+    /* Transición suave del ancho */
 }
 
 /* Contenedor de la barra de progreso */
@@ -267,7 +272,7 @@ export default {
 }
 
 
-.next-button{
+.next-button {
     background-color: #f1693f;
     color: white;
     border: none;
@@ -279,8 +284,8 @@ export default {
 
 
 }
- 
-.button[type="submit"]{
+
+.button[type="submit"] {
     background-color: #f1693f;
     color: white;
 
@@ -342,13 +347,13 @@ export default {
 
 }
 
-.boton-atras{
+.boton-atras {
     background-color: #cbc5c5af;
     color: #333;
     border: none;
     border-radius: 26px;
     font-size: 28px;
     margin-right: 10px;
-    padding: 0px 13px;  
+    padding: 0px 13px;
 }
 </style>

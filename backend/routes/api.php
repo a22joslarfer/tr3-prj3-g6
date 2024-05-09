@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\discoController;
 use App\Http\Controllers\reviewController;
@@ -22,6 +24,7 @@ use App\Http\Controllers\CiudadController;
 Route::get('/csrf-token', function () {
     return csrf_token();
 });
+Route::post('auth', [AuthController::class, 'auth']);
 // middleware usuarios
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

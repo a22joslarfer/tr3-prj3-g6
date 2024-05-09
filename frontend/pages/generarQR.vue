@@ -7,8 +7,6 @@
           alt="Profile Picture">
       </div>
       <div class="qr-card">
-
-        <!-- name user -->
         <h1>{{ name }}</h1>
         <div v-if="qrImageUrl" class="qr-code">
           <div v-html="qrImageUrl"></div>
@@ -16,12 +14,13 @@
         <div v-else>
           <p>Cargando código QR...</p>
         </div>
-        <!-- titulo -->
-        <h1 class="title_company">🥂 ELYSIUM</h1>
+        <h1 class="title-company">ELYSIUM 🥂</h1>
+        
       </div>
     </div>
   </div>
 </template>
+
 
 
 
@@ -35,20 +34,15 @@ export default {
       userId: '',
       name: '',
       avatar: '',
+      clientId: '',
+      
     };
   },
   methods: {
-    async fetchQRCode() {
+    async fetchQRCode(id) {
       try {
-        const store = useStore(); // Acceder al almacenamiento Vuex usando this.$store
-        const id = store.return_user_id(); // Suponiendo que tienes un estado llamado 'user' que contiene el ID del usuario
-        console.log(id);
-        console.log("hola");
-        const response = await fetch(`http://localhost:8000/api/generate-qr-code/${id}`);
-        //console del usuario
-        console.log(id);
-        this.userId = id;
-        //console de nombre de usuario
+          const response = await fetch(`http://localhost:8000/api/generate-qr-code/${id}`);
+     
         if (!response.ok) {
           throw new Error('Error fetching QR code');
         }
@@ -62,109 +56,81 @@ export default {
     }
   },
   created() {
-    this.fetchQRCode();
     const store = useStore();
     this.name = store.return_user_username();
-    console.log(this.name);
+    this.clientId = store.return_user_id();
+    this.fetchQRCode(this.clientId);
+
   },
 
 };
 </script>
+
+
+
+
+
+
+
 <style scoped>
-.title_company {
-  font-size: 20px;
-  color: #000;
-  font-weight: bold;
-  margin-top: 20px;
-  margin-bottom: 20px;
-
-
-}
-
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #ebe5e4;
-}
-
-.qr-card {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgb(0 0 0 / 26%);
-  background-color: #ffffff;
-  text-align: center;
-  width: 80%;
+  background-color: #ff806d;
+  border-radius: 10px;
 }
 
 .qr-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
   width: 100%;
-}
-
-.qr-card h1 {
-  font-size: 28px;
-  margin-bottom: 20px;
-}
-
-.qr-code {
-  max-width: 300px;
-  margin: 0 auto;
-  margin-top: 30px;
-}
-
-.qr-code img {
-  max-width: 100%;
-  height: auto;
-}
-
-.follow-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #ff806d;
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 20px;
-}
-
-.follow-button:hover {
-  background-color: #45a049;
-}
-
-.user-profile {
-  position: absolute;
-  top: -50px;
-  /* Desplazamiento negativo para que la mitad de la imagen sobresalga */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 100px;
-  overflow: hidden;
+  max-width: auto;
+  margin: 10px;
+  max-width: 425px;
 }
 
 .avatar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-
+  text-align: center;
 }
 
 .profile-picture {
-  width: 100px;
-  height: auto;
-  border-radius: 50%;
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 150px;
+  height: 150px;
 
+  border-radius: 50%;
+}
+
+.qr-card {
+  padding: 20px;
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.qr-code {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.title-company {
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+img{
+  border: 2px solid #f5f5f5;
+}
+.follow-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 </style>

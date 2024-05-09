@@ -113,10 +113,10 @@ public function show($id)
         ]);
 
         $user = new User();
-        $user->nombre = $request->nombre;
+        $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
-        $user->birthdate = $request->birthdate;
+        $user->birthday = $request->birthday;
         $user->password = Hash::make($request->password);
 
         $user->save();
@@ -130,24 +130,35 @@ public function show($id)
         // Validar los datos del formulario
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+            'password' => 'required'
 
-        // Intentar autenticar al usuario
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        ]);
+        $user = User::where("email", "=", $request->email)->first();
+
+        if (isset($user->id)) {
+            if (Hash::check($request->password, $user->password)) {
+
+                $token = $user->createToken("auth_token")->plainTextToken;
+
+                //si esta todo bien
+                return response()->json([
+                    "status" => 1,
+                    "msg" => "Usuario logeado  exitosamente",
+                    "access_token" => $token
+
+                ]);
+            } else {
+                return response()->json([
+                    "status" => 0,
+                    "msg" => "La password es incorrecta",
+
+                ], 404);
+            }
+        } else {
             return response()->json([
                 'message' => 'Invalid credentials',
             ], 401);
         }
-
-        // Obtener el usuario autenticado
-        $user = User::where('email', $request->input('email'))->firstOrFail();
-
-        // Generar un nuevo token de API
-        $user->api_token = Str::random(60);
-        $user->save();
-
-        return response()->json($user);
     }
     public function logout(Request $request)
     {
@@ -168,25 +179,23 @@ public function show($id)
         $user = User::find($id);
         return response()->json($user);
     }
-  
-   
+
     public function getUserById($id)
     {
         $user = User::find($id);
-    
+
         if (!$user) {
             return response()->json([
                 "status" => 0,
                 "msg" => "Usuario no encontrado",
             ], 404);
         }
-    
+
         return response()->json([
             "status" => 1,
             "data" => $user->name, // Devolver solo el nombre del usuario
-        ]);        return response()->json($user);
-
-    }    
+        ]);
+    }
 
 
 
@@ -220,8 +229,7 @@ public function show($id)
 }
 
     // return profile_photo from user
-    public function getProfilePhoto($id)
-{
+    public function getProfilePhoto($id){
     $user = User::find($id);
     if ($user) {
         // Construir la URL completa de la imagen de perfil
