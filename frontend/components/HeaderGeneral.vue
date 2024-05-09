@@ -7,7 +7,7 @@
           <img src="../public/img/copas.png" alt="Logo">
         </div>
         <div class="name">
-          <h2>VIAEGIS</h2>
+          <h2>ELYSIUM</h2>
         </div>
         <div class="menu-activador">
           <input type="checkbox" id="lanzador" @click="toggleMenu" />

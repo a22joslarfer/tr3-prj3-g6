@@ -25,6 +25,8 @@
                 <form @submit.prevent="register" class="form">
                     <div class="input-group" v-if="step === 1">
                         <input type="text" v-model.trim="name" class="input" placeholder="Nombre Completo" required />
+                        <input type="file" @change="handleFileUpload" accept="image/*" />
+
                         <div class="botones">
 
                             <button type="button" class="button next-button" @click="step++">Siguiente</button>
@@ -78,7 +80,6 @@
 import { useStore } from '../stores/index.js';
 
 export default {
-
     data() {
         return {
             step: 1,
@@ -87,27 +88,25 @@ export default {
             password: '',
             phone: '',
             birthday: '',
-
-
+            profile_photo: null // Cambiado de 'photo' a 'profile_photo'
         };
     },
-
     methods: {
+        handleFileUpload(event) {
+            this.profile_photo = event.target.files[0]; // Cambiado de 'this.photo' a 'this.profile_photo'
+        },
         register() {
+            const formData = new FormData();
+            formData.append('name', this.name.trim());
+            formData.append('email', this.email.trim());
+            formData.append('password', this.password.trim());
+            formData.append('phone', this.phone.trim());
+            formData.append('birthday', this.birthday.trim());
+            formData.append('profile_photo', this.profile_photo); // Cambiado de 'this.photo' a 'this.profile_photo'
+
             fetch('http://localhost:8000/api/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: this.name.trim(),
-                    email: this.email.trim(),
-                    password: this.password.trim(),
-                    phone: this.phone.trim(),
-                    birthday: this.birthday.trim(),
-
-
-                }),
+                body: formData
             })
                 .then(response => {
                     if (!response.ok) {
@@ -155,7 +154,6 @@ export default {
     }
 };
 </script>
-
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap');

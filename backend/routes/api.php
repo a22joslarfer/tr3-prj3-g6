@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\categoriasReviewController;
 use App\Http\Controllers\friendController;
 use App\Http\Controllers\seguidoresController;
+use App\Http\Controllers\CiudadController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,8 +29,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // ruta para hacer login
 Route::post('login', [userController::class, 'login']);
 // ruta para hacer logout
-Route::post('register', [userController::class, 'register']);
-// ruta para obtener todos los usuarios
+Route::post('register', [userController::class, 'store']);
 Route::get('/users', [userController::class, 'getUsers']);
 //ruta para obtener un usuario por id
 Route::get('/users/{id}', [userController::class, 'getUserById']);
@@ -40,6 +41,11 @@ Route::delete('/users/{id}', [userController::class, 'delete']);
 Route::put('/users/{id}', [userController::class, 'update']);
 //ruta de qr
 Route::get('/generate-qr-code/{user}', [UserController::class, 'generateQRCode']);
+//ruta para acceder a la profile_photo de un usuario
+Route::get('/users/profile_photo/{id}', [userController::class, 'getProfilePhoto']);
+Route::get('users/seguidores/{id}', [userController::class, 'getFollowers']);
+
+
 
 
 
@@ -133,4 +139,9 @@ Route::get('/comentarios/show/{id}', [comentariosController::class, 'show']);
 //eliminar comentari
 Route::delete('/comentarios/{id}', [comentariosController::class, 'destroy']);
 
+
+
+
+//ciudades
+Route::get('/ciudades', [CiudadController::class, 'index']);
 
