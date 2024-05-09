@@ -59,23 +59,13 @@ class UserController extends Controller
 
     return response()->json($user, 201);
 }
-    public function show($id)
+public function show($id)
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return response()->json([
-                "status" => 0,
-                "msg" => "Usuario no encontrado",
-            ], 404);
-        }
-
-        $user->delete();
-        return response()->json([
-            "status" => 1,
-            "msg" => "Usuario eliminado exitosamente",
-        ]);
+        // Mostrar un usuario específico
+        $user = User::findOrFail($id);
+        return response()->json($user);
     }
+
 
 
     public function update(Request $request, $id)
@@ -140,31 +130,11 @@ class UserController extends Controller
         // Validar los datos del formulario
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
-
+            'password' => 'required|string',
         ]);
-        $user = User::where("email", "=", $request->email)->first();
 
-        if (isset($user->id)) {
-            if (Hash::check($request->password, $user->password)) {
-
-                $token = $user->createToken("auth_token")->plainTextToken;
-
-                //si esta todo bien
-                return response()->json([
-                    "status" => 1,
-                    "msg" => "Usuario logeado  exitosamente",
-                    "access_token" => $token
-
-                ]);
-            } else {
-                return response()->json([
-                    "status" => 0,
-                    "msg" => "La password es incorrecta",
-
-                ], 404);
-            }
-        } else {
+        // Intentar autenticar al usuario
+        if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'message' => 'Invalid credentials',
             ], 401);
@@ -179,7 +149,6 @@ class UserController extends Controller
 
         return response()->json($user);
     }
-
     public function logout(Request $request)
     {
         // Obtener el usuario autenticado
@@ -251,7 +220,8 @@ class UserController extends Controller
 }
 
     // return profile_photo from user
-    public function getProfilePhoto($id){
+    public function getProfilePhoto($id)
+{
     $user = User::find($id);
     if ($user) {
         // Construir la URL completa de la imagen de perfil
