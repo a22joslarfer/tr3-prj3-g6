@@ -5,7 +5,7 @@
         <div class="content">
           <!-- Add multi-step progress bar -->
           <div class="step-progress-content">    
-            <button type="radio" class="boton-atras" @click="step--"><</button>
+            <button type="radio" class="boton-atras" @click="step--">atras</button>
 
                 <div class="progress-bar">
                     <div class="progress" :style="{ width: (step * 33.33) + '%' }"></div>
