@@ -108,10 +108,10 @@ class UserController extends Controller
         ]);
 
         $user = new User();
-        $user->nombre = $request->nombre;
+        $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
-        $user->birthdate = $request->birthdate;
+        $user->birthday = $request->birthday;
         $user->password = Hash::make($request->password);
 
         $user->save();
@@ -128,7 +128,12 @@ class UserController extends Controller
             'password' => 'required'
 
         ]);
-        $user = User::where("email", "=", $request->email)->first();
+        // Obtener el usuario autenticado
+        $user = User::where('email', $request->input('email'))->firstOrFail();
+
+        // Generar un nuevo token de API
+        $user->api_token = Str::random(60);
+        $user->save();
 
         if (isset($user->id)) {
             if (Hash::check($request->password, $user->password)) {
@@ -139,8 +144,10 @@ class UserController extends Controller
                 return response()->json([
                     "status" => 1,
                     "msg" => "Usuario logeado  exitosamente",
-                    "access_token" => $token
-
+                    "access_token" => $token,
+                    "email" => $user->email,
+                    "name" => $user->name,
+                    "id" => $user->id,
                 ]);
             } else {
                 return response()->json([
@@ -154,15 +161,6 @@ class UserController extends Controller
                 'message' => 'Invalid credentials',
             ], 401);
         }
-
-        // Obtener el usuario autenticado
-        $user = User::where('email', $request->input('email'))->firstOrFail();
-
-        // Generar un nuevo token de API
-        $user->api_token = Str::random(60);
-        $user->save();
-
-        return response()->json($user);
     }
 
     public function logout(Request $request)
@@ -184,55 +182,49 @@ class UserController extends Controller
         $user = User::find($id);
         return response()->json($user);
     }
-  
-   
+
     public function getUserById($id)
     {
         $user = User::find($id);
-    
+
         if (!$user) {
             return response()->json([
                 "status" => 0,
                 "msg" => "Usuario no encontrado",
             ], 404);
         }
-    
+
         return response()->json([
             "status" => 1,
             "data" => $user->name, // Devolver solo el nombre del usuario
-        ]);        return response()->json($user);
-
-    }    
-
-
-
-    
-  public function generateQRCode(User $user)
-{
-    try {
-      
-        // Generar el contenido para el código QR (puede ser dinámico) llevar a http://localhost:3000/
-        $qrContent = 'http://viaegis.daw.inspedralbes.cat/';
-
-        // Generar el código QR con Simple-QRCode
-        $qrCode = QrCode::size(200)->generate($qrContent);
-
-        // Nombre del archivo
-        $fileName = 'qr_code_' . time() . '.svg';
-
-        // Ruta de destino para guardar el código QR
-        $qrPath = public_path('qr_codes/' . $fileName);
-
-        // Guardar el código QR en la carpeta de destino
-        File::put($qrPath, $qrCode);
-
-        // Devolver la URL del código QR guardado
-        return response()->file($qrPath);
-        
-    } catch (\Exception $e) {
-        // Manejar el error de generación del código QR
-        return response()->json(['error' => $e->getMessage()], 500);
+        ]);
     }
-}
-}
 
+
+
+    public function generateQRCode($userId)
+    {
+        try {
+            // Contenido del código QR con el ID de usuario de A y la URL de redirección
+            $qrContent = 'http://localhost:3000/auth/' . $userId;    
+            // Generar el código QR con Simple-QRCode
+            $qrCode = QrCode::size(200)->generate($qrContent);
+    
+            // Nombre del archivo
+            $fileName = 'qr_code_' . time() . '.svg';
+    
+            // Ruta de destino para guardar el código QR
+            $qrPath = public_path('qr_codes/' . $fileName);
+    
+            // Guardar el código QR en la carpeta de destino
+            File::put($qrPath, $qrCode);
+    
+            // Devolver la URL del código QR guardado
+            return response()->file($qrPath);
+        } catch (\Exception $e) {
+            // Manejar el error de generación del código QR
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
+}

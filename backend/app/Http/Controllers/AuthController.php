@@ -30,7 +30,7 @@ class AuthController extends Controller
 
         return response()->json($user, 201);
     }
-public function login(Request $request)
+    public function login(Request $request)
     {
         // Validar los datos del formulario
         $request->validate([
@@ -66,4 +66,30 @@ public function login(Request $request)
 
         return response()->json(['message' => 'Logged out']);
     }
+
+        public function auth(Request $request)
+        {
+            // email 
+            // password
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|string',
+            ]);
+
+            if (!Auth::attempt($request->only('email', 'password'))) {
+                return response()->json([
+                    'message' => 'Invalid credentials',
+                ], 401);
+            }
+
+            $user = User::where('email', $request->input('email'))->firstOrFail();
+
+            if ($user) {
+                // message success
+                return response()->json([
+                    'message' => 'success',
+                    'user' => $user
+                ], 200);
+            }
+        }
 }
