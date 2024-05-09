@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
@@ -27,6 +27,17 @@ class CreateUsersTable extends Migration
             $table->string('profile_photo')->nullable();
             $table->integer('seguidores')->default(0);
         });
+
+        Schema::create('seguidores', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('usuario_id');
+            $table->unsignedBigInteger('seguidor_id');
+            $table->timestamps();
+
+            // Claves foráneas
+            $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
+            $table->foreign('seguidor_id')->references('id')->on('usuarios')->onDelete('cascade');
+        });
     }
 
     /**
@@ -36,6 +47,7 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('seguidores');
+        Schema::dropIfExists('usuarios');
     }
 }

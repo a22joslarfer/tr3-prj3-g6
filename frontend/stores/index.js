@@ -17,6 +17,7 @@ export const useStore = defineStore({
     birthdate: null,
     phone: null,
     username: null,
+    profile_picture: null,
   }),
   actions: {
     save_seats(seats) {
@@ -57,12 +58,15 @@ export const useStore = defineStore({
     return_user_password() {
       return this.password;
     },
+    return_user_profile_picture() {
+      return this.profile_picture;
+    },
     return_user_info() {
       return {
         username: this.username,
         email: this.email,
         user_id: this.user_id,
-       
+       profile_picture: this.profile_picture,
 
       };
     },
@@ -83,6 +87,7 @@ export const useStore = defineStore({
       this.phone = null;
       this.birthday = null;
       this.password = null;
+      this.profile_picture = null;
     },
     set_return_path(path) {
       this.return_path = path;

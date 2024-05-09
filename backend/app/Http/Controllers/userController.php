@@ -21,29 +21,44 @@ class UserController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Validar los datos del formulario
-        $request->validate([
-            'nombre' => 'required',
-            'email' => 'required|email|unique:usuarios,email',
-            'password' => 'required',
-            'password2' => 'required|same:password',
-            'phone' => 'required',
-            'birthdate' => 'required',
-        ]);
+{
+    // Validar los datos del formulario
+    $request->validate([
+        'name' => 'required|string',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:8',
+        'phone' => 'nullable|string', // Añadido
+        'birthday' => 'nullable|date', // Añadido
+        'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Asegúrate de agregar la validación de la imagen aquí
+    ]);
 
-        $user = new User();
-        $user->nombre = $request->nombre;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->birthdate = $request->birthdate;
-        $user->password = Hash::make($request->password);
-
-        $user->save();
-
-        return response()->json($user, 201);
+    // Procesar y almacenar la imagen de perfil
+    $profilePhotoPath = null;
+    if ($request->hasFile('profile_photo')) {
+        // Obtener el nombre del archivo
+        $fileName = $request->file('profile_photo')->getClientOriginalName();
+        
+        // Mover la imagen a la carpeta profile en el directorio public
+        $request->file('profile_photo')->move(public_path('profile'), $fileName);
+    
+        // Almacenar la ruta relativa de la imagen en la base de datos
+        $profilePhotoPath = 'profile/' . $fileName;
     }
+    
+    // Crear un nuevo usuario
+    $user = new User([
+        'name' => $request->input('name'),
+        'email' => $request->input('email'),
+        'password' => Hash::make($request->input('password')),
+        'phone' => $request->input('phone'),
+        'birthday' => $request->input('birthday'),
+        'api_token' => Str::random(60), 
+        'profile_photo' => $profilePhotoPath, // Almacenar la ruta relativa de la imagen en la base de datos
+    ]);
+    $user->save();
 
+    return response()->json($user, 201);
+}
     public function show($id)
     {
         $user = User::find($id);
