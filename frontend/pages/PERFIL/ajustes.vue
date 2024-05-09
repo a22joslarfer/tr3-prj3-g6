@@ -7,7 +7,7 @@
         <div class="update-form">
           <label for="name">Usuario:</label>
           <input type="text" id="name" v-model="newName">
-          <label for="email">Correo electronico:</label>
+          <label for="email">Correo electrónico:</label>
           <input type="email" id="email" v-model="newEmail">
           <label for="phone">Teléfono:</label>
           <input type="text" id="phone" v-model="newPhone">
@@ -15,8 +15,9 @@
           <input type="date" id="birthday" v-model="newBirthday">
           <!-- contraseña anterior -->
           <label for="currentPassword">Contraseña actual:</label>
-<input type="password" id="currentPassword" v-model="currentPassword">
-          <label for="password">Contraseña:</label>
+          <input type="password" id="currentPassword" v-model="currentPassword">
+          <!-- nueva contraseña -->
+          <label for="password">Nueva contraseña:</label>
           <input type="password" id="password" v-model="newPassword">
           <button @click="updateUser">Actualizar datos</button>
         </div>
@@ -30,10 +31,15 @@
 </template>
 
 <script>
+import HeaderPerfil from '~/components/HeaderPerfil.vue';
 import FooterOptions from '~/components/FooterOptions.vue';
 import { useStore } from '../stores/index.js';
 
 export default {
+  components: {
+    HeaderPerfil,
+    FooterOptions
+  },
   data() {
     return {
       newName: '',
@@ -49,71 +55,49 @@ export default {
   async mounted() {
     const store = useStore();
     this.user = store.return_user_info_register();
-    console.log('User data:', this.user);
     this.newName = this.user.username;
     this.newEmail = this.user.email;
     this.userId = this.user.user_id;
     this.newPhone = this.user.phone;
     this.newBirthday = this.user.birthday;
-    this.newPassword = this.user.password;
   },
   methods: {
     async updateUser() {
       console.log('Updating user...');
       const store = useStore();
-  // Verificar si se ha proporcionado la contraseña anterior
-  if (!this.currentPassword) {
-    console.error('Debe proporcionar la contraseña anterior.');
-    return;
-  }
-  
-  // Verificar que la contraseña anterior coincida con la almacenada
-  if (this.currentPassword !== this.user.password) {
-    console.error('La contraseña anterior es incorrecta.');
-    return;
-  }
+      const userId = this.user ? this.user.user_id : null;
 
+      if (!this.currentPassword) {
+        console.error('Debe proporcionar la contraseña actual.');
+        return;
+      }
 
-      // Actualizar el usuario en el store
-      store.save_user_info_register(this.newName, this.newEmail, this.userId, this.newPhone, this.newBirthday, this.newPassword);
-      console.log('New user data:', store.return_user_info_register());
-
-      // Lógica para enviar la actualización al backend
-      this.sendUpdateToBackend();
-    },
-    async sendUpdateToBackend() {
-      console.log('Sending update to backend...');
-
-      const store = useStore();
-      const userId = this.user ? this.user.user_id : null;// Obtener el ID del usuario
-
-      if (userId) { // Verificar si userId es null o no
-        try {
-          const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
-            method: 'PUT', // Utilizar el método PUT para actualizar el usuario
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              name: this.newName, // Enviar el nuevo nombre
-              email: this.newEmail, // Enviar el nuevo email
-              password: this.newPassword, // Enviar la nueva contraseña
-              phone: this.newPhone,
-              birthday: this.newBirthday
-            })
-          });
-          const data = await response.json();
-          console.log('Response from server:', data);
-        } catch (error) {
-          console.error('Error updating user:', error);
-        }
-      } else {
-        console.error('User ID is null. Cannot send update request.');
+      // Enviar los datos al backend
+      try {
+        const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: this.newName,
+            email: this.newEmail,
+            phone: this.newPhone,
+            birthday: this.newBirthday,
+            old_password: this.currentPassword, // Enviar la contraseña actual al backend
+            new_password: this.newPassword // Enviar la nueva contraseña al backend
+          })
+        });
+        const data = await response.json();
+        console.log('Response from server:', data);
+      } catch (error) {
+        console.error('Error updating user:', error);
       }
     }
   }
 };
 </script>
+
 
 
 <style scoped>

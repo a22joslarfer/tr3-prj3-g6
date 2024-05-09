@@ -74,21 +74,33 @@ public function show($id)
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'required|string|min:8',
+            'new_password' => 'nullable|string|min:8',
             'phone' => 'required|string',
             'birthday' => 'required|string',
+            'old_password' => 'required|string', // Nuevo campo para la contraseña anterior
         ]);
-
-        // Actualizar un usuario existente
+    
+        // Obtener el usuario existente
         $user = User::findOrFail($id);
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = Hash::make($request->input('password'));
-        $user->phone = $request->input('phone');
-        $user->birthday = $request->input('birthday');
-        $user->save();
-
-        return response()->json($user);
+    
+        // Verificar si la contraseña anterior coincide
+        if (Hash::check($request->input('old_password'), $user->password)) {
+            // La contraseña anterior coincide, procede a actualizar el usuario
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            if ($request->filled('new_password')) {
+                // Si se proporciona una nueva contraseña, actualiza la contraseña
+                $user->password = Hash::make($request->input('new_password'));
+            }
+            $user->phone = $request->input('phone');
+            $user->birthday = $request->input('birthday');
+            $user->save();
+    
+            return response()->json($user);
+        } else {
+            // La contraseña anterior no coincide, devuelve un error
+            return response()->json(['error' => 'La contraseña anterior no es válida'], 400);
+        }
     }
     public function destroy($id)
     {
