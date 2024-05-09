@@ -248,10 +248,10 @@ class UserController extends Controller
         // Manejar el error de generación del código QR
         return response()->json(['error' => $e->getMessage()], 500);
     }
+}
 
     // return profile_photo from user
-    public function getProfilePhoto($id)
-{
+    public function getProfilePhoto($id){
     $user = User::find($id);
     if ($user) {
         // Construir la URL completa de la imagen de perfil

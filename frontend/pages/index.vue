@@ -291,25 +291,22 @@
     },
 
     mostrarMarcador(coordenadas) {
-        // Redirigir al lugar específico
-        this.map.flyTo({
-            center: coordenadas,
-            zoom: 14,
-        });
+    // Redirigir al lugar específico
+    this.map.flyTo({
+        center: coordenadas,
+        zoom: 14,
+    });
 
-        // Remover el marcador existente, si hay uno
-        if (this.marker) {
-            this.marker.remove();
-        }
-        if (this.map.getLayer('unclustered-point')) {
-            this.map.removeLayer('unclustered-point');
-        }
+    // Remover el marcador existente, si hay uno
+    if (this.marker) {
+        this.marker.remove();
+    }
 
-        // Agregar un nuevo marcador en las coordenadas especificadas
-        this.marker = new mapboxgl.Marker()
-            .setLngLat(coordenadas)
-            .addTo(this.map);
-    },
+    // Agregar un nuevo marcador en las coordenadas especificadas
+    this.marker = new mapboxgl.Marker()
+        .setLngLat(coordenadas)
+        .addTo(this.map);
+},
     crear_mostrar_pines_discos() {
         // Eliminar las capas existentes si utilizan la fuente "points"
         if (this.map.getLayer('clusters')) {
