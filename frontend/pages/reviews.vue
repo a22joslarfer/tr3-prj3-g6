@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h2>Lista de reviews</h2>
+        <!--
         <div class="dropdown-categorias">
             <select v-model="selectedCategory" class="mobile-select">
                 <option disabled value="">Please select one</option>
@@ -9,12 +9,11 @@
                 </option>
             </select>
         </div>
-
+         -->
         <div class="row">
             <div v-for="review in reviews" :key="review.id" class="col-md-4">
                 <div class="card mb-3">
                     <img :src="getImagenUrl(review.photo)" class="card-img-top" alt="...">
-
 
                     <div class="card-body">
                         <h5 class="card-title">{{ review.titulo }}</h5>
@@ -23,8 +22,14 @@
                     </div>
                     <div class="card-footer">
                         <small class="text-muted">Review de {{ getUserById(review.usuario_id) }}</small>
-                        <div v-if="review.usuario_id != client_id">
-                            <button @click="follow(review.usuario_id)">Follow</button>
+                        <div v-if="review.usuario_id !== client_id">
+                            <template v-if="!isFollowing(review.usuario_id)">
+                                <button @click="follow(review.usuario_id)">Follow</button>
+                            </template>
+                            <template v-else>
+                                <!-- Display something else if the user is already followed -->
+                                <span>Already Following</span>
+                            </template>
                         </div>
 
                         <div v-else>
@@ -77,10 +82,13 @@ export default {
                     if (!response.ok) {
                         throw new Error(`Error fetching user: ${response.status} - ${response.statusText}`);
                     }
-                    return response.json(); // Return the parsed JSON
+                    return response.json();
                 })
-                .then(user => {
-                    this.userMap[id] = user; // Direct assignment
+                .then(response => {
+                    this.userMap[id] = response.data;
+                    
+
+
                 })
                 .catch(error => {
                     console.error('Error fetching user:', error);
@@ -88,8 +96,9 @@ export default {
                 });
         },
         getUserById(id) {
-            const user = this.userMap[id];
-            return user ? user.name : 'Usuario Desconocido';
+            console.log('buscando el usuario con id', id);
+            const userName = this.userMap[id];
+            return userName ? userName : 'Usuario Desconocido';
         },
         getImagenUrl(rutaRelativaImagen) {
 
@@ -167,36 +176,13 @@ export default {
                     alert('Error adding friend');
                 });
         },
-        unfollow(seguido_id) {
-
-        },
-        checkIfSeguidor(seguidor_id, seguido_id) {
-            fetch(`http://localhost:8000/api/seguidores/${seguidor_id}/${seguido_id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error fetching seguidores');
-                    }
-                    return response.json();
-
-                })
-                .then(data => {
-                    if (data.status) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                })
-
-                .catch(error => {
-                    console.error('Error fetching seguidores:', error);
-                    alert('Error fetching seguidores catch error');
-                });
-        }
+       x
     },
     mounted() {
+        this.checkIfAuth();
         this.fetchReviews();
         this.fetchCategoriasReviews();
-        this.checkIfAuth();
+        
 
     },
 
@@ -204,14 +190,13 @@ export default {
 </script>
 
 <style scoped>
-/*normazile*/
 * {
     box-sizing: border-box;
     font-family: "Antonio", sans-serif;
     margin: 0;
     padding: 0px;
-    overflow: hidden;
-    color: #ccc;
+
+    color: #1c1c1c;
 
 }
 
@@ -219,7 +204,9 @@ export default {
 
 .container {
     padding: 8px;
-    background-color: #30355ade;
+    background-color: #ff806d;
+    height: auto;
+
 }
 
 .btn {
@@ -245,9 +232,9 @@ export default {
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
-    background-color: #30355a;
+    background-color: #f5f5f5;
     background-clip: border-box;
-    border: 1px solid #23284b;
+
     border-radius: 1rem;
     margin: 40px 0;
 }
@@ -274,9 +261,8 @@ export default {
 
 .card-footer {
     padding: 0.75rem 1.25rem;
-    background-color: rgba(0, 0, 0, 0.301);
-    border-top: 1px solid rgba(252, 252, 252, 0.212);
-    border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+    background-color: #f1eeeee3;
+    border-top: 1px solid black;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -290,7 +276,8 @@ export default {
 }
 
 button {
-    background-color: #30355a;
+    background-color: #ff806d;
+    ;
     transition: background-color 0.2s ease-in-out;
     padding: 10px;
     border: none;
@@ -313,14 +300,14 @@ h2 {
     width: 100%;
     padding: 10px;
     font-size: 16px;
-    background-color: #30355a;
+    background-color: #1c1c1c;
     border: 1px solid #ccc;
 
     border-radius: 4px;
 }
 
 option {
-    background-color: #30355a;
+    background-color: #1c1c1c;
     color: #ccc;
     border: 2px solid #ccc;
 }
@@ -334,5 +321,10 @@ option {
 
 body {
     margin: 0px;
+}
+
+
+.row {
+    height: auto;
 }
 </style>

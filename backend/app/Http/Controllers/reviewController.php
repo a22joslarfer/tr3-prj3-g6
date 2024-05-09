@@ -19,10 +19,10 @@ class reviewController extends Controller
             'titulo' => 'required',
             'content' => 'required',
             'puntuacion' => 'required',
-            'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048|required',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Change 'required' to 'nullable'
             'categoria' => 'required',
         ]);
-
+    
         try {
             $review = new ReviewModel;
             $review->usuario_id = $request->usuario_id;
@@ -31,28 +31,26 @@ class reviewController extends Controller
             $review->content = $request->content;
             $review->puntuacion = $request->puntuacion;
             $review->categoria = $request->categoria;
-
+    
             if ($request->hasFile('photo')) {
                 $photoPath = $request->file('photo')->store('photos', 'public');
                 $review->photo = $photoPath;
-            } elseif ($request->exists('photo')) {
-                $review->photo = $request->photo;
             } else {
-                return response()->json(['error' => 'No photo was provided.'], 400);
+                $review->photo = null; // Set photo to null if no file is uploaded
             }
-
-
+    
             $review->save();
-
+    
             return response()->json($review);
         } catch (\Exception $e) {
             // Log the error for debugging purposes
             Log::error('Error creating review: ' . $e->getMessage());
-
+    
             // Return a generic error response
             return response()->json(['error' => 'An error occurred while creating the review.'], 500);
         }
     }
+    
 
 
     public function getReviews()

@@ -1,5 +1,5 @@
-<template>   
- <HeaderGeneral />
+<template>
+  <HeaderGeneral />
 
   <div class="container">
     <form @submit.prevent="submitReview" class="form">
@@ -17,20 +17,15 @@
       </div>
 
       <div class="form-group">
-        <label for="categoria" class="texto">Categoría *</label>
-        <select id="categoria" v-model="categoria" class="form-control" required>
-          <option disabled value="">Selecciona una categoría</option>
-          <option v-for="categoria in categorias_reviews" :key="categoria.nombre" :value="categoria.id">
-            {{ categoria.nombre }}
-          </option>
-        </select>
+        <label class="texto">Categoría *</label>
+        <div v-for="item in categorias_reviews" :key="item.id">
+          <button type="button" @click="categoria = item.id">{{ item.nombre }}</button>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="puntuacion" class="texto">Puntuación *</label>
-          <NuxtRating :read-only="false" :rating-count="5" :rating-size="'40px'" :active-color="'gold'"
-            :rating-value="1" rating-content="⭐" @rating-selected="logRating" class="star-rating"/>
-
+        <input type="number" id="puntuacion" v-model="puntuacion" min="1" max="5" class="form-control">
       </div>
 
       <div class="form-group">
@@ -39,7 +34,7 @@
           <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file"
             accept="image/*">
           <div class="dropzone-text" @click="openFileInput">
-            
+
           </div>
           <span>Seleccionar archivo</span>
         </div>
@@ -60,28 +55,37 @@ export default {
       usuario_id: '',
       titulo: '',
       content: '',
-      puntuacion: null,
+      puntuacion: 1,
       photo: null,
       categorias_reviews: [],
-      categoria: '',
+      categoria: 'asdasdas',
     };
   },
   methods: {
 
-   logRating(rating) {
+    logRating(rating) {
       console.log('Rating:', rating);
       this.puntuacion = rating;
     },
     submitReview() {
+      if (!this.categoria) {
+        alert('Please select a category.');
+        return; // Don't proceed with review submission if categoria is not selected
+      }
       let data = {
         disco_id: this.disco_id,
         usuario_id: this.usuario_id,
         titulo: this.titulo,
         content: this.content,
         puntuacion: this.puntuacion,
-        photo: this.photo,
         categoria: this.categoria,
       };
+
+      console.log('categoria' + this.categoria);
+      // Check if photo is present before adding it to the data object
+      if (this.photo) {
+        data.photo = this.photo;
+      }
 
       fetch('http://localhost:8000/api/reviews', {
         method: 'POST',
@@ -97,12 +101,12 @@ export default {
           }
           alert('Tot correcte!');
           this.$router.push('/reviews');
-
         })
         .catch(error => {
           alert('Error submitting review: ' + error.message);
         });
     },
+
     handleFileUpload(event) {
       this.photo = event.target.files[0];
     },
@@ -119,19 +123,20 @@ export default {
         })
         .then(data => {
           this.categorias_reviews = data;
+          console.log('Categorias:', this.categorias_reviews);
         })
         .catch(error => {
           alert('Error fetching categorias: ' + error.message)
         });
     },
-    checkIfAuth(){
+    checkIfAuth() {
       const store = useStore();
       const user_id = store.return_user_id();
-      if(user_id === null){
+      if (user_id === null) {
         alert('Necesitas estar logueado para crear una review');
-        store.set_return_path('/'+ this.$route.params.id);
+        store.set_return_path('/' + this.$route.params.id);
         this.$router.push('/login');
-        localStorage.setItem('return_path', '/'+ this.$route.params.id);
+        localStorage.setItem('return_path', '/' + this.$route.params.id);
       }
     }
   },
@@ -140,7 +145,7 @@ export default {
     const store = useStore();
     this.usuario_id = store.return_user_id();
 
-    
+
 
   },
   computed() {
@@ -151,6 +156,9 @@ export default {
     console.log('Categorias:', this.categorias_reviews);
     this.checkIfAuth();
   },
+  created() {
+    this.categoria = 123;
+  }
 };
 </script>
 
@@ -230,10 +238,12 @@ export default {
 .btn-primary:hover {
   background-color: #0056b3;
 }
+
 .star-rating {
   margin-top: 10px;
 }
-textarea{
+
+textarea {
   resize: none;
 }
 </style>

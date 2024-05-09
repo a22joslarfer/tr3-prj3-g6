@@ -144,7 +144,10 @@ public function show($id)
                 return response()->json([
                     "status" => 1,
                     "msg" => "Usuario logeado  exitosamente",
-                    "access_token" => $token
+                    "access_token" => $token,
+                    "id" => $user->id,
+                    "name" => $user->name,
+                    "email" => $user->email,
 
                 ]);
             } else {

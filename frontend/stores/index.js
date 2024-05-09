@@ -18,8 +18,23 @@ export const useStore = defineStore({
     phone: null,
     username: null,
     profile_picture: null,
+    chattingWithId: null,
+    chattingWithIdName: null,
+
   }),
   actions: {
+    set_chattingWithId(id) {
+      this.chattingWithId = id;
+    },
+    set_chattingWithIdName(name) {
+      this.chattingWithIdName = name;
+    },
+    return_chattingWithId() {
+      return this.chattingWithId;
+    },
+    return_chattingWithIdName() {
+      return this.chattingWithIdName;
+    },
     save_seats(seats) {
       this.selected_seats = seats;
     },
@@ -95,7 +110,7 @@ export const useStore = defineStore({
     return_path() {
       return this.return_path;
     },
-
+    
 
     logout() {
       this.clear_user_info();
