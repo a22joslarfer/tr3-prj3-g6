@@ -5,11 +5,11 @@
         <div class="content">
             <!-- Add multi-step progress bar -->
             <div class="step-progress-content">
-                <button type="radio" class="boton-atras" @click="step--">
+                <button type="button" class="boton-atras" @click="step = step > 1 ? step - 1 : 1"><</button>
                     <div class="progress-bar">
                         <div class="progress" :style="{ width: (step * 33.33) + '%' }"></div>
                     </div>
-                </button>
+                
             </div>
 
             <div class="company-info">
