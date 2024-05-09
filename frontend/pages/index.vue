@@ -227,10 +227,10 @@
             center: [2.0947632393357907, 39.35567342431939],
             zoom: 0,
         });
-        this.map.on('style.load', () => {
-        // Aquí puedes agregar tus fuentes y capas al mapa
-        this.crear_mostrar_pines_discos();
-    });
+       //hacer que los pines carguen siempre
+        this.map.on('load', () => {
+            this.crear_mostrar_pines_discos();
+        });
 
         var geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken,
