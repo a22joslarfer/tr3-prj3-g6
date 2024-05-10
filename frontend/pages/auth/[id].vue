@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     auth() {
-      fetch(`http://localhost:8000/api/auth/`, {
+      fetch(`http://localhost:8000/api/auth`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -55,8 +55,11 @@ export default {
         .then(data => {
           console.log(data);
           if (data.message = 'success') {
-            this.followBack();
             this.lectorId = data.user.id;
+            console.log('lector id ' + this.lectorId);
+            console.log('cliente id ' + this.clientId);
+            this.followBack();
+            
 
             this.hasAuthenticated = true;
 
@@ -76,8 +79,8 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          seguidor: this.clientId,
-          seguido: this.lectorId,
+          seguidor: this.lectorId,
+          seguido: this.clientId,
         }),
       })
         .then(response => {
