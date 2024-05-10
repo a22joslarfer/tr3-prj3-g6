@@ -152,9 +152,8 @@ class UserController extends Controller
         if (isset($user->id)) {
             if (Hash::check($request->password, $user->password)) {
 
-                $token = $user->createToken("auth_token")->plainTextToken;
+                $token = $user->createToken("api_token")->plainTextToken;
 
-                //si esta todo bien
                 return response()->json([
                     "status" => 1,
                     "msg" => "Usuario logeado  exitosamente",
@@ -162,7 +161,6 @@ class UserController extends Controller
                     "id" => $user->id,
                     "name" => $user->name,
                     "email" => $user->email,
-
                 ]);
             } else {
                 return response()->json([
@@ -171,6 +169,7 @@ class UserController extends Controller
 
                 ], 404);
             }
+        
         } else {
             return response()->json([
                 'message' => 'Invalid credentials',
@@ -219,19 +218,19 @@ class UserController extends Controller
     {
         try {
             // Contenido del código QR con el ID de usuario de A y la URL de redirección
-            $qrContent = 'http://localhost:3000/auth/' . $userId;    
+            $qrContent = 'http://localhost:3000/auth/' . $userId;
             // Generar el código QR con Simple-QRCode
             $qrCode = QrCode::size(200)->generate($qrContent);
-    
+
             // Nombre del archivo
             $fileName = 'qr_code_' . time() . '.svg';
-    
+
             // Ruta de destino para guardar el código QR
             $qrPath = public_path('qr_codes/' . $fileName);
-    
+
             // Guardar el código QR en la carpeta de destino
             File::put($qrPath, $qrCode);
-    
+
             // Devolver la URL del código QR guardado
             return response()->file($qrPath);
         } catch (\Exception $e) {
@@ -239,7 +238,7 @@ class UserController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
+
 
 
     // return profile_photo from user
