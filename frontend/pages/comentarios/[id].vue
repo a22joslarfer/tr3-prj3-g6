@@ -49,13 +49,13 @@
     methods: {
       async obtenerBereal() {
         try {
-          const response = await fetch(`http://localhost:8000/api/bereals/${this.$route.params.id}`);
+          const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/bereals/${this.$route.params.id}`);
           if (!response.ok) {
             throw new Error('Error al obtener el Bereal');
           }
           this.bereal = await response.json();
           // Obtener el nombre de usuario asociado al Bereal
-          const usuarioResponse = await fetch(`http://localhost:8000/api/users/${this.bereal.id_usuari}`);
+          const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${this.bereal.id_usuari}`);
           if (!usuarioResponse.ok) {
             throw new Error('Error al obtener el usuario');
           }
@@ -67,7 +67,7 @@
       },
       async obtenerComentarios() {
         try {
-          const response = await fetch(`http://localhost:8000/api/comentarios/${this.$route.params.id}`);
+          const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios/${this.$route.params.id}`);
           if (!response.ok) {
             throw new Error('Error al obtener los comentarios');
           }
@@ -76,7 +76,7 @@
   
           // Obtener el nombre de usuario asociado a cada comentario
           for (const comentario of this.comentarios) {
-            const usuarioResponse = await fetch(`http://localhost:8000/api/users/${comentario.id_usuari}`);
+            const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${comentario.id_usuari}`);
             if (!usuarioResponse.ok) {
               throw new Error('Error al obtener el usuario');
             }
@@ -89,7 +89,7 @@
       },
       async agregarComentario() {
         try {
-          const response = await fetch('http://localhost:8000/api/comentarios', {
+          const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

@@ -59,7 +59,7 @@ export default {
     },
     methods: {
         fetchReviews() {
-            fetch('http://localhost:8000/api/reviews')
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/reviews')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Error fetching reviews: ${response.status} - ${response.statusText}`);
@@ -78,7 +78,7 @@ export default {
                 });
         },
         fetchUserById(id) {
-            fetch(`http://localhost:8000/api/users/${id}`)
+            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${id}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Error fetching user: ${response.status} - ${response.statusText}`);
@@ -106,7 +106,7 @@ export default {
             return `http://localhost:8000/${rutaRelativaImagen}`;
         },
         fetchCategoriasReviews() {
-            fetch('http://localhost:8000/api/categorias_reviews')
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Error fetching categorias_reviews: ${response.status} - ${response.statusText}`);
@@ -134,7 +134,7 @@ export default {
 
         },
         deleteReview(review_id) {
-            fetch(`http://localhost:8000/api/reviews/${review_id}`, {
+            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/reviews/${review_id}`, {
                 method: 'DELETE',
             })
                 .then(response => {
@@ -153,7 +153,7 @@ export default {
                 });
         },
         follow(seguido_id) {
-            fetch('http://localhost:8000/api/seguidores', {
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/seguidores', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

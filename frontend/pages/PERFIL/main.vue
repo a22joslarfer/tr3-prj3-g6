@@ -1,10 +1,13 @@
 <template>
   <div class="social-profile">
     <div class="header-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+      <button @click="llevarAgenerarCodigoQr()">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
         <path
           d="M80-680v-200h200v80H160v120H80Zm0 600v-200h80v120h120v80H80Zm600 0v-80h120v-120h80v200H680Zm120-600v-120H680v-80h200v200h-80ZM700-260h60v60h-60v-60Zm0-120h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60-60h60v60h-60v-60Zm120-120h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60-60h60v60h-60v-60Zm240-320v240H520v-240h240ZM440-440v240H200v-240h240Zm0-320v240H200v-240h240Zm-60 500v-120H260v120h120Zm0-320v-120H260v120h120Zm320 0v-120H580v120h120Z" />
       </svg>
+      </button>
+      
     </div>
     <div class="profile-header">
       <div class="profile-image">
@@ -150,6 +153,7 @@ export default {
       return rows;
     }
   },
+  
   mounted() {
     const store = useStore();
     const userInfo = store.return_user_info();
@@ -165,20 +169,22 @@ export default {
       this.barPosition = this.sections[section] + '%';
       this.selectedSection = section;
     },
-
+    llevarAgenerarCodigoQr(){
+      navigateTo('../generarQr');
+    },
     async fetch() {
       try {
         const store = useStore();
         const id = store.return_user_id();
 
         // Fetch de la imagen de perfil
-        const profilePhotoResponse = await fetch(`http://localhost:8000/api/users/profile_photo/${id}`);
+        const profilePhotoResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/profile_photo/${id}`);
         const profilePhotoData = await profilePhotoResponse.json();
         console.log(profilePhotoData);
         this.profileImageUrl = profilePhotoData; // Suponiendo que la respuesta contiene la URL de la imagen de perfil
 
         // Fetch del número de seguidores
-        const followersResponse = await fetch(`http://localhost:8000/api/users/seguidores/${id}`);
+        const followersResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/seguidores/${id}`);
         const followersData = await followersResponse.json();
         console.log(followersData);
         this.seguidores = followersData.seguidores; // Asigna el número de seguidores

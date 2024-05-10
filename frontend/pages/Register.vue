@@ -109,7 +109,7 @@ export default {
             if (this.selected_photo) {
                 formData.append('profile_photo', this.selected_photo);
             }
-            fetch('http://localhost:8000/api/register', {
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/register', {
                 method: 'POST',
                 body: formData,
             })

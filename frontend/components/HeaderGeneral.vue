@@ -93,6 +93,7 @@ body, html {
   justify-content: center; /* Centrar horizontalmente */
   align-items: center; /* Centrar verticalmente */
   margin-top: -17px;
+  
 }
 
 .container {

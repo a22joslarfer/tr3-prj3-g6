@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     login() {
-      fetch('http://localhost:8000/api/login', {
+      fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

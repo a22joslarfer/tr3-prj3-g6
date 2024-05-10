@@ -230,7 +230,7 @@ class UserController extends Controller
     {
         try {
             // Contenido del código QR con el ID de usuario de A y la URL de redirección
-            $qrContent = 'http://localhost:3000/auth/' . $userId;
+            $qrContent = 'http://elysium.daw.inspedralbes.cat/auth/' . $userId;
             // Generar el código QR con Simple-QRCode
             $qrCode = QrCode::size(200)->generate($qrContent);
 

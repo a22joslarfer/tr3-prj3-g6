@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     auth() {
-      fetch(`http://localhost:8000/api/auth`, {
+      fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/auth`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -73,7 +73,7 @@ export default {
         });
     },
     followBack() {
-      fetch('http://localhost:8000/api/seguidores', {
+      fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/seguidores', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
