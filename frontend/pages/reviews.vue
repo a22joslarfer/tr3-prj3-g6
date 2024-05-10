@@ -195,7 +195,7 @@ export default {
     font-family: "Antonio", sans-serif;
     margin: 0;
     padding: 0px;
-
+   
     color: #1c1c1c;
 
 }
@@ -206,7 +206,6 @@ export default {
     padding: 8px;
     background-color: #ff806d;
     height: auto;
-
 }
 
 .btn {
@@ -326,5 +325,6 @@ body {
 
 .row {
     height: auto;
+    overflow-y: auto;
 }
 </style>

@@ -116,25 +116,37 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-
+        // Validación de los datos del formulario
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'password' => 'required|string|min:8|max:255',
+            'phone' => 'nullable|string|max:20',
+            'birthday' => 'nullable|date',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Asegúrate de agregar la validación de la imagen aquí
+        ]);
+    
+        // Crear una nueva instancia de usuario con los datos validados
         $user = new User([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-            'phone' => $request->input('phone'),
-            'birthday' => $request->input('birthday'),
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+            'phone' => $validatedData['phone'],
+            'birthday' => $validatedData['birthday'],
             'api_token' => Str::random(60),
         ]);
-
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->birthday = $request->birthday;
-        $user->password = Hash::make($request->password);
-
+    
+        // Guardar la imagen en el sistema de archivos
+        if ($request->hasFile('profile_photo')) {
+            $image = $request->file('profile_photo');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('profile_photos'), $imageName);
+            $user->profile_photo = $imageName;
+        }
+    
+        // Guardar el usuario en la base de datos
         $user->save();
-
+    
         return response()->json($user, 201);
     }
 

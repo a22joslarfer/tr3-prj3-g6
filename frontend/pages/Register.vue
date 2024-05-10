@@ -5,11 +5,13 @@
         <div class="content">
             <!-- Add multi-step progress bar -->
             <div class="step-progress-content">
-                <button type="button" class="boton-atras" @click="step = step > 1 ? step - 1 : 1"><</button>
-                    <div class="progress-bar">
-                        <div class="progress" :style="{ width: (step * 33.33) + '%' }"></div>
-                    </div>
-                
+                <button type="button" class="boton-atras" @click="step = step > 1 ? step - 1 : 1">
+    <<
+</button>
+                        <div class="progress-bar">
+                            <div class="progress" :style="{ width: (step * 33.33) + '%' }"></div>
+                        </div>
+
             </div>
 
             <div class="company-info">
@@ -86,12 +88,15 @@ export default {
             password: '',
             phone: '',
             birthday: '',
-            profile_photo: null // Cambiado de 'photo' a 'profile_photo'
+            profile_photo: null, // Cambiado de 'photo' a 'profile_photo'
+            selected_photo: null // Nuevo estado para la imagen seleccionada
+
         };
     },
     methods: {
         handleFileUpload(event) {
-            this.profile_photo = event.target.files[0]; // Cambiado de 'this.photo' a 'this.profile_photo'
+            this.selected_photo = event.target.files[0];
+            this.profile_photo = URL.createObjectURL(this.selected_photo);
         },
         register() {
             const formData = new FormData();
@@ -100,22 +105,13 @@ export default {
             formData.append('password', this.password.trim());
             formData.append('phone', this.phone.trim());
             formData.append('birthday', this.birthday.trim());
-            formData.append('profile_photo', this.profile_photo); // Cambiado de 'this.photo' a 'this.profile_photo'
 
+            if (this.selected_photo) {
+                formData.append('profile_photo', this.selected_photo);
+            }
             fetch('http://localhost:8000/api/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: this.name,
-                    email: this.email,
-                    password: this.password,
-                    phone: this.phone,
-                    birthday: this.birthday,
-
-
-                }),
+                body: formData,
             })
                 .then(response => {
                     if (!response.ok) {
