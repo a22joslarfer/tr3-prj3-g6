@@ -53,6 +53,7 @@ export default {
             categorias_reviews: [],
             client_id: null,
             selectedCategory: '',
+            
 
         };
     },
@@ -86,7 +87,7 @@ export default {
                 })
                 .then(response => {
                     this.userMap[id] = response.data;
-                    
+
 
 
                 })
@@ -125,9 +126,9 @@ export default {
             const store = useStore();
             const user_id = store.return_user_id();
             if (user_id == null) {
-                alert('Necesitas estar logueado para crear una review');
-                this.$router.push('/login');
                 store.set_return_path('/reviews');
+                this.$router.push('/login');
+
             }
             this.client_id = user_id;
 
@@ -176,14 +177,13 @@ export default {
                     alert('Error adding friend');
                 });
         },
-       x
+        x
     },
-    mounted() {
+    created() {
         this.checkIfAuth();
+
         this.fetchReviews();
         this.fetchCategoriasReviews();
-        
-
     },
 
 };

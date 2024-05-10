@@ -15,7 +15,7 @@
           <p>Cargando código QR...</p>
         </div>
         <h1 class="title-company">ELYSIUM 🥂</h1>
-        
+
       </div>
     </div>
   </div>
@@ -35,14 +35,14 @@ export default {
       name: '',
       avatar: '',
       clientId: '',
-      
+
     };
   },
   methods: {
     async fetchQRCode(id) {
       try {
-          const response = await fetch(`http://localhost:8000/api/generate-qr-code/${id}`);
-     
+        const response = await fetch(`http://localhost:8000/api/generate-qr-code/${id}`);
+
         if (!response.ok) {
           throw new Error('Error fetching QR code');
         }
@@ -53,9 +53,21 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    }
+    },
+    checkIfAuth() {
+      const store = useStore();
+      const user_id = store.return_user_id();
+      if (user_id == null) {
+        store.set_return_path('/generarQr');
+        this.$router.push('/login');
+
+      }
+      this.client_id = user_id;
+
+    },
   },
   created() {
+    this.checkIfAuth();
     const store = useStore();
     this.name = store.return_user_username();
     this.clientId = store.return_user_id();
@@ -125,9 +137,11 @@ export default {
   color: #333;
   text-align: center;
 }
-img{
+
+img {
   border: 2px solid #f5f5f5;
 }
+
 .follow-btn-container {
   display: flex;
   justify-content: center;

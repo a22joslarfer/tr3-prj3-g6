@@ -11,20 +11,20 @@
       </div>
 
       <div class="form-group">
-        <label for="content" class="texto">Contenido *</label>
+        <label for="content" class="texto">Contenido </label>
         <textarea id="content" v-model="content" class="form-control" required
           placeholder="Escribe aquí el contenido de la reseña..."></textarea>
       </div>
 
       <div class="form-group">
-        <label class="texto">Categoría *</label>
-        <div v-for="item in categorias_reviews" :key="item.id">
-          <button type="button" @click="categoria = item.id">{{ item.nombre }}</button>
+        <label class="texto">Categoría </label>
+        <div v-for="(item, index) in categorias_reviews" :key="index">
+          <button type="button" @click="categoria = index">{{ item.nombre }}</button>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="puntuacion" class="texto">Puntuación *</label>
+        <label for="puntuacion" class="texto">Puntuación </label>
         <input type="number" id="puntuacion" v-model="puntuacion" min="1" max="5" class="form-control">
       </div>
 
@@ -58,7 +58,7 @@ export default {
       puntuacion: 1,
       photo: null,
       categorias_reviews: [],
-      categoria: 'asdasdas',
+      categoria: null,
     };
   },
   methods: {
@@ -133,10 +133,9 @@ export default {
       const store = useStore();
       const user_id = store.return_user_id();
       if (user_id === null) {
-        alert('Necesitas estar logueado para crear una review');
         store.set_return_path('/' + this.$route.params.id);
         this.$router.push('/login');
-        localStorage.setItem('return_path', '/' + this.$route.params.id);
+      
       }
     }
   },
@@ -144,7 +143,6 @@ export default {
     this.disco_id = this.$route.params.id;
     const store = useStore();
     this.usuario_id = store.return_user_id();
-
 
 
   },
@@ -156,16 +154,13 @@ export default {
     console.log('Categorias:', this.categorias_reviews);
     this.checkIfAuth();
   },
-  created() {
-    this.categoria = 123;
-  }
 };
 </script>
 
 <style scoped>
 .container {
   padding: 20px;
-
+  height: auto;
 }
 
 .form {
