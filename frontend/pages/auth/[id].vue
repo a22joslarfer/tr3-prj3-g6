@@ -76,8 +76,8 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          seguidor: this.lectorId,
-          seguido: this.clientId,
+          seguidor: this.clientId,
+          seguido: this.lectorId,
         }),
       })
         .then(response => {
