@@ -44,6 +44,8 @@
 
 <script>
 
+import { useStore } from '../stores/index'
+
 export default {
   data() {
     return {

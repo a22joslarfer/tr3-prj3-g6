@@ -62,7 +62,7 @@ export default {
     };
   },
   methods: {
-
+   
     logRating(rating) {
       console.log('Rating:', rating);
       this.puntuacion = rating;
@@ -70,43 +70,34 @@ export default {
     submitReview() {
       if (!this.categoria) {
         alert('Please select a category.');
-        return; // Don't proceed with review submission if categoria is not selected
+        return;
       }
-      let data = {
-        disco_id: this.disco_id,
-        usuario_id: this.usuario_id,
-        titulo: this.titulo,
-        content: this.content,
-        puntuacion: this.puntuacion,
-        categoria: this.categoria,
-      };
-
-      console.log('categoria' + this.categoria);
-      // Check if photo is present before adding it to the data object
-      if (this.photo) {
-        data.photo = this.photo;
-      }
-
       fetch('http://localhost:8000/api/reviews', {
         method: 'POST',
-        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+          disco_id: this.disco_id,
+          usuario_id: this.usuario_id,
+          titulo: this.titulo,
+          content: this.content,
+          puntuacion: this.puntuacion,
+          categoria: this.categoria,
+          photo: this.photo,
+        }),
       })
         .then(response => {
           if (!response.ok) {
             throw new Error(`Error submitting review: ${response.status} - ${response.statusText}`);
           }
-          alert('Tot correcte!');
+         
           this.$router.push('/reviews');
         })
         .catch(error => {
           alert('Error submitting review: ' + error.message);
         });
     },
-
     handleFileUpload(event) {
       this.photo = event.target.files[0];
     },
@@ -129,31 +120,23 @@ export default {
           alert('Error fetching categorias: ' + error.message)
         });
     },
-    checkIfAuth() {
-      const store = useStore();
-      const user_id = store.return_user_id();
-      if (user_id === null) {
-        store.set_return_path('/' + this.$route.params.id);
-        this.$router.push('/login');
-      
-      }
-    }
-  },
-  created() {
-    this.disco_id = this.$route.params.id;
-    const store = useStore();
-    this.usuario_id = store.return_user_id();
 
-
-  },
-  computed() {
-    this.checkifAuth();
   },
   mounted() {
+    const store = useStore();
+    const user_id = store.return_user_id();
+
+    if (user_id === null) {
+      store.set_return_path('/' + this.$route.params.id);
+      this.$router.push('/login');
+
+    }
+    this.disco_id = this.$route.params.id;
+    this.usuario_id = store.return_user_id();
+
     this.fetchCategorias();
-    console.log('Categorias:', this.categorias_reviews);
-    this.checkIfAuth();
   },
+
 };
 </script>
 

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class reviewController extends Controller
 {
-    //
+    
     public function createReview(Request $request)
     {
         $request->validate([
@@ -43,10 +43,7 @@ class reviewController extends Controller
     
             return response()->json($review);
         } catch (\Exception $e) {
-            // Log the error for debugging purposes
-            Log::error('Error creating review: ' . $e->getMessage());
-    
-            // Return a generic error response
+            Log::error($e->getMessage());
             return response()->json(['error' => 'An error occurred while creating the review.'], 500);
         }
     }
