@@ -74,7 +74,7 @@ export default {
 
       // Enviar los datos al backend
       try {
-        const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'

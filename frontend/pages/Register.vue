@@ -17,7 +17,7 @@
             <div class="company-info">
                 <img src="https://static.vecteezy.com/system/resources/previews/029/938/250/non_2x/planet-earth-globe-world-map-ai-generative-free-png.png"
                     alt="Logo de la empresa" class="company-logo">
-                <div class="title_company">BIENVENIDO A VIAEGIS</div>
+                <div class="title_company">BIENVENIDO A ELYSIUM</div>
             </div>
 
             <div class="login-form">
@@ -109,7 +109,7 @@ export default {
             if (this.selected_photo) {
                 formData.append('profile_photo', this.selected_photo);
             }
-            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/register', {
+            fetch('http://localhost:8000/api/register', {
                 method: 'POST',
                 body: formData,
             })

@@ -72,7 +72,7 @@ export default {
         alert('Please select a category.');
         return;
       }
-      fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/reviews', {
+      fetch('http://localhost:8000/api/reviews', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -105,7 +105,7 @@ export default {
       this.$refs.fileInput.click();
     },
     fetchCategorias() {
-      fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
+      fetch('http://localhost:8000/api/categorias_reviews')
         .then(response => {
           if (!response.ok) {
             throw new Error(`Error fetching categorias: ${response.status} - ${response.statusText}`);

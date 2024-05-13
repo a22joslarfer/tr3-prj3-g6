@@ -47,7 +47,7 @@ export default {
 
         },
         getAmigos(id) {
-            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/amigos/${id}`)
+            fetch(`http://localhost:8000/api/amigos/${id}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error fetching amigos');

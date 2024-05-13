@@ -18,7 +18,7 @@ export default {
     },
     methods: {
         follow(seguido_id) {
-            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/seguidores', {
+            fetch('http://localhost:8000/api/seguidores', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -8,7 +8,7 @@
         <img
           src="https://static.vecteezy.com/system/resources/previews/029/938/250/non_2x/planet-earth-globe-world-map-ai-generative-free-png.png"
           alt="Logo de la empresa" class="company-logo">
-        <div class="title_company">BIENVENIDO A VIAEGIS</div>
+        <div class="title_company">BIENVENIDO A ELYSIUM</div>
       </div>
 
       <div class="login-form">
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     login() {
-      fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/login', {
+      fetch('http://localhost:8000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
