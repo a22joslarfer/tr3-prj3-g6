@@ -208,7 +208,7 @@ export default {
             }
         },
         async fetchCiudades() {
-            const response = await fetch('http://localhost:8000/api/ciudades');
+            const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/ciudades');
             const data = await response.json();
 
             this.ciudades = data.map((ciudad) => {
