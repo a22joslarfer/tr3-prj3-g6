@@ -80,7 +80,7 @@ export default {
           const store = useStore();
           store.save_user_info(data.name, data.email, data.id);
 
-
+        
 
           this.$router.push('/');
 

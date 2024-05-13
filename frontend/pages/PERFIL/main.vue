@@ -170,7 +170,7 @@ export default {
       this.selectedSection = section;
     },
     llevarAgenerarCodigoQr(){
-      navigateTo('../generarQr');
+      navigateTo('../generarQR');
     },
     async fetch() {
       try {

@@ -125,10 +125,11 @@ export default {
         checkIfAuth() {
             const store = useStore();
             const user_id = store.return_user_id();
-            if (user_id == null) {
+            if (user_id === null) {
                 store.set_return_path('/reviews');
+                console.log('No estás autenticado pasando por user_id === null');
                 this.$router.push('/login');
-
+              
             }
             this.client_id = user_id;
 
