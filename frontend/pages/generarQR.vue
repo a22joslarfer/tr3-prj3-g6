@@ -1,4 +1,5 @@
 <template>
+  <HeaderGeneral />
   <div class="container">
     <div class="qr-container">
       <div class="avatar">
@@ -19,6 +20,7 @@
       </div>
     </div>
   </div>
+  <FooterOptions />
 </template>
 
 
@@ -41,7 +43,7 @@ export default {
   methods: {
     async fetchQRCode(id) {
       try {
-        const response = await fetch(`http://localhost:8000/api/generate-qr-code/${id}`);
+        const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/generate-qr-code/${id}`);
 
         if (!response.ok) {
           throw new Error('Error fetching QR code');

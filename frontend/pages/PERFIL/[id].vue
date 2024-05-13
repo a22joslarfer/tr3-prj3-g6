@@ -46,7 +46,7 @@ export default {
     },
     methods: {
         async getUserData() {
-            const response = await fetch(`http://localhost:8000/api/users/${this.id}`);
+            const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${this.id}`);
             const data = await response.json();
             this.username = data.username;
             this.email = data.email;

@@ -33,7 +33,7 @@ export default {
   methods: {
     async obtenerBereals() {
       try {
-        const response = await fetch('http://localhost:8000/api/bereals');
+        const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/bereals');
         if (!response.ok) {
           throw new Error('Error al obtener los Bereals');
         }
@@ -41,7 +41,7 @@ export default {
        
         for (const bereal of data) {
           // Obtener el nombre de usuario del Bereal
-          const usuarioResponse = await fetch(`http://localhost:8000/api/users/${bereal.id_usuari}`);
+          const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${bereal.id_usuari}`);
           if (!usuarioResponse.ok) {
             throw new Error('Error al obtener el usuario');
           }

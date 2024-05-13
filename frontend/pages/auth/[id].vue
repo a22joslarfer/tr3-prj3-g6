@@ -1,5 +1,6 @@
 <template>
-  <div class="container" v-if="!hasAuthenticated">
+  <HeaderGeneral />
+  <div class="container" v-if="!hasAuthenticated && !skipAuth">
     <div class="form-container">
       <p>🥂</p>
       <header class="header"> Elysium Auth </header>
@@ -23,6 +24,7 @@
     <BtnFollowAuth :clientId="clientId" :lectorId="lectorId" />
     <CancelarFollow />
   </div>
+  <FooterOptions />
 </template>
 
 
@@ -37,11 +39,12 @@ export default {
       hasAuthenticated: false,
       clientId: this.$route.params.id,
       lectorId: null,
+      skipAuth: false,
     };
   },
   methods: {
     auth() {
-      fetch(`http://localhost:8000/api/auth`, {
+      fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/auth`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -59,10 +62,7 @@ export default {
             console.log('lector id ' + this.lectorId);
             console.log('cliente id ' + this.clientId);
             this.followBack();
-            
-
             this.hasAuthenticated = true;
-
           }
           else {
             alert('Error');
@@ -73,7 +73,7 @@ export default {
         });
     },
     followBack() {
-      fetch('http://localhost:8000/api/seguidores', {
+      fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/seguidores', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -96,6 +96,23 @@ export default {
           console.error('Error adding friend:', error);
           alert('Error adding friend');
         });
+    },
+    checkIfAuth() {
+
+      const store = useStore();
+      
+      this.lectorId =  store.return_user_id();
+      if(this.lectorId != null){
+        this.skipAuth = true;
+      }
+      
+    }
+
+  },
+  created() {
+    this.checkIfAuth();
+    if(this.hasAuthenticated){
+      this.followBack();
     }
   }
 }
