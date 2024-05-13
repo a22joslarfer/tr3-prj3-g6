@@ -735,8 +735,6 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        padding: 20px;
-        width: 400px;
         animation: fade-in 0.5s ease-in-out;
 
     }

@@ -33,8 +33,8 @@ class reviewController extends Controller
             $review->categoria = $request->categoria;
     
             if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('photos', 'public');
-                $review->photo = $photoPath;
+                $photoPath = $request->file('photo')->store('public/photos');
+                $review->photo = str_replace('public/', 'storage/', $photoPath);
             } else {
                 $review->photo = null; // Set photo to null if no file is uploaded
             }
