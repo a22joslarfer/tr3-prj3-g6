@@ -191,9 +191,21 @@ export default {
       } catch (error) {
         console.error('Error al obtener los datos del usuario:', error);
       }
-    }
+    },
+    checkIfAuth() {
+            const store = useStore();
+            const user_id = store.return_user_id();
+            if (user_id == null) {
+                store.set_return_path('/reviews');
+                this.$router.push('/login');
+
+            }
+            this.client_id = user_id;
+
+        },
   },
   created() {
+    this.checkIfAuth();
     this.fetch();
   }
 }
