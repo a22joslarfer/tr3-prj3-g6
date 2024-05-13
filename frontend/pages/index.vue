@@ -145,7 +145,7 @@ export default {
             formData.append('file', file);
 
             try {
-                const response = await fetch('http://localhost:8000/api/upload', {
+                const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/upload', {
                     method: 'POST',
                     body: formData,
                 });
@@ -165,7 +165,7 @@ export default {
         async fetchData() {
             try {
                 console.log("ahora hare un fetch")
-                const response = await fetch('http://localhost:8000/api/discotecas');
+                const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/discotecas');
                 const data = await response.json();
 
                 if (this.ciudadSeleccionada) {
@@ -208,7 +208,7 @@ export default {
             }
         },
         async fetchCiudades() {
-            const response = await fetch('http://localhost:8000/api/ciudades');
+            const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/ciudades');
             const data = await response.json();
 
             this.ciudades = data.map((ciudad) => {
