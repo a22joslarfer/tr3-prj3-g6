@@ -18,17 +18,19 @@
 
       <div class="form-group">
         <label class="texto">Categoría </label>
-        <div v-for="(item, index) in categorias_reviews" :key="index">
-          <button type="button" @click="categoria = index">{{ item.nombre }}</button>
-        </div>
+        <select v-model="categoria" class="form-control">
+          <option v-for="(item, index) in categorias_reviews" :key="index" :value="index">{{ item.nombre }}</option>
+        </select>
       </div>
 
       <div class="form-group">
         <label for="puntuacion" class="texto">Puntuación </label>
-        <input type="number" id="puntuacion" v-model="puntuacion" min="1" max="5" class="form-control">
+        <!-- <input type="number" id="puntuacion" v-model="puntuacion" min="1" max="5" class="form-control"> -->
+        <NuxtRating :read-only="false" :ratingValue="1.2" class="stars-rating"/>
+
       </div>
 
-      <div class="form-group">
+      <div class="form-group" >
         <label for="photo" class="texto">Foto (opcional):</label>
         <div class="dropzone" @click="openFileInput">
           <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file"
@@ -36,13 +38,15 @@
           <div class="dropzone-text" @click="openFileInput">
 
           </div>
-          <span>Seleccionar archivo</span>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary">Enviar reseña</button>
+      <button type="submit" class="btn btn-primary" style="margin-bottom: 150px;">Enviar reseña</button>
     </form>
+    <div class="footer">
+
     <FooterOptions />
+    </div>  
   </div>
 </template>
 
@@ -141,24 +145,39 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 .container {
   padding: 20px;
-  height: auto;
+  overflow-y: auto;
+  background-color: rgb(181, 205, 214);
+  margin-bottom: 60px; /* Añadir un margen inferior para evitar solapamiento con el footer */
 }
 
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff; /* Ajusta el color según tu diseño */
+  height: 60px; /* Ajusta la altura según tu diseño */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
 .form {
   display: flex;
   flex-direction: column;
 }
 
 .form-group {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .texto {
-
-  font-weight: bold;
-  color: #333;
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
 }
 
 .form-control {
@@ -169,19 +188,13 @@ export default {
   background-color: #f9f9f9;
   font-size: 13px;
   transition: border-color 0.3s ease;
-  margin-top: 10px;
-
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #007bff;
+  margin-top:10px;
 }
 
 .dropzone {
   position: relative;
   width: 100%;
-  height: 50px;
+  min-height: 50px;
   border: 2px dashed #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
@@ -189,18 +202,7 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
-
-.dropzone:hover {
-  background-color: #f0f0f0;
-}
-
-.dropzone span {
-  color: #555;
-  font-size: 16px;
-  cursor: pointer;
-}
-
+} 
 .btn-primary {
   width: 100%;
   padding: 15px;
@@ -212,16 +214,14 @@ export default {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+.stars-rating{
+position: relative;
+  }
 
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-.star-rating {
-  margin-top: 10px;
-}
-
-textarea {
-  resize: none;
+@media (min-width: 768px) {
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
 }
 </style>
