@@ -23,8 +23,6 @@
 </template>
 
 
-
-
 <script>
 import { useStore } from "../stores/index";
 
