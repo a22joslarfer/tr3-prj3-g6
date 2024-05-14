@@ -36,7 +36,7 @@ class reviewController extends Controller
                 $photoPath = $request->file('photo')->store('public/photos');
                 $review->photo = str_replace('public/', 'storage/', $photoPath);
             } else {
-                $review->photo = null; // Set photo to null if no file is uploaded
+                $review->photo = null; 
             }
     
             $review->save();

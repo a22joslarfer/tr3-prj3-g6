@@ -81,11 +81,18 @@
                 supercluster: null,
                 filtroActivo: false,
                 ciudadSeleccionada: null, // Agregar ciudadSeleccionada
-                ciudades: []
+                ciudades: [],
+                fetchDataError: false,
             };
         },
         mounted() {
+            
             this.fetchData();
+            setTimeout(() => {
+                if(this.fetchDataError){
+                    this.fetchData();
+                }
+            }, 5000);
             this.fetchCiudades();
             this.initMapaDatosMapBox();
 
@@ -205,6 +212,7 @@
                     this.añadir_popup_info_de_las_discos();
                 } catch (error) {
                     console.error('Error al obtener los datos de las discotecas:', error);
+                    this.fetchDataError= true;
                 }
             },
             async fetchCiudades() {
