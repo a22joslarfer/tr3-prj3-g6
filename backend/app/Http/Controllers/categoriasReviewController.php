@@ -11,7 +11,7 @@ class categoriasReviewController extends Controller
     // obtener todas las categorias solo apartado nombre
     public function getCategorias()
     {
-        $categorias = categoriasReviewModel::select('nombre')->get();
+        $categorias = categoriasReviewModel::all();
         return response()->json($categorias);
     }
 }

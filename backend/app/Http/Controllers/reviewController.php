@@ -8,9 +8,11 @@ use App\Models\reviewModel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\File;
+
 class reviewController extends Controller
 {
-    
+
     public function createReview(Request $request)
     {
         $request->validate([
@@ -19,11 +21,13 @@ class reviewController extends Controller
             'titulo' => 'required',
             'content' => 'required',
             'puntuacion' => 'required',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Change 'required' to 'nullable'
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'categoria' => 'required',
         ]);
-    
+
         try {
+            $photoPath = $request->photo->store('public/img');
+
             $review = new ReviewModel;
             $review->usuario_id = $request->usuario_id;
             $review->disco_id = $request->disco_id;
@@ -31,23 +35,18 @@ class reviewController extends Controller
             $review->content = $request->content;
             $review->puntuacion = $request->puntuacion;
             $review->categoria = $request->categoria;
-    
-            if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('public/photos');
-                $review->photo = str_replace('public/', 'storage/', $photoPath);
-            } else {
-                $review->photo = null; 
-            }
-    
+            $review->photo = str_replace('public/', 'storage', $photoPath);
+
             $review->save();
-    
+
             return response()->json($review);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+
             return response()->json(['error' => 'An error occurred while creating the review.'], 500);
+
         }
     }
-    
+
 
 
     public function getReviews()

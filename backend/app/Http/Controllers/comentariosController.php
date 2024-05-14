@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Comentario; 
+use App\Models\Comentario;
 
 class comentariosController extends Controller
 {
@@ -42,5 +42,11 @@ class comentariosController extends Controller
         $comentario->delete();
 
         return response()->json(['message' => 'Comentario eliminado exitosamente']);
+    }
+
+    public function indexComentarios()
+    {
+        $comentarios = Comentario::all();
+        return response()->json($comentarios);
     }
 }

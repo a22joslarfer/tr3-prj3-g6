@@ -101,9 +101,9 @@ export default {
             const userName = this.userMap[id];
             return userName ? userName : 'Usuario Desconocido';
         },
-        getImagenUrl(rutaRelativaImagen) {
+        getImagenUrl(imagen) {
 
-            return `http://localhost:8000/${rutaRelativaImagen}`;
+            return `http://elysium.daw.inspedralbes.cat/backend/public/review_photos/${imagen}`;
         },
         fetchCategoriasReviews() {
             fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews')

@@ -62,7 +62,7 @@ export default {
     };
   },
   methods: {
-   
+
     logRating(rating) {
       console.log('Rating:', rating);
       this.puntuacion = rating;
@@ -72,26 +72,32 @@ export default {
         alert('Please select a category.');
         return;
       }
+      if (!this.photo || this.photo === null) {
+        alert('Please select a photo.');
+        return;
+      }
+
+      let formData = new FormData();
+      formData.append('disco_id', this.disco_id);
+      formData.append('usuario_id', this.usuario_id);
+      formData.append('titulo', this.titulo);
+      formData.append('content', this.content);
+      formData.append('puntuacion', this.puntuacion);
+      formData.append('categoria', this.categoria);
+      formData.append('photo', this.photo);
+
       fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/reviews', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Accept': 'application/json'
         },
-        body: JSON.stringify({
-          disco_id: this.disco_id,
-          usuario_id: this.usuario_id,
-          titulo: this.titulo,
-          content: this.content,
-          puntuacion: this.puntuacion,
-          categoria: this.categoria,
-          photo: this.photo,
-        }),
+        body: formData,
       })
         .then(response => {
           if (!response.ok) {
             throw new Error(`Error submitting review: ${response.status} - ${response.statusText}`);
           }
-         
+
           this.$router.push('/reviews');
         })
         .catch(error => {

@@ -47,8 +47,8 @@ Route::get('/generate-qr-code/{user}', [UserController::class, 'generateQRCode']
 //ruta para acceder a la profile_photo de un usuario
 Route::get('/users/profile_photo/{id}', [userController::class, 'getProfilePhoto']);
 Route::get('users/seguidores/{id}', [userController::class, 'getFollowers']);
-
-
+//ruta para obtener todos los usuarios
+Route::get('/users', [userController::class, 'index']);
 
 
 
@@ -121,11 +121,17 @@ Route::post('/seguidores', [seguidoresController::class, 'addSeguidor']);
 // ruta para comprobar si un usuario sigue a otro usuario
 Route::get('/seguidores/{seguidor_id}/{seguido_id}', [seguidoresController::class, 'checkIfSeguidor']);
 //ruta para crear 
+
+
+
+
+// rutas bereal
+
 Route::post('/bereal', [BeRealController::class, 'createBereal']);
 //ruta para obtener y mostrar
 Route::get('/bereals/{id}', [BeRealController::class, 'show']);
 //mostrar todos
-Route::get('/bereals', [BeRealController::class, 'index']);
+Route::get('/inTimes', [BeRealController::class, 'index']);
 //crear comentari 
 Route::post('/bereal/{id}/commentari', [BeRealController::class, 'addComentari']);
 //veure comentari
@@ -141,7 +147,8 @@ Route::post('/comentarios', [comentariosController::class, 'store']);
 Route::get('/comentarios/show/{id}', [comentariosController::class, 'show']);
 //eliminar comentari
 Route::delete('/comentarios/{id}', [comentariosController::class, 'destroy']);
-
+// mostrar tots els comentaris
+Route::get('/comentarios', [comentariosController::class, 'indexComentarios']);
 
 
 
