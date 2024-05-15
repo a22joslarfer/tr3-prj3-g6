@@ -286,11 +286,7 @@ export default {
                 }
             });
 
-            this.map.addControl(geocoder);
-            this.$nextTick(() => {
-                var geocoderElement = document.querySelector('.mapboxgl-ctrl-geocoder');
-                searchBar.appendChild(geocoderElement);
-            });
+            
         },
 
         mostrarMarcador(coordenadas) {
