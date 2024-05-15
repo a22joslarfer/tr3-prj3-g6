@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { socket } from "../../node/socket.js";
+import { socket } from "../node/socket.js";
 
 export default {
     data() {
