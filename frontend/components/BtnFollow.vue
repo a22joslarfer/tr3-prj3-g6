@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button class="follow-btn" @click="follow(lectorId)">Follow</button>
+        <button class="follow-btn" @click="follow(lectorId)">Seguir</button>
     </div>
 </template>
 
@@ -47,19 +47,20 @@ export default {
 </script>
 
 <style scoped>
-.follow-btn {
-    background-color: #ff806d;
-    color: #fff;
-    padding: 14px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    
-
-}
-
-.follow-btn:hover {
-    background-color: #f3634d;
-}
+   .follow-btn {
+        background-color: #48d454;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    .follow-btn:hover {
+        background-color: #408a0e;
+    }
 </style>

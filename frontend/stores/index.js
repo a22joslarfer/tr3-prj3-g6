@@ -10,7 +10,7 @@ import { defineStore } from 'pinia'
 export const useStore = defineStore({
   id: 'main',
   state: () => ({
-    return_path: null,
+    return_path: '/',
     user_id: null,
     email: null,
     password: null,

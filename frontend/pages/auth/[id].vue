@@ -124,109 +124,59 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow: hidden;
 }
-
-
-
-
-
 .container {
-  display: grid;
-  place-items: center;
-  height: 100vh;
-  background-color: #fff;
-  border-radius: 16px;
-}
-
-.else-container {
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #fff;
-  border-radius: 16px;
-
-
-
-}
-
-p {
-  font-size: 3rem;
-  margin: 10px;
-}
-
-
-.form-container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  padding: 3rem;
-  padding-top: 2rem;
+  height: 100vh;
   background-color: #f5f5f5;
-
-  border-radius: 2.5rem;
-  height: auto;
-  width: auto;
-  margin: auto;
-  box-shadow: 0px 0px 100px 10px #ff806d;
-
 }
-
-input::content {
-  border-radius: 4px;
-
+.form-container {
+  width: 300px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
 .header {
-
-  font-size: 2rem;
+  font-size: 24px;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 20px;
   text-align: center;
 }
-
 .form-group {
-
-  margin-bottom: 1rem;
+  margin-bottom: 20px;
 }
-
 .label {
-  display: block;
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  margin-bottom: 5px;
 }
-
 .input-field {
-  padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #cccccc3b;
-  background-color: #fff;
-}
-
-.submit-btn {
-  padding: 0.5rem;
   width: 100%;
-  border-radius: 4px;
-  border: none;
-  background-color: #ff806d;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.submit-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
   color: #fff;
-  font-weight: 500;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
-
 .submit-btn:hover {
-  background-color: #f3634d;
+  background-color: #0056b3;
+}
+.else-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
 }
 
-input:focus {
-  outline: none;
-}
-
-button:focus {
-  outline: none;
-}
 </style>
