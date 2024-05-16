@@ -25,8 +25,8 @@
                         <img :src="user.profile_photo" alt="Profile Photo" class="img-fluid rounded-circle" />
                     </td>
                     <td><button class="btn btn-primary" @click="crearNuevoItem()">Crear</button></td>
-                    <td><button class="btn btn-danger" @click="eliminarItem()">Delete</button></td>
-                    <td><button class="btn btn-warning" @click="editarItem()">Editar</button></td>
+                    <td><button class="btn btn-danger" @click="eliminarItem(user.id)">Delete</button></td>
+                    <td><button class="btn btn-warning" @click="editarItem(user.id)">Editar</button></td>
                 </tr>
             </tbody>
         </table>
@@ -69,21 +69,47 @@ export default {
                 })
                 .catch(error => {
                     console.error(error);
+                })
+                .finally(() => {
+                    this.loading = false; // Desactivar pantalla de carga al finalizar
                 });
+        },
+        crearNuevoItem() {
+            navigateTo('/crud/usuarios/create');
+        },
+        eliminarItem(id) {
+            //id del usuario a eliminar
+            console.log('Eliminar item');
+            console.log(id);
+            fetch(`http://localhost:8000/api/users/${id}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error deleting item');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Item deleted');
+                    this.fetchData();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+               
+            //pantalla de carga
+
+
+        },
+        editarItem(id) {
+            navigateTo(`/crud/usuarios/edit/${id}`);
         }
     },
     created() {
         this.fetchData();
     },
-    crearNuevoItem() {
-        console.log('Crear nuevo item');
-    },
-    eliminarItem() {
-        console.log('Eliminar item');
-    },
-    editarItem() {
-        console.log('Editar item');
-    }
+
 
 }
 </script>

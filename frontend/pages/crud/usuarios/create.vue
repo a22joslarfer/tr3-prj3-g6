@@ -2,32 +2,33 @@
     <div class="container mt-4">
         <form @submit.prevent="crearNuevoItem" class="mb-4">
             <div class="form-group">
-                <label for="img_del">Img Delantera</label>
-                <input type="text" v-model="img_del" class="form-control" id="img_del"
-                    placeholder="Enter front image URL">
+                <label for="name">name</label>
+                <input type="text" v-model="name" class="form-control" id="name" placeholder="Enter name">
             </div>
             <div class="form-group">
-                <label for="img_tra">Img Trasera</label>
-                <input type="text" v-model="img_tra" class="form-control" id="img_tra"
-                    placeholder="Enter rear image URL">
+                <label for="Email">Email</label>
+                <input type="text" v-model="email" class="form-control" id="Email" placeholder="Enter Email">
             </div>
             <div class="form-group">
-                <label for="id_usuari">Id Usuari</label>
-                <input type="number" v-model="id_usuari" class="form-control" id="id_usuari"
-                    placeholder="Enter user ID">
+                <label for="password">password</label>
+                <input type="text" v-model="password" class="form-control" id="password" placeholder="Enter password">
             </div>
             <div class="form-group">
-                <label for="hora">Hora</label>
-                <input type="text" v-model="hora" class="form-control" id="hora" placeholder="Enter time">
+                <label for="phone">phone</label>
+                <input type="text" v-model="phone" class="form-control" id="phone" placeholder="Enter phone">
+            </div>
+            <div class="form-group">
+                <label for="birthday">birthday</label>
+                <input type="text" v-model="birthday" class="form-control" id="birthday" placeholder="Enter birthday">
+            </div>
+            <div class="form-group">
+                <label for="profile_photo">profile_photo</label>
+                <input type="file" @change="handleFileChange" class="form-control" id="profile_photo" placeholder="Enter profile_photo">
             </div>
             <button type="submit" class="btn btn-primary mt-2">Create</button>
         </form>
     </div>
 </template>
-
-
-
-
 
 <script>
 import 'bootstrap/dist/css/bootstrap.css'
@@ -35,50 +36,43 @@ import 'bootstrap/dist/css/bootstrap.css'
 export default {
     data() {
         return {
-            img_del: '',
-            img_tra: '',
-            id_usuari: '',
-            hora: '',
-        }
-
-    },
-    head() {
-        return {
-            link: [
-                { rel: 'stylesheet', href: 'https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cerulean/bootstrap.min.css' }
-            ]
+            name: '',
+            email: '',
+            password: '',
+            phone: '',
+            birthday: '',
+            profile_photo: ''
         }
     },
     methods: {
         crearNuevoItem() {
-            fetch('http://localhost:8000/api/inTimes', {
+            let formData = new FormData();
+            formData.append('name', this.name);
+            formData.append('email', this.email);
+            formData.append('password', this.password);
+            formData.append('phone', this.phone);
+            formData.append('birthday', this.birthday);
+            formData.append('profile_photo', this.profile_photo);
+
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    img_del: this.img_del,
-                    img_tra: this.img_tra,
-                    id_usuari: this.id_usuari,
-                    hora: this.hora,
-                })
+                body: formData,
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Error creating new item');
+                        throw new Error('Error creating new user');
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log('New item created');
-                    this.$router.push('/crud/bereals');
+                    console.log('New user created');
+                    // Puedes hacer algo aquí después de crear el usuario, como redirigir a otra página
                 })
                 .catch(error => {
-                    console.error('There was an error creating the new item', error);
+                    console.error('There was an error creating the new user', error);
                 });
         }
     }
-
 }
 </script>
 
