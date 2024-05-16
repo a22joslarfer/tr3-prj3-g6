@@ -94,9 +94,15 @@ Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getRev
 
 // RUTAS DE CATEGORIAS_REVIEWS
 // ruta para obtener todas las categorias
-Route::get('/categorias_reviews', [categoriasReviewController::class, 'getCategorias']);
-// ruta para obtener una categoria por nombre
-Route::get('/categorias_reviews/{nombre}', [categoriasReviewController::class, 'getCategoria']);
+Route::get('/categorias_reviews', [categoriasReviewController::class, 'index']);
+// ruta para crear una categoria nueva
+Route::post('/categorias_reviews', [categoriasReviewController::class, 'store']);
+//ruta para mostrar una categoria por id
+Route::get('/categorias_reviews/{id}', [categoriasReviewController::class, 'show']);
+//ruta para updatear una categoria
+Route::put('/categorias_reviews/{id}', [categoriasReviewController::class, 'update']);
+//ruta para eliminar una categoria
+Route::delete('/categorias_reviews/{id}', [categoriasReviewController::class, 'destroy']);
 
 
 
@@ -153,6 +159,9 @@ Route::get('/comentarios/show/{id}', [comentariosController::class, 'show']);
 Route::delete('/comentarios/{id}', [comentariosController::class, 'destroy']);
 // mostrar tots els comentaris
 Route::get('/comentarios', [comentariosController::class, 'indexComentarios']);
+// editar un comentario
+Route::put('/comentarios/{id}', [comentariosController::class, 'update']);
+
 
 
 
