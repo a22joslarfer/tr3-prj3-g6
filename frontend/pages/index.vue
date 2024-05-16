@@ -89,50 +89,51 @@ export default {
         this.fetchCiudades();
         this.initMapaDatosMapBox();
 
-        // Notification.requestPermission().then((permission) => {
-        //     if (permission === "granted") {
-        //         console.log("Permisos aceptados");
+        Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+                console.log("Permisos aceptados");
 
-        //         if ("geolocation" in navigator) {
-        //             navigator.geolocation.getCurrentPosition(
-        //                 (position) => {
-        //                     const { latitude, longitude } = position.coords;
-        //                     console.log("Ubicación del usuario:", latitude, longitude);
-
-        //                     const coordenada1 = {
-        //                         //pedralbes
-        //                         latitude: 41.386181,
-        //                         longitude: 2.106058,
-        //                     };
-
-        //                     const coordenada2 = {
-        //                         //pacha
-        //                         latitude: 41.385647,
-        //                         longitude: 2.197256,
-        //                     };
-        //                     if (
-        //                         this.personesAprop({ latitude, longitude }, coordenada1)
-        //                     ) {
-        //                         //pedralbes
-        //                         this.programarNotificacio(9, 37);
-        //                     } else if (
-        //                         //pacha
-        //                         this.personesAprop({ latitude, longitude }, coordenada2)
-        //                     ) {
-        //                         this.programarNotificacio(10, 22);
-        //                     }
-        //                 },
-        //                 (error) => {
-        //                     console.error("Error al obtener la ubicación:", error.message);
-        //                 }
-        //             );
-        //         }
-        //     }
-        // });
-
+                this.programarNotificacio(9, 46); // Hora de la notificacio
+            }
+        });
     },
 
     methods: {
+        programarNotificacio(hora, minuts) {
+            const now = new Date();
+            const horaEspecifica = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate(),
+                hora,
+                minuts,
+                0
+            );
+            const tempsRestant = horaEspecifica - now;
+
+            if (tempsRestant > 0) {
+                setTimeout(() => {
+                    this.enviarNotificacio();
+                }, tempsRestant);
+            }
+        },
+        enviarNotificacio() {
+            const opcionesNotificacion = {
+                body: "Es hora de publicar tu foto!",
+            };
+            const notification = new Notification("¡HORA DE BEREAL!", opcionesNotificacion);
+            notification.onclick = () => {
+                window.location.href = "/Bereal";
+                notification.close();
+                localStorage.removeItem('notificacionPendiente');
+            };
+
+            localStorage.setItem('notificacionPendiente', JSON.stringify({
+                titulo: "¡Encara no has pujat l'InTime, puja'l ara!",
+                opciones: opcionesNotificacion,
+                tiempo: new Date().getTime() 
+            }));
+        },
         handleChangeCiudadSeleccionada(event) {
             this.ciudadSeleccionada = event.target.value;
 
@@ -476,32 +477,6 @@ export default {
             const maxDistancia = 5; // Distancia en km
             return distancia <= maxDistancia;
         },
-        // programarNotificacio(hora, minuts) {
-        //     const now = new Date();
-        //     const horaEspecifica = new Date(
-        //         now.getFullYear(),
-        //         now.getMonth(),
-        //         now.getDate(),
-        //         hora,
-        //         minuts,
-        //         0
-        //     );
-        //     const tempsRestant = horaEspecifica - now;
-
-        //     if (tempsRestant > 0) {
-        //         setTimeout(() => {
-        //             this.enviarNotificacio();
-        //         }, tempsRestant);
-        //     }
-        // },
-        // enviarNotificacio() {
-        //     const opcionesNotificacion = {
-        //         body: "Es hora de publicar tu foto!",
-        //     };
-
-        //     new Notification("¡HORA DE BEREAL!", opcionesNotificacion);
-        // },
-
         toggleFiltro() {
             // Cambiar el estado del filtro al hacer clic en el icono del mapa
             this.filtroActivo = !this.filtroActivo;

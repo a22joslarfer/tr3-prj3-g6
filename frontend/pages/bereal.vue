@@ -1,17 +1,19 @@
 <template>
+  <HeaderGeneral />
     <body>
-      <h1>BeReal</h1>
+      <h1>InTime</h1>
       <div class="container">
       <input type="file" @change="handleFileChange('img_del')" accept="image/*" />
       <input type="file" @change="handleFileChange('img_tra')" accept="image/*" />
       <button @click="uploadImages" class="upload-button">Pujar Imágenes</button>
     </div>  
   </body>
+  <FooterOptions />
   </template>
   
   
   <script>
-  //import { useStore } from '../stores/index';
+  import { useStore } from '../stores/index';
   export default {
     data() {
       return {
@@ -20,7 +22,7 @@
       }
     },
     created() {
-     // this.checkIfAuth();
+      this.checkIfAuth();
     },
     methods: {
       handleFileChange(type) {
@@ -30,7 +32,7 @@
         const formData = new FormData();
         formData.append('img_del', this.img_del);
         formData.append('img_tra', this.img_tra);
-        formData.append('id_usuari', 23 );    //aqui hay que poner el id del usuario / pinia /////////////////////////////////////////////////////////
+        formData.append('id_usuari', this.userId );    
         try {
           const response = await fetch('http://localhost:8000/api/bereal', {
             method: 'POST',
@@ -46,15 +48,15 @@
           console.error('Error al subir imágenes:', error);
           alert('Error al subir imágenes');
         }
-      },/*
+      },
       checkIfAuth() {
               const store = useStore();
               this.userId = store.return_user_id();
-              if(this.userId==null){
+              if(this.userId===null){
                 navigateTo('/login')
               }
           },
-          */
+          
     },
   }
   </script>
@@ -66,6 +68,9 @@
     padding: 0;
     height: 100vh;
     width: 100vw;
+  }
+  h1{
+    margin-top: 40px;
   }
   body{
     background-color: black;
@@ -99,4 +104,3 @@
     background-color: #45a049;
   }
   </style>
-  
