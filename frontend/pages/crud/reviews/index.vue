@@ -37,10 +37,6 @@
     </div>
 </template>
 
-
-
-
-
 <script>
 import 'bootstrap/dist/css/bootstrap.css'
 
@@ -50,7 +46,6 @@ export default {
             data: [],
             autenticado: false,
         }
-
     },
     head() {
         return {
@@ -75,7 +70,6 @@ export default {
                     console.error(error);
                 });
         },
-
         truncateContent(content) {
             const maxLength = 100; // Maximum number of characters to display
             return content.length > maxLength ? content.slice(0, maxLength) + '...' : content;
@@ -83,7 +77,6 @@ export default {
         crearNuevoItem() {
             navigateTo('/crud/reviews/create');
         },
-        //eliminarreview id
         eliminarItem(id) {
             fetch(`http://localhost:8000/api/reviews/${id}`, {
                 method: 'DELETE',
@@ -109,8 +102,6 @@ export default {
     created() {
         this.fetchData();
     },
-
-
 }
 </script>
 
@@ -118,7 +109,6 @@ export default {
 .content-cell {
     max-width: 200px;
     overflow: auto;
-
 }
 
 ::-webkit-scrollbar {
