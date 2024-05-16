@@ -113,7 +113,7 @@ class UserController extends Controller
         return response()->json(null, 204);
     }
 
-
+//ruta de register http://elysium.daw.inspedralbes.cat/backend/public/api/register
     public function register(Request $request)
     {
         // Validación de los datos del formulario
@@ -188,6 +188,33 @@ class UserController extends Controller
             ], 401);
         }
     }
+    //update user crud only name email phone and birthday
+    public function updateCrud(Request $request, $id)
+    {
+        // Validar los datos del formulario
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'phone' => 'required|string',
+            'birthday' => 'required|string',
+        ]);
+
+        // Obtener el usuario existente
+        $user = User::findOrFail($id);
+
+        // Actualizar el usuario
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->phone = $request->input('phone');
+        $user->birthday = $request->input('birthday');
+        $user->save();
+
+        return response()->json($user);
+
+
+    }
+
+
     public function logout(Request $request)
     {
         // Obtener el usuario autenticado
@@ -200,7 +227,23 @@ class UserController extends Controller
         return response()->json(['message' => 'Logged out']);
     }
 
-
+public function delete($id)
+    {
+        // Eliminar un usuario
+        $user = User::find($id);
+        if ($user) {
+            $user->delete();
+            return response()->json([
+                "status" => 1,
+                "msg" => "Usuario eliminado exitosamente",
+            ]);
+        } else {
+            return response()->json([
+                "status" => 0,
+                "msg" => "Usuario no encontrado",
+            ], 404);
+        }
+    }
 
     public function getUsers($id)
     {

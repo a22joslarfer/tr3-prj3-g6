@@ -29,8 +29,8 @@
                         <img :src="review.photo" alt="Profile Photo" class="img-fluid rounded-circle" />
                     </td>
                     <td><button class="btn btn-primary" @click="crearNuevoItem()">Crear</button></td>
-                    <td><button class="btn btn-danger" @click="eliminarItem()">Delete</button></td>
-                    <td><button class="btn btn-warning" @click="editarItem()">Editar</button></td>
+                    <td><button class="btn btn-danger" @click="eliminarItem(review.id)">Delete</button></td>
+                    <td><button class="btn btn-warning" @click="editarItem(review.id)">Editar</button></td>
                 </tr>
             </tbody>
         </table>
@@ -79,36 +79,49 @@ export default {
         truncateContent(content) {
             const maxLength = 100; // Maximum number of characters to display
             return content.length > maxLength ? content.slice(0, maxLength) + '...' : content;
+        },
+        crearNuevoItem() {
+            navigateTo('/crud/reviews/create');
+        },
+        //eliminarreview id
+        eliminarItem(id) {
+            fetch(`http://localhost:8000/api/reviews/${id}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error deleting review');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Review deleted');
+                    this.fetchData();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+        editarItem(id) {
+            navigateTo(`/crud/reviews/edit/${id}`);
         }
-
     },
     created() {
         this.fetchData();
     },
-    crearNuevoItem() {
-        console.log('Crear nuevo item');
-    },
-    eliminarItem() {
-        console.log('Eliminar item');
-    },
-    editarItem() {
-        console.log('Editar item');
-    }
+
 
 }
 </script>
 
 <style scoped>
-
 .content-cell {
-    max-width: 200px; 
-    overflow: auto; 
-    
+    max-width: 200px;
+    overflow: auto;
+
 }
 
 ::-webkit-scrollbar {
     width: 5px;
 }
-
-
 </style>

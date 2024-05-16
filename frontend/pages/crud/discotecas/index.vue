@@ -30,8 +30,8 @@
                         <img :src="discoteca.imgUrl" alt="Profile Photo" class="img-fluid rounded-circle" />
                     </td>
                     <td><button class="btn btn-primary" @click="crearNuevoItem()">Crear</button></td>
-                    <td><button class="btn btn-danger" @click="eliminarItem()">Delete</button></td>
-                    <td><button class="btn btn-warning" @click="editarItem()">Editar</button></td>
+                    <td><button class="btn btn-danger" @click="eliminarItem(discoteca.id)">Delete</button></td>
+                    <td><button class="btn btn-warning" @click="editarItem(discoteca.id)">Editar</button></td>
                 </tr>
             </tbody>
         </table>
@@ -75,33 +75,32 @@ export default {
                 .catch(error => {
                     console.error(error);
                 });
+        },
+        crearNuevoItem() {
+            navigateTo('/crud/discotecas/create');
+        },
+        eliminarItem(id) {
+        },
+        editarItem(id) {
         }
+
     },
+
+
     created() {
         this.fetchData();
     },
-    crearNuevoItem() {
-        console.log('Crear nuevo item');
-    },
-    eliminarItem() {
-        console.log('Eliminar item');
-    },
-    editarItem() {
-        console.log('Editar item');
-    }
+
+
 
 }
 </script>
 
 <style scoped>
-
-img{
+img {
     width: 200px;
     height: 100px;
     object-fit: cover;
 
 }
-
-
-
 </style>

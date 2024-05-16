@@ -49,7 +49,8 @@ Route::get('/users/profile_photo/{id}', [userController::class, 'getProfilePhoto
 Route::get('users/seguidores/{id}', [userController::class, 'getFollowers']);
 //ruta para obtener todos los usuarios
 Route::get('/users', [userController::class, 'index']);
-
+//ruta para update crud
+Route::put('/update/users/{id}', [userController::class, 'updateCrud']);
 
 
 
