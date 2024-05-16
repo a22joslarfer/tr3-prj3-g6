@@ -1,8 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Bereal; 
+use App\Models\Bereal;
+
+use Illuminate\Support\Facades\Validator;
+
 class BeRealController extends Controller
 {
     /**
@@ -16,17 +20,24 @@ class BeRealController extends Controller
         $validatedData = $request->validate([
             'img_del' => 'required|file',
             'img_tra' => 'required|file',
-            'id_usuari' => 'required|exists:users,id'
+            'id_usuari' => 'required|exists:users,id',
+            'hora' => 'required|date_format:Y-m-d\TH:i',
         ]);
 
         $img_del = $request->file('img_del')->store('public/img');
         $img_tra = $request->file('img_tra')->store('public/img');
 
+        // Convert 'hora' into a valid datetime format
+        $hora = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $validatedData['hora'])
+            ->setYear(date('Y')) // Set the year to the current year
+            ->format('Y-m-d H:i:s');
+
         $bereal = Bereal::create([
-          'img_del' => str_replace('public/', 'storage/', $img_del),
-          'img_tra' => str_replace('public/', 'storage/', $img_tra),
-          'id_usuari' => $validatedData['id_usuari']
-      ]);
+            'img_del' => str_replace('public/', 'storage/', $img_del),
+            'img_tra' => str_replace('public/', 'storage/', $img_tra),
+            'id_usuari' => $validatedData['id_usuari'],
+            'hora' => $hora,
+        ]);
 
         return response()->json($bereal, 201);
     }
@@ -41,5 +52,20 @@ class BeRealController extends Controller
     {
         return Bereal::find($id);
     }
-}
 
+    public function update(Request $request, $id)
+    {
+        $bereal = Bereal::find($id);
+        $bereal->update($request->all());
+        return response()->json($bereal, 200);
+    }
+
+    public function delete($id)
+    {
+        Bereal::destroy($id);
+        if(Bereal::find($id) === null) {
+            return response()->json();
+        }
+    
+    }
+}

@@ -22,8 +22,8 @@
                     <td>{{ inTime.hora }}</td>
 
                     <td><button class="btn btn-primary" @click="crearNuevoItem()">Crear</button></td>
-                    <td><button class="btn btn-danger" @click="eliminarItem()">Delete</button></td>
-                    <td><button class="btn btn-warning" @click="editarItem()">Editar</button></td>
+                    <td><button class="btn btn-danger" @click="eliminarItem(inTime.id)">Delete</button></td>
+                    <td><button class="btn btn-warning" @click="editarItem(inTime.id)">Editar</button></td>
                 </tr>
             </tbody>
         </table>
@@ -69,13 +69,28 @@ export default {
                 });
         },
         crearNuevoItem() {
-            console.log('Crear nuevo item');
+            navigateTo('/crud/bereals/create');
         },
-        eliminarItem() {
-            console.log('Eliminar item');
+        eliminarItem(id) {
+            fetch(`http://localhost:8000/api/inTime/${id}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error deleting item');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Item deleted');
+                    this.fetchData();
+                })
+                .catch(error => {
+                    console.error('There was an error deleting the item', error);
+                });
         },
-        editarItem() {
-            console.log('Editar item');
+        editarItem(id) {
+            navigateTo(`/crud/bereals/edit/${id}`);
         }
     },
     created() {

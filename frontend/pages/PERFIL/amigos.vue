@@ -10,7 +10,9 @@
 </template>
 
 <script>
-import { socket } from "../node/socket.js";
+import { socket } from '../../socket';
+
+
 
 export default {
     data() {
@@ -25,12 +27,13 @@ export default {
         this.getAmigos(this.clientId);
         socket.emit('userJoined', this.clientId);
     },
+
     methods: {
         startChatWith(chattingWithId, chattingWithIdName) {
             const store = useStore();
             store.set_chattingWithId(chattingWithId);
             store.set_chattingWithIdName(chattingWithIdName);
-            
+
             console.log('guardando chattingWithId ' + chattingWithId + ' en store ' + store.return_chattingWithId());
             socket.emit('joinRoomWith', chattingWithId, this.clientId);
 

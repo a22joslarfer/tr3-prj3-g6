@@ -3,12 +3,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@pinia/nuxt', 'nuxt-socket-io', '@pinia-plugin-persistedstate/nuxt'],
   telemetry: false,
-  ssr:false,
+  ssr: false,
   routeRules: {
     // Homepage pre-rendered at build time
     '/': { ssr: true },
-    
+
   },
-})
   
+
+})
+
 
