@@ -21,19 +21,40 @@ class comentariosController extends Controller
             'id_usuari' => 'required'
         ]);
 
-        $comentario = new Comentario();
-        $comentario->comentario = $request->comentario;
-        $comentario->id_bereal = $request->id_bereal;
-        $comentario->id_usuari = $request->id_usuari;
-        $comentario->save();
+        $comentario = Comentario::create([
+            'comentario' => $request->comentario,
+            'id_bereal' => $request->id_bereal,
+            'id_usuari' => $request->id_usuari,
+        ]);
 
-        return response()->json(['message' => 'Comentari creat'], 201);
+        return response()->json(['message' => 'Comentario creado exitosamente', 'comentario' => $comentario], 201);
     }
 
     public function show($id)
     {
         $comentario = Comentario::find($id);
         return response()->json($comentario);
+    }
+    
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'comentario' => 'required',
+            'id_bereal' => 'required|exists:bereal,id',
+            'id_usuari' => 'required'
+        ]);
+
+        $comentario = Comentario::find($id);
+        if (!$comentario) {
+            return response()->json(['message' => 'Comentario no encontrado'], 404);
+        }
+
+        $comentario->comentario = $request->comentario;
+        $comentario->id_bereal = $request->id_bereal;
+        $comentario->id_usuari = $request->id_usuari;
+        $comentario->save();
+
+        return response()->json(['message' => 'Comentario actualizado exitosamente']);
     }
 
     public function destroy($id)

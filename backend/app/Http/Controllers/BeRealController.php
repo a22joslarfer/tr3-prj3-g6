@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Bereal;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+
 
 class BeRealController extends Controller
 {
@@ -55,17 +57,19 @@ class BeRealController extends Controller
 
     public function update(Request $request, $id)
     {
-        $bereal = Bereal::find($id);
-        $bereal->update($request->all());
-        return response()->json($bereal, 200);
+        
     }
+    
+
+
+
+
 
     public function delete($id)
     {
         Bereal::destroy($id);
-        if(Bereal::find($id) === null) {
+        if (Bereal::find($id) === null) {
             return response()->json();
         }
-    
     }
 }
