@@ -90,7 +90,8 @@ Route::get('/reviews/user/{id}', [reviewController::class, 'getReviewsByUser']);
 Route::get('/reviews/disco/{id}', [reviewController::class, 'getReviewsByDisco']);
 // ruta para obtener las reviews por puntuacion
 Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getReviewsByPuntuacion']);
-
+//ruta para obtener las fotos de una review
+Route::get('/reviews/fotos/{id}', [reviewController::class, 'getFotos']);
 
 // RUTAS DE CATEGORIAS_REVIEWS
 // ruta para obtener todas las categorias

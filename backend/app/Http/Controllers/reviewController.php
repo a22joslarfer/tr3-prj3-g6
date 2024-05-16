@@ -19,8 +19,8 @@ class reviewController extends Controller
             'titulo' => 'required',
             'content' => 'required',
             'puntuacion' => 'required',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Change 'required' to 'nullable'
             'categoria' => 'required',
+            'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validación de la foto
         ]);
     
         try {
@@ -32,11 +32,13 @@ class reviewController extends Controller
             $review->puntuacion = $request->puntuacion;
             $review->categoria = $request->categoria;
     
+            // Manejar la foto si está presente en la solicitud
             if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('public/photos');
-                $review->photo = str_replace('public/', 'storage/', $photoPath);
-            } else {
-                $review->photo = null; 
+                $foto = $request->file('photo');
+                $nombre_photo = time() . '.' . $foto->getClientOriginalExtension();
+                $ruta = public_path('/photos'); // Ruta de almacenamiento de las fotos
+                $foto->move($ruta, $nombre_photo);
+                $review->foto = $nombre_photo;
             }
     
             $review->save();
@@ -105,5 +107,13 @@ class reviewController extends Controller
     {
         $reviews = reviewModel::where('puntuacion', $puntuacion)->get();
         return response()->json($reviews);
+    }
+
+
+    public function getFotos($id)
+    {
+        $review = reviewModel::find($id);
+        $photo = $review->photo;
+        return Storage::download($photo);
     }
 }
