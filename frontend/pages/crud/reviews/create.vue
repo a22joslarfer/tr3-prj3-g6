@@ -18,7 +18,7 @@
             </div>
             <div class="form-group">
                 <label for="content">content</label>
-                <input type="text" v-model="content" class="form-control" id="content" placeholder="Enter time">
+                <input type="text" v-model="content" class="form-control" id="content" placeholder="descripció">
             </div>
             <div class="form-group">
                 <label for="puntuacion">puntuacion</label>
@@ -27,11 +27,11 @@
             </div>
             <div class="form-group">
                 <label for="photo">photo</label>
-                <input type="file" @change="handleFileChange" class="form-control" id="photo" placeholder="Enter time">
+                <input type="file" @change="handleFileChange" class="form-control" id="photo">
             </div>
             <div class="form-group">
                 <label for="categoria">categoria</label>
-                <input type="text" v-model="categoria" class="form-control" id="categoria" placeholder="Enter time">
+                <input type="text" v-model="categoria" class="form-control" id="categoria" placeholder="categoria">
             </div>
             <button type="submit" class="btn btn-primary mt-2">Create</button>
         </form>
