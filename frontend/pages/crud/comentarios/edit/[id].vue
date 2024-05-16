@@ -1,31 +1,23 @@
 <template>
     <div class="container mt-4">
-        <form @submit.prevent="crearNuevoItem" class="mb-4">
+        <h2>Editar Comentario</h2>
+        <form @submit.prevent="actualizarComentario">
             <div class="form-group">
-                <label for="img_del">Img Delantera</label>
-                <input type="file" v-on:change="handleFrontImageUpload" class="form-control" id="img_del">
+                <label for="comentario">Comentario:</label>
+                <input type="text" class="form-control" id="comentario" v-model="comentario" required>
             </div>
             <div class="form-group">
-                <label for="img_tra">Img Trasera</label>
-                <input type="file" v-on:change="handleRearImageUpload" class="form-control" id="img_tra">
+                <label for="id_bereal">ID Bereal:</label>
+                <input type="number" class="form-control" id="id_bereal" v-model="id_bereal" required>
             </div>
             <div class="form-group">
-                <label for="id_usuari">Id Usuari</label>
-                <input type="number" v-model="id_usuari" class="form-control" id="id_usuari"
-                    placeholder="Enter user ID">
+                <label for="id_usuari">ID Usuario:</label>
+                <input type="number" class="form-control" id="id_usuari" v-model="id_usuari" required>
             </div>
-            <div class="form-group">
-                <label for="hora">Hora</label>
-                <input type="datetime-local" v-model="hora" class="form-control" id="hora">
-            </div>
-            <button type="submit" class="btn btn-primary mt-2">Edit</button>
+            <button type="submit" class="btn btn-primary">Actualizar</button>
         </form>
     </div>
 </template>
-
-
-
-
 
 <script>
 import 'bootstrap/dist/css/bootstrap.css'
@@ -33,58 +25,57 @@ import 'bootstrap/dist/css/bootstrap.css'
 export default {
     data() {
         return {
-            img_del: '',
-            img_tra: '',
+            comentario: '',
+            id_bereal: '',
             id_usuari: '',
-            hora: '',
-        }
-
-    },
-    head() {
-        return {
-            link: [
-                { rel: 'stylesheet', href: 'https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cerulean/bootstrap.min.css' }
-            ]
+            
         }
     },
     methods: {
-        crearNuevoItem() {
-            let formData = new FormData();
-            formData.append('img_del', this.img_del);
-            formData.append('img_tra', this.img_tra);
-            formData.append('id_usuari', this.id_usuari);
-            formData.append('hora', this.hora);
-
-            fetch('http://localhost:8000/api/inTime', {
-                method: 'POST',
-                body: formData,
-
-            })
+        obtenerComentario() {
+            
+            fetch(`http://localhost:8000/api/comentarios/${this.$route.params.id}`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Error creating new item');
+                        throw new Error('Failed to fetch comentario');
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log('New item created');
-                    this.$router.push('/crud/bereals');
+                    this.comentario = data.comentario;
+                    this.id_bereal = data.id_bereal;
+                    this.id_usuari = data.id_usuari;
+                    this.id = data.id;
                 })
                 .catch(error => {
-                    console.error('There was an error creating the new item', error);
+                    console.error(error);
                 });
         },
-        handleFrontImageUpload(event) {
-            this.img_del = event.target.files[0];
-        },
-        handleRearImageUpload(event) {
-            this.img_tra = event.target.files[0];
-        },
-        
-
+        actualizarComentario() {
+            fetch(`http://localhost:8000/api/comentarios/${this.$route.params.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    comentario: this.comentario,
+                    id_bereal: this.id_bereal,
+                    id_usuari: this.id_usuari,
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update comentario');
+                }
+                this.$router.push('/crud/comentarios/');
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+    },
+    created() {
+        this.obtenerComentario();
     }
-
 }
 </script>
-
-<style scoped></style>

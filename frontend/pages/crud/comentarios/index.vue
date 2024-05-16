@@ -6,6 +6,7 @@
                     <th>Id</th>
                     <th>id inTime</th>
                     <th>id usuari</th>
+                    <th>Comentario</th>
                     <th>Hora</th>
                     <th>Crear</th>
                     <th>Delete</th>
@@ -17,20 +18,17 @@
                     <td>{{ comentario.id }}</td>
                     <td>{{ comentario.id_bereal }}</td>
                     <td>{{ comentario.id_usuari }}</td>
+                    <td>{{ comentario.comentario }}</td>
                     <td>{{ comentario.hora }}</td>
 
                     <td><button class="btn btn-primary" @click="crearNuevoItem()">Crear</button></td>
-                    <td><button class="btn btn-danger" @click="eliminarItem()">Delete</button></td>
-                    <td><button class="btn btn-warning" @click="editarItem()">Editar</button></td>
+                    <td><button class="btn btn-danger" @click="eliminarItem(comentario.id)">Delete</button></td>
+                    <td><button class="btn btn-warning" @click="editarItem(comentario.id)">Editar</button></td>
                 </tr>
             </tbody>
         </table>
     </div>
 </template>
-
-
-
-
 
 <script>
 import 'bootstrap/dist/css/bootstrap.css'
@@ -41,7 +39,6 @@ export default {
             data: [],
             autenticado: false,
         }
-
     },
     head() {
         return {
@@ -65,21 +62,33 @@ export default {
                 .catch(error => {
                     console.error(error);
                 });
+        },
+        crearNuevoItem() {
+            this.$router.push('/crud/comentarios/create');
+        },
+        eliminarItem(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar este comentario?')) {
+                fetch(`http://localhost:8000/api/comentarios/${id}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al eliminar comentario');
+                    }
+                    this.fetchData();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            }
+        },
+        editarItem(id) {
+            this.$router.push(`/crud/comentarios/edit/${id}`);
         }
     },
     created() {
         this.fetchData();
-    },
-    crearNuevoItem() {
-        console.log('Crear nuevo item');
-    },
-    eliminarItem() {
-        console.log('Eliminar item');
-    },
-    editarItem() {
-        console.log('Editar item');
     }
-
 }
 </script>
 

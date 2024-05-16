@@ -159,6 +159,9 @@ Route::get('/comentarios/show/{id}', [comentariosController::class, 'show']);
 Route::delete('/comentarios/{id}', [comentariosController::class, 'destroy']);
 // mostrar tots els comentaris
 Route::get('/comentarios', [comentariosController::class, 'indexComentarios']);
+// editar un comentario
+Route::put('/comentarios/{id}', [comentariosController::class, 'update']);
+
 
 
 
