@@ -26,7 +26,7 @@ class reviewController extends Controller
         ]);
 
         try {
-            $photoPath = $request->photo->store('public/img');
+            $photo = $request->file->store('public/img');
 
             $review = new ReviewModel;
             $review->usuario_id = $request->usuario_id;
@@ -35,7 +35,7 @@ class reviewController extends Controller
             $review->content = $request->content;
             $review->puntuacion = $request->puntuacion;
             $review->categoria = $request->categoria;
-            $review->photo = str_replace('public/', 'storage', $photoPath);
+            $review->photo = str_replace('public/', 'storage', $photo);
 
             $review->save();
 
