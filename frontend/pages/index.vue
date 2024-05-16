@@ -100,7 +100,7 @@
             if (permission === "granted") {
                 console.log("Permisos aceptados");
 
-                this.programarNotificacio(9, 46); // Hora de la notificacio
+                this.programarNotificacio(8, 59); // Hora de la notificacio
             }
         });
     },
