@@ -40,24 +40,18 @@
     <div class="edit-profile">
       <button onclick="window.location.href='/PERFIL/ajustes'">Editar perfil</button>
     </div>
-    <div class="instagram-stories">
-      <div class="story"
-        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_zqXfEtVU1TPQeQX4MgJ4wjqBDLEVH2okT5Vbgs5ZsJ869wAmvk1MWJsWX4WqG4j-W1w&usqp=CAU');">
-        <span class="story-username">Story 1</span>
+    <div class="amigos-lista" v-if="filteredAmigos.length > 0">
+      <div v-for="amigo in filteredAmigos" :key="amigo.id" @click="startChatWith(amigo.id, amigo.name)" class="amigo">
+        <div class="amigo-content">
+          <div class="amigo-avatar">
+            <img :src="getProfilePhotoUrl(amigo.profile_photo)" alt="Imagen del perfil">
+          </div>
+          <div class="amigo-info">
+            <span class="amigo-nombre">{{ amigo.name }}</span>
+          </div>
+        </div>
       </div>
-      <div class="story"
-        style="background-image: url('https://e00-elmundo.uecdn.es/assets/multimedia/imagenes/2018/05/08/15257737585365.jpg');">
-        <span class="story-username">Story 2</span>
-      </div>
-      <div class="story"
-        style="background-image: url('https://e00-marca.uecdn.es/blogs/alacontra/imagenes_posts/2010/09/15/messi_570x420.jpg');">
-        <span class="story-username">Story 3</span>
-      </div>
-      <div class="story"
-        style="background-image: url('https://e00-marca.uecdn.es/blogs/alacontra/imagenes_posts/2010/09/15/messi_570x420.jpg');">
-        <span class="story-username">Story 3</span>
-      </div>
-    </div>
+    </div> 
     <div class="bottom-bar">
       <div class="selected-line" :style="{ left: barPosition }"></div>
       <div class="icon" @click="scrollTo('inicio')">
@@ -107,6 +101,7 @@
         <h2>Contenido de nombres</h2>
       </div>
     </div>
+    <FooterOptions />
   </div>
 </template>
 <script>
@@ -126,24 +121,13 @@ export default {
         notificaciones: 70,
 
       },
-      images: [
-        { src: 'https://image.ondacero.es/clipping/cmsimages01/2023/06/13/D2A4CC75-E672-4A54-B325-1611051ED976/messi-principio-ire-proximo-mundial_104.jpg?crop=715,715,x182,y0&width=1200&height=1200&optimize=low&format=webply' },
-        { src: 'https://image.ondacero.es/clipping/cmsimages01/2023/06/13/D2A4CC75-E672-4A54-B325-1611051ED976/messi-principio-ire-proximo-mundial_104.jpg?crop=715,715,x182,y0&width=1200&height=1200&optimize=low&format=webply' },
-
-        { src: 'https://image.ondacero.es/clipping/cmsimages01/2023/06/13/D2A4CC75-E672-4A54-B325-1611051ED976/messi-principio-ire-proximo-mundial_104.jpg?crop=715,715,x182,y0&width=1200&height=1200&optimize=low&format=webply' },
-        { src: 'https://image.ondacero.es/clipping/cmsimages01/2023/06/13/D2A4CC75-E672-4A54-B325-1611051ED976/messi-principio-ire-proximo-mundial_104.jpg?crop=715,715,x182,y0&width=1200&height=1200&optimize=low&format=webply' },
-        { src: 'https://image.ondacero.es/clipping/cmsimages01/2023/06/13/D2A4CC75-E672-4A54-B325-1611051ED976/messi-principio-ire-proximo-mundial_104.jpg?crop=715,715,x182,y0&width=1200&height=1200&optimize=low&format=webply' },
-
-        { src: 'https://image.ondacero.es/clipping/cmsimages01/2023/06/13/D2A4CC75-E672-4A54-B325-1611051ED976/messi-principio-ire-proximo-mundial_104.jpg?crop=715,715,x182,y0&width=1200&height=1200&optimize=low&format=webply' },
-        { src: 'https://image.ondacero.es/clipping/cmsimages01/2023/06/13/D2A4CC75-E672-4A54-B325-1611051ED976/messi-principio-ire-proximo-mundial_104.jpg?crop=715,715,x182,y0&width=1200&height=1200&optimize=low&format=webply' },
-
-        { src: 'https://image.ondacero.es/clipping/cmsimages01/2023/06/13/D2A4CC75-E672-4A54-B325-1611051ED976/messi-principio-ire-proximo-mundial_104.jpg?crop=715,715,x182,y0&width=1200&height=1200&optimize=low&format=webply' },
-        { src: 'https://image.ondacero.es/clipping/cmsimages01/2023/06/13/D2A4CC75-E672-4A54-B325-1611051ED976/messi-principio-ire-proximo-mundial_104.jpg?crop=715,715,x182,y0&width=1200&height=1200&optimize=low&format=webply' }
-      ]
+      amigos: [], // Inicializamos amigos como un array vacío
+      searchQuery: '', // Añadimos una propiedad para la búsqueda
     };
-  },
+  },    
 
   computed: {
+    
     imageRows() {
       const rows = [];
       const imagesCopy = [...this.images];
@@ -152,6 +136,7 @@ export default {
       }
       return rows;
     }
+    
   },
   
   mounted() {
@@ -247,7 +232,7 @@ export default {
 }
 
 .bottom-bar {
-  position: fixed;
+  position: absolute;
   left: 0;
   width: 100%;
   height: 46px;
