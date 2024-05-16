@@ -32,6 +32,16 @@ class discoController extends Controller
 
     public function createDiscoteca(Request $request)
     {
+        $request->validate([
+            'coordenadas' => 'required',
+            'imgUrl' => 'required',
+            'minEdad' => 'required',
+            'horario' => 'required',
+            'nombre_local' => 'required',
+            'telefono' => 'required',
+            'descripcion' => 'required',
+        ]);
+    
         $discoteca = discoModel::create($request->all());
         return $discoteca;
     }
@@ -39,15 +49,22 @@ class discoController extends Controller
     // funcion para actualizar una discoteca
 
     public function updateDiscoteca(Request $request, $id)
-    {
-        $discoteca = discoModel::find($id);
-        $discoteca->update($request->all());
-        return $discoteca;
-    }
+{
+    $request->validate([
+        'coordenadas' => 'required',
+        'imgUrl' => 'required',
+        'minEdad' => 'required',
+        'horario' => 'required',
+        'nombre_local' => 'required',
+        'telefono' => 'required',
+        'descripcion' => 'required',
+    ]);
 
+    $discoteca = discoModel::find($id);
+    $discoteca->update($request->all());
+    return $discoteca;
+}
     // funcion para borrar una discoteca
-
-
 
     public function delete($id){
         $discotecas = discoModel::find($id);

@@ -80,8 +80,23 @@ export default {
             navigateTo('/crud/discotecas/create');
         },
         eliminarItem(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar este comentario?')) {
+                fetch(`http://localhost:8000/api/discotecas/${id}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al eliminar comentario');
+                    }
+                    this.fetchData();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            }
         },
         editarItem(id) {
+            this.$router.push(`/crud/discotecas/edit/${id}`);
         }
 
     },
