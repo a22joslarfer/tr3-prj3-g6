@@ -30,7 +30,7 @@ class seguidoresController extends Controller
         $amigos = seguidorModel::where('seguidor', $id)->whereIn('seguido', $seguidorIds)->get('seguido');
 
         // Get the ids and names of the users with the ids in $amigos
-        $users = User::whereIn('id', $amigos)->select('id', 'name')->get();
+        $users = User::whereIn('id', $amigos)->select('id', 'name', 'profile_photo')->get();
 
         return response()->json($users);
     }

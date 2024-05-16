@@ -12,7 +12,7 @@
     </div>
 </template>
 <script>
-import { socket } from "../../node/socket.js";
+import { socket } from "../../socket.js";
 import { useStore } from "../../stores/index.js";
 export default {
     data() {
