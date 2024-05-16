@@ -1,10 +1,9 @@
 <template>
     <div class="container mt-4">
-        <form @submit.prevent="editarItem" class="mb-4">
+        <form @submit.prevent="editarItem()" class="mb-4">
             <div class="form-group">
                 <label for="img_del">Img Delantera</label>
-                <input type="file" v-on:change="handleFrontImageUpload" class="form-control" id="img_del"
-                    placeholder="">
+                <input type="file" v-on:change="handleFrontImageUpload" class="form-control" id="img_del">
             </div>
             <div class="form-group">
                 <label for="img_tra">Img Trasera</label>
@@ -49,40 +48,45 @@ export default {
         }
     },
     methods: {
-        editarItem(id) {
+        editarItem() {
             let formData = new FormData();
-            if (this.img_del != '') {
+            if (this.img_del) {
                 formData.append('img_del', this.img_del);
             }
-            if (this.img_tra != '') {
+            if (this.img_tra) {
                 formData.append('img_tra', this.img_tra);
             }
-            if (this.id_usuari != '') {
+            if (this.id_usuari) {
                 formData.append('id_usuari', this.id_usuari);
             }
-            if (this.hora != '') {
+            if (this.hora) {
                 formData.append('hora', this.hora);
             }
 
-            fetch(`http://localhost:8000/api/inTime/${id}`, {
-                method: 'POST',
-                body: formData,
+            // Log FormData entries
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}:`, value);
+            }
 
+            fetch(`http://localhost:8000/api/inTime/${this.$route.params.id}`, {
+                method: 'PUT',
+                body: formData,
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Error creating new item');
+                        throw new Error(`Error updating item: ${response.status} ${response.statusText}`);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log('New item created');
+                    console.log('Item updated successfully', data);
                     this.$router.push('/crud/bereals');
                 })
                 .catch(error => {
-                    console.error('There was an error creating the new item', error);
+                    console.error('There was an error updating the item', error);
                 });
-        },
+        }
+        ,
         handleFrontImageUpload(event) {
             this.img_del = event.target.files[0];
         },

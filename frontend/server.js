@@ -144,8 +144,8 @@ function storeMessageInDatabase(senderId, receiverId, text) {
   });
 }
 
-server.listen(5000, () => {
-  //console.log('Server running at http://elysium.daw.inspedralbes.cat:5000');
-  console.log('Server running at http://localhost:5000');
+server.listen(3333, () => {
+  console.log('Server running at http://elysium.daw.inspedralbes.cat:3333');
+  //console.log('Server running at http://localhost:3333');
 
 });
