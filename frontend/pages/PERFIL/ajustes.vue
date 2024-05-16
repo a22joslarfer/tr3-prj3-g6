@@ -74,7 +74,7 @@ export default {
 
       // Enviar los datos al backend
       try {
-        const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
+        const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -93,7 +93,21 @@ export default {
       } catch (error) {
         console.error('Error updating user:', error);
       }
-    }
+    },
+    checkIfAuth() {
+            const store = useStore();
+            const user_id = store.return_user_id();
+            if (user_id == null) {
+                store.set_return_path('/reviews');
+                this.$router.push('/login');
+               
+            }
+            this.client_id = user_id;
+
+        },
+  },
+  created() {
+    this.checkIfAuth();
   }
 };
 </script>

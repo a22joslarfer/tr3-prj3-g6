@@ -34,7 +34,7 @@
         formData.append('img_tra', this.img_tra);
         formData.append('id_usuari', this.userId );    
         try {
-          const response = await fetch('http://localhost:8000/api/bereal', {
+          const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/bereal', {
             method: 'POST',
             body: formData
           });

@@ -1,11 +1,11 @@
 <template>
+  <HeaderGeneral />
   <div class="container">
     <div class="qr-container">
       <div class="avatar">
-        <img class="profile-picture"
-          src="https://static-00.iconduck.com/assets.00/profile-circle-icon-2048x2048-cqe5466q.png"
-          alt="Profile Picture">
+        <img class="profile-picture" :src="profileImageUrl" alt="Profile Image">
       </div>
+     
       <div class="qr-card">
         <h1>{{ name }}</h1>
         <div v-if="qrImageUrl" class="qr-code">
@@ -19,9 +19,8 @@
       </div>
     </div>
   </div>
+  <FooterOptions />
 </template>
-
-
 
 
 <script>
@@ -35,13 +34,15 @@ export default {
       name: '',
       avatar: '',
       clientId: '',
+      profileImageUrl: null,
+
 
     };
   },
   methods: {
     async fetchQRCode(id) {
       try {
-        const response = await fetch(`http://localhost:8000/api/generate-qr-code/${id}`);
+        const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/generate-qr-code/${id}`);
 
         if (!response.ok) {
           throw new Error('Error fetching QR code');
@@ -51,6 +52,22 @@ export default {
         this.qrImageUrl = qrSvg; // Establecer la URL del código QR
 
       } catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchUserPhoto() {
+      try {
+        const store = useStore();
+        const id = store.return_user_id();
+
+        // Fetch de la imagen de perfil
+        const profilePhotoResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/profile_photo/${id}`);
+        const profilePhotoData = await profilePhotoResponse.json();
+        console.log(profilePhotoData);
+        this.profileImageUrl = profilePhotoData; // Suponiendo que la respuesta contiene la URL de la imagen de perfil
+
+      }
+      catch (error) {
         console.error(error);
       }
     },
@@ -72,6 +89,7 @@ export default {
     this.name = store.return_user_username();
     this.clientId = store.return_user_id();
     this.fetchQRCode(this.clientId);
+    this.fetchUserPhoto();
 
   },
 
@@ -91,14 +109,12 @@ export default {
   align-items: center;
   height: 100vh;
   background-color: #ff806d;
-  border-radius: 10px;
 }
 
 .qr-container {
-  width: 100%;
-  max-width: auto;
-  margin: 10px;
-  max-width: 425px;
+  width: 80%;
+  max-width: 100%;
+  margin-bottom: 145px;
 }
 
 .avatar {
@@ -106,8 +122,8 @@ export default {
 }
 
 .profile-picture {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
 
   border-radius: 50%;
 }
@@ -146,5 +162,21 @@ img {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+/* media query iphone 5 */
+@media only screen and (max-width: 320px) {
+  .profile-picture {
+    /* que no se vea */
+    display: none;
+  }
+  .qr-card {
+    padding: 1px;
+  }
+  .title-company {
+    font-size:10px;
+  }
+  .qr-code {
+    margin-top: 10px;
+  }
 }
 </style>

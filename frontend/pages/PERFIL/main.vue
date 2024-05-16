@@ -170,7 +170,7 @@ export default {
       this.selectedSection = section;
     },
     llevarAgenerarCodigoQr(){
-      navigateTo('../generarQr');
+      navigateTo('../generarQR');
     },
     async fetch() {
       try {
@@ -178,22 +178,34 @@ export default {
         const id = store.return_user_id();
 
         // Fetch de la imagen de perfil
-        const profilePhotoResponse = await fetch(`http://localhost:8000/api/users/profile_photo/${id}`);
+        const profilePhotoResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/profile_photo/${id}`);
         const profilePhotoData = await profilePhotoResponse.json();
         console.log(profilePhotoData);
         this.profileImageUrl = profilePhotoData; // Suponiendo que la respuesta contiene la URL de la imagen de perfil
 
         // Fetch del número de seguidores
-        const followersResponse = await fetch(`http://localhost:8000/api/users/seguidores/${id}`);
+        const followersResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/seguidores/${id}`);
         const followersData = await followersResponse.json();
         console.log(followersData);
         this.seguidores = followersData.seguidores; // Asigna el número de seguidores
       } catch (error) {
         console.error('Error al obtener los datos del usuario:', error);
       }
-    }
+    },
+    checkIfAuth() {
+            const store = useStore();
+            const user_id = store.return_user_id();
+            if (user_id == null) {
+                store.set_return_path('/reviews');
+                this.$router.push('/login');
+
+            }
+            this.client_id = user_id;
+
+        },
   },
   created() {
+    this.checkIfAuth();
     this.fetch();
   }
 }
