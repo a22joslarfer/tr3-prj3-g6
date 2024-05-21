@@ -21,6 +21,9 @@
 
 <script>
 import 'bootstrap/dist/css/bootstrap.css'
+definePageMeta({
+    middleware: 'admin'
+});
 
 export default {
     data() {
