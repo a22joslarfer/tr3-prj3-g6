@@ -1,108 +1,156 @@
 <template>
-  <div class="container">
-    <div class="wrapper">
-      <h1>BeReal</h1>
-      <div v-if="bereals.length" class="bereals-list" id="bereals-list">
-        <div v-for="bereal in bereals" :key="bereal.id" class="bereal-item">
-          <div class="user-info">
-            <h2>{{ bereal.usuarioNombre }}</h2>
-            <p>{{ bereal.hora.slice(11, 19) }}</p>
+  <div>
+    <HeaderGeneral />
+
+    <body>
+      <div class="bereals-container">
+
+        <div class="section-buttons">
+          <div class="section-button-left">
+            <h4 @click="showSection('todos')" :class="{ active: activeSection === 'todos' }">Tots els InTime</h4>
           </div>
-          <div class="bereal-images">
-            <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
-            <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
+          <div class="section-button-right">
+            <h4 @click="showSection('misIntime')" :class="{ active: activeSection === 'misIntime' }">Mis InTime</h4>
           </div>
-          <button @click="irAComentarios(bereal.id)" class="comment-button">Afegir Comentaris</button>
         </div>
+        <div v-if="activeSection === 'todos'" class="bereals-list" id="bereals-list">
+          <div v-if="bereals.length">
+            <div v-for="bereal in bereals" :key="bereal.id" class="bereal-item">
+              <h2>{{ bereal.usuarioNombre }} </h2>
+              <p>{{ bereal.hora.slice(11, 19) }}</p>
+              <div class="bereal-images">
+                <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
+                <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
+              </div>
+              <button @click="irAComentarios(bereal.id)" class="comment-button">Afegir Comentaris</button>
+            </div>
+          </div>
+          <p v-else>No s'han trobat InTimes.</p>
+        </div>
+        <div v-else-if="activeSection === 'misIntime'" class="bereals-list" id="bereals-list">
+          <div v-if="misIntime.length">
+            <div v-for="bereal in misIntime" :key="bereal.id" class="bereal-item">
+              <h2>{{ bereal.usuarioNombre }} </h2>
+              <p>{{ bereal.hora.slice(11, 19) }}</p>
+              <div class="bereal-images">
+                <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
+                <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
+              </div>
+              <button @click="irAComentarios(bereal.id)" class="comment-button">Afegir Comentaris</button>
+            </div>
+          </div>
+          <p v-else>No has pujat cap InTime encara.</p>
+        </div>
+        <p v-else>No s'ha selecionat cap secció.</p>
       </div>
-      <p v-else class="no-bereals-message">No s'ha pujat cap Bereal encara.</p>
-    </div>
+    </body>
+    <FooterOptions />
   </div>
 </template>
 
-<style>
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  
+<style scoped>
+/* General styling */
+body {
+  overflow: visible;
 }
 
-.wrapper {
-  border: 1px solid #a34427;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+*{
+  overflow-y: scroll;
 }
 
-h1 {
-  text-align: center;
+
+
+/* Main container styling */
+.bereals-container {
+  margin: 20px;
+}
+
+
+
+/* Section buttons styling */
+.section-buttons {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 20px;
-  color: #f1693f;
 }
 
-.bereals-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-gap: 20px;
+.section-button-left,
+.section-button-right {
+  width: 48%;
 }
 
-.bereal-item {
-  border: 1px solid #ddd;
+.section-button-left h4,
+.section-button-right h4 {
+  cursor: pointer;
+  padding: 10px;
+  background-color: #ccc;
   border-radius: 5px;
-  padding: 15px;
+  text-align: center;
+  transition: background-color 0.3s ease;
 }
 
-.user-info {
-  margin-bottom: 10px;
+.section-button-left h4.active,
+.section-button-right h4.active {
+  background-color: #f1693f;
+  color: white;
 }
 
-.user-info h2 {
+
+
+/* List styling */
+.bereals-list {
+  margin-top: 20px;
+}
+
+/* Bereal item styling */
+.bereal-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 16px;
+
+}
+
+.bereal-item h2 {
   font-size: 18px;
-  margin: 0;
+  margin-bottom: 5px;
 }
 
-.user-info p {
+.bereal-item p {
   font-size: 14px;
-  color: #777;
-  margin: 0;
+  color: #666;
+  margin-bottom: 10px;
 }
 
 .bereal-images {
   display: flex;
-  justify-content: space-between;
   margin-bottom: 10px;
+  justify-content: center;
+  justify-items: center;
 }
 
 .bereal-image {
-  max-width: 100px;
-  max-height: 100px;
-  border-radius: 5px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
+  margin-right: 10px;
 }
 
+/* Button styling */
 .comment-button {
-  background-color: #f1693f;
+  padding: 8px 16px;
+  background-color: #007bff;
   color: #fff;
   border: none;
   border-radius: 5px;
-  padding: 8px 15px;
   cursor: pointer;
-  font-size: 14px;
+  transition: background-color 0.3s ease;
   display: flex;
-  margin-top: 10px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
 }
 
 .comment-button:hover {
-  background-color: #a34427;
-}
-
-.no-bereals-message {
-  text-align: center;
-  margin-top: 20px;
-  color: #777;
+  background-color: #0056b3;
 }
 </style>
 
@@ -172,4 +220,3 @@ export default {
   },
 };
 </script>
-
