@@ -71,7 +71,7 @@ export default {
                 })
                 .then(data => {
                     console.log('New item created');
-                    this.$router.push('/crud/bereals');
+                    this.$router.push('/crud/inTimes');
                 })
                 .catch(error => {
                     console.error('There was an error creating the new item', error);

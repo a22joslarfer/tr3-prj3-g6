@@ -95,16 +95,16 @@ export default {
       }
     },
     checkIfAuth() {
-            const store = useStore();
-            const user_id = store.return_user_id();
-            if (user_id == null) {
-                store.set_return_path('/reviews');
-                this.$router.push('/login');
-               
-            }
-            this.client_id = user_id;
+      const store = useStore();
+      const user_id = store.return_user_id();
+      if (user_id == null) {
+        store.set_return_path('/reviews');
+        this.$router.push('/login');
 
-        },
+      }
+      this.client_id = user_id;
+
+    },
   },
   created() {
     this.checkIfAuth();
@@ -128,21 +128,23 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: calc(100vh - 110px); /* Restar la altura del pie de página */
-  overflow-y: auto; /* Permite el desplazamiento vertical */
+  max-height: calc(100vh - 110px);
+  /* Restar la altura del pie de página */
+  overflow-y: auto;
+  /* Permite el desplazamiento vertical */
 }
 
 h1 {
   font-size: 2rem;
-    position: relative;
-    top: -25px;
+  position: relative;
+  top: -25px;
   margin-bottom: -11px;
 }
 
 .user-info {
   width: 100%;
   max-width: 600px;
-  overflow-y: auto  ;
+  overflow-y: auto;
 }
 
 .user-info-item {
@@ -186,7 +188,7 @@ h1 {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
+
 }
 
 .update-form button:hover {

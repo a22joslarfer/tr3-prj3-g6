@@ -143,7 +143,6 @@ Route::post('/inTime/{id}/commentari', [BeRealController::class, 'addComentari']
 //veure comentari
 Route::post('/inTime/{id}/commentaris', [BeRealController::class, 'getComentaris']);
 // crear bereal
-Route::post('/inTime', [BeRealController::class, 'createBereal']);
 // eliminar bereal
 Route::delete('/inTime/{id}', [BeRealController::class, 'delete']);
 // editar bereal

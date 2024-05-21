@@ -72,7 +72,7 @@ export default {
                 });
         },
         crearNuevoItem() {
-            navigateTo('/crud/bereals/create');
+            navigateTo('/crud/inTimes/create');
         },
         eliminarItem(id) {
             fetch(`http://localhost:8000/api/inTime/${id}`, {
@@ -93,7 +93,7 @@ export default {
                 });
         },
         editarItem(id) {
-            navigateTo(`/crud/bereals/edit/${id}`);
+            navigateTo(`/crud/inTimes/edit/${id}`);
         }
     },
     created() {
