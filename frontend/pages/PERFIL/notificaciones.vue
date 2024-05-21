@@ -37,7 +37,7 @@
           localStorage.removeItem('notificacionPendiente');
         }
         if (!notificacion.eliminadaPorX) {
-          window.location.href = '/bereal';
+          window.location.href = '/inTime';
         }
       };
   

@@ -83,7 +83,7 @@ export default {
                 })
                 .then(data => {
                     console.log('Item updated successfully', data);
-                    this.$router.push('/crud/bereals');
+                    this.$router.push('/crud/inTimes');
                 })
                 .catch(error => {
                     console.error('There was an error updating the item', error);

@@ -31,13 +31,15 @@ export default {
     }
   },
   created() {
-    // this.checkIfAuth();
+    this.checkIfAuth();
   },
   methods: {
     handleFileChange(type, event) {
       this[type] = event.target.files[0];
     },
     async uploadImages() {
+ 
+
       const formData = new FormData();
       formData.append('img_del', this.img_del);
       formData.append('img_tra', this.img_tra);
@@ -45,11 +47,11 @@ export default {
       try {
         const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/inTime', {
           method: 'POST',
-          body: formData
+          body: formData,
         });
         if (response.ok) {
           alert('Imágenes subidas correctamente');
-          navigateTo('mostrarBereal')
+          navigateTo('inTimes')
         } else {
           alert('Error al subir imágenes');
         }

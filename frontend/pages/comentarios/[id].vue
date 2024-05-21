@@ -1,9 +1,7 @@
 <template>
+
   <body>
-    <div v-if="loading" class="loading-container">
-      <img src="../../public/img/carga.gif" alt="Loading GIF" class="loading-gif">
-    </div>
-    <div v-else class="bereals-container">
+    <div class="bereals-container">
       <h1>BEREAL</h1>
       <div class="bereal-item">
         <h2>{{ bereal.usuarioNombre }}</h2>
@@ -13,7 +11,6 @@
         </div>
       </div>
       <div class="comentarios-container">
-        <h1>Comentaris</h1>
         <div class="comentario-item" v-for="comentario in comentarios" :key="comentario.id">
           <p>{{ comentario.hora.slice(11, 19) }} - {{ comentario.usuarioNombre }}: {{ comentario.comentario }}</p>
         </div>
@@ -122,7 +119,8 @@ export default {
       bereal: {},
       comentarios: [],
       nuevoComentario: "",
-      loading: true
+      loading: true,
+      clientId: null,
     };
   },
   async mounted() {
@@ -172,6 +170,7 @@ export default {
       }
     },
     async agregarComentario() {
+   
       try {
         const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios', {
           method: 'POST',
@@ -181,7 +180,7 @@ export default {
           body: JSON.stringify({
             comentario: this.nuevoComentario,
             id_bereal: this.$route.params.id,
-            id_usuari: 23, //aqui hay que poner el id del usuario / pinia /////////////////////////////////////////////////////////
+            id_usuari: this.clientId,
           })
         });
         if (!response.ok) {
@@ -195,8 +194,21 @@ export default {
     },
     getImagenUrl(rutaRelativaImagen) {
       return `http://localhost:8000/${rutaRelativaImagen}`;
-    }
+    },
+    checkIfAuth() {
+      const store = useStore();
+      const user_id = store.return_user_id();
+      if (user_id == null) {
+        store.set_return_path('/comentarios'+ this.$route.params.id);
+        this.$router.push('/login');
+
+      }
+      this.clientId = user_id;
+
+    },
+  },
+  mounted(){
+    this.checkIfAuth();
   }
 }
 </script>
-

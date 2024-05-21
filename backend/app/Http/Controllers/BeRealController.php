@@ -23,22 +23,17 @@ class BeRealController extends Controller
             'img_del' => 'required|file',
             'img_tra' => 'required|file',
             'id_usuari' => 'required|exists:users,id',
-            'hora' => 'required|date_format:Y-m-d\TH:i',
         ]);
 
         $img_del = $request->file('img_del')->store('public/img');
         $img_tra = $request->file('img_tra')->store('public/img');
 
-        // Convert 'hora' into a valid datetime format
-        $hora = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $validatedData['hora'])
-            ->setYear(date('Y')) // Set the year to the current year
-            ->format('Y-m-d H:i:s');
+       
 
         $bereal = Bereal::create([
             'img_del' => str_replace('public/', 'storage/', $img_del),
             'img_tra' => str_replace('public/', 'storage/', $img_tra),
             'id_usuari' => $validatedData['id_usuari'],
-            'hora' => $hora,
         ]);
 
         return response()->json($bereal, 201);
