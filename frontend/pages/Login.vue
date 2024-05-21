@@ -24,17 +24,7 @@
           </div>
           <button type="submit" class="button">Iniciar Sesión</button>
         </form>
-        <!-- GOOGLE
-        <div class="sc-18d118e1-0 gjmkph">
-          <hr class="sc-1a86d6e9-0 doHtqb"><span class="sc-7b9b9acb-0 bMZrBT">or</span>
-          <hr class="sc-1a86d6e9-0 doHtqb">
-        </div>
-        
-          <div>
-    <button id="signinButton" class="google-signin-button">
-      <img src="../public/img/google_icon.png" alt="Google Logo" class="google-logo"> Iniciar sesión con Google
-    </button>
-  </div> -->
+
       </div>
     </div>
 
@@ -80,7 +70,12 @@ export default {
           const store = useStore();
           store.save_user_info(data.name, data.email, data.id);
 
-        
+         
+
+          if (data.rol === 'admin') {
+            store.set_user_rol('admin');
+          }
+
 
           this.$router.push('/');
 

@@ -20,6 +20,7 @@ export const useStore = defineStore({
     profile_picture: null,
     chattingWithId: null,
     chattingWithIdName: null,
+    rol: null,
 
   }),
   actions: {
@@ -45,7 +46,7 @@ export const useStore = defineStore({
       this.username = username;
       this.email = email;
       this.user_id = id;
-     
+
     },
     save_user_info_register(username, email, id, phone, birthdate) {
       this.username = username;
@@ -53,7 +54,7 @@ export const useStore = defineStore({
       this.user_id = id;
       this.phone = phone;
       this.birthdate = birthdate;
-   
+
     },
     return_user_id() {
       return this.user_id;
@@ -81,7 +82,7 @@ export const useStore = defineStore({
         username: this.username,
         email: this.email,
         user_id: this.user_id,
-       profile_picture: this.profile_picture,
+        profile_picture: this.profile_picture,
 
       };
     },
@@ -110,12 +111,17 @@ export const useStore = defineStore({
     return_path() {
       return this.return_path;
     },
-    
-
+    return_user_rol() {
+      return this.rol;
+    },
+    set_user_rol(rol) {
+      this.rol = rol;
+    },
+  
     logout() {
       this.clear_user_info();
     }
-  
+
   },
 
   persist: true,

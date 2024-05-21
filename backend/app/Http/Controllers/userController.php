@@ -173,6 +173,7 @@ class UserController extends Controller
                     "id" => $user->id,
                     "name" => $user->name,
                     "email" => $user->email,
+                    "rol" => $user->rol,
                 ]);
             } else {
                 return response()->json([

@@ -40,6 +40,10 @@
 <script>
 import 'bootstrap/dist/css/bootstrap.css'
 
+definePageMeta({
+    middleware: 'admin'
+});
+
 export default {
     data() {
         return {
@@ -97,13 +101,16 @@ export default {
                 .catch(error => {
                     console.error(error);
                 });
-               
+
             //pantalla de carga
 
 
         },
         editarItem(id) {
             navigateTo(`/crud/usuarios/edit/${id}`);
+        },
+        checkIfAdmin() {
+
         }
     },
     created() {
