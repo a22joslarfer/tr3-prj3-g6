@@ -2,51 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\reviewModel;
-use Illuminate\Support\Facades\Storage;
+use App\Models\ReviewModel;
+
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
-use Illuminate\Support\Facades\File;
+
 
 class reviewController extends Controller
 {
 
     public function createReview(Request $request)
     {
-        $request->validate([
-            'usuario_id' => 'required',
-            'disco_id' => 'required',
-            'titulo' => 'required',
-            'content' => 'required',
-            'puntuacion' => 'required',
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'categoria' => 'required',
-        ]);
-
         try {
-            $photo = $request->file->store('public/img');
-
-            $review = new ReviewModel;
-            $review->usuario_id = $request->usuario_id;
-            $review->disco_id = $request->disco_id;
-            $review->titulo = $request->titulo;
-            $review->content = $request->content;
-            $review->puntuacion = $request->puntuacion;
-            $review->categoria = $request->categoria;
-            $review->photo = str_replace('public/', 'storage', $photo);
-
-            $review->save();
-
-            return response()->json($review);
+            $validatedData = $request->validate([
+                'usuario_id' => 'required|exists:users,id',
+                'disco_id' => 'required',
+                'titulo' => 'required',
+                'content' => 'required',
+                'puntuacion' => 'required|integer|min:1|max:5',
+                'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'categoria' => 'required',
+            ]);
+    
+            // Almacenar la foto y obtener la ruta
+            $photoPath = $request->file('photo')->store('public/img');
+    
+            // Crear la nueva revisión
+            $review = ReviewModel::create([
+                'photo' => str_replace('public/', 'storage/', $photoPath),
+                'usuario_id' => $validatedData['usuario_id'],
+                'disco_id' => $validatedData['disco_id'],
+                'titulo' => $validatedData['titulo'],
+                'content' => $validatedData['content'],
+                'puntuacion' => $validatedData['puntuacion'],
+                'categoria' => $validatedData['categoria'],
+            ]);
+    
+            return response()->json(['message' => 'Review stored successfully', 'review' => $review], 201);
         } catch (\Exception $e) {
-
-            return response()->json(['error' => 'An error occurred while creating the review.'], 500);
-
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
 
 
     public function getReviews()

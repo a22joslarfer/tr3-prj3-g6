@@ -6,41 +6,32 @@
 
       <div class="form-group">
         <label for="titulo" class="texto">Título *</label>
-        <input type="text" id="titulo" v-model="titulo" class="form-control" required
-          placeholder="Ingresa el título de la reseña...">
+        <input type="text" id="titulo" v-model="titulo" class="form-control" required placeholder="Ingresa el título de la reseña...">
       </div>
 
       <div class="form-group">
         <label for="content" class="texto">Contenido </label>
-        <textarea id="content" v-model="content" class="form-control" required
-          placeholder="Escribe aquí el contenido de la reseña..."></textarea>
+        <textarea id="content" v-model="content" class="form-control" required placeholder="Escribe aquí el contenido de la reseña..."></textarea>
       </div>
 
       <div class="form-group">
         <label class="texto">Categoría </label>
-        <div v-for="(item, index) in categorias_reviews" :key="index">
-          <button type="button" @click="categoria = index">{{ item.nombre }}</button>
-        </div>
+        <select v-model="categoria" class="form-control">
+          <option v-for="(item, index) in categorias_reviews" :key="index" :value="index">{{ item.nombre }}</option>
+        </select>
       </div>
 
       <div class="form-group">
         <label for="puntuacion" class="texto">Puntuación </label>
-        <input type="number" id="puntuacion" v-model="puntuacion" min="1" max="5" class="form-control">
+        <NuxtRating :read-only="false" :ratingValue="1.2" />
       </div>
 
       <div class="form-group">
         <label for="photo" class="texto">Foto (opcional):</label>
-        <div class="dropzone" @click="openFileInput">
-          <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file"
-            accept="image/*">
-          <div class="dropzone-text" @click="openFileInput">
-
-          </div>
-          <span>Seleccionar archivo</span>
-        </div>
+        <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file" accept="image/*">
       </div>
 
-      <button type="submit" class="btn btn-primary">Enviar reseña</button>
+      <button type="submit" class="btn btn-primary" style="margin-bottom: 150px;">Enviar reseña</button>
     </form>
     <FooterOptions />
   </div>
@@ -62,18 +53,9 @@ export default {
     };
   },
   methods: {
-
-    logRating(rating) {
-      console.log('Rating:', rating);
-      this.puntuacion = rating;
-    },
     submitReview() {
       if (!this.categoria) {
-        alert('Please select a category.');
-        return;
-      }
-      if (!this.photo || this.photo === null) {
-        alert('Please select a photo.');
+        alert('Por favor selecciona una categoría.');
         return;
       }
 
@@ -84,49 +66,42 @@ export default {
       formData.append('content', this.content);
       formData.append('puntuacion', this.puntuacion);
       formData.append('categoria', this.categoria);
-      formData.append('photo', this.photo);
+      if (this.photo) {
+        formData.append('photo', this.photo);
+      }
 
       fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/reviews', {
         method: 'POST',
-        headers: {
-          'Accept': 'application/json'
-        },
         body: formData,
       })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Error submitting review: ${response.status} - ${response.statusText}`);
-          }
-
-          this.$router.push('/reviews');
-        })
-        .catch(error => {
-          alert('Error submitting review: ' + error.message);
-        });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error al enviar la reseña: ${response.status} - ${response.statusText}`);
+        }
+        this.$router.push('/reviews');
+      })
+      .catch(error => {
+        alert('Error al enviar la reseña: ' + error.message);
+      });
     },
     handleFileUpload(event) {
       this.photo = event.target.files[0];
     },
-    openFileInput() {
-      this.$refs.fileInput.click();
-    },
     fetchCategorias() {
       fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Error fetching categorias: ${response.status} - ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          this.categorias_reviews = data;
-          console.log('Categorias:', this.categorias_reviews);
-        })
-        .catch(error => {
-          alert('Error fetching categorias: ' + error.message)
-        });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error al obtener las categorías: ${response.status} - ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        this.categorias_reviews = data;
+      })
+      .catch(error => {
+        alert('Error al obtener las categorías: ' + error.message);
+      });
     },
-
   },
   mounted() {
     const store = useStore();
@@ -135,21 +110,22 @@ export default {
     if (user_id === null) {
       store.set_return_path('/' + this.$route.params.id);
       this.$router.push('/login');
-
     }
+
     this.disco_id = this.$route.params.id;
     this.usuario_id = store.return_user_id();
 
     this.fetchCategorias();
   },
-
 };
 </script>
 
 <style scoped>
 .container {
   padding: 20px;
-  height: auto;
+  overflow-y: auto;
+  background-color: rgb(181, 205, 214);
+  margin-bottom: 60px;
 }
 
 .form {
@@ -158,13 +134,15 @@ export default {
 }
 
 .form-group {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .texto {
-
-  font-weight: bold;
-  color: #333;
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
 }
 
 .form-control {
@@ -176,35 +154,6 @@ export default {
   font-size: 13px;
   transition: border-color 0.3s ease;
   margin-top: 10px;
-
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-.dropzone {
-  position: relative;
-  width: 100%;
-  height: 50px;
-  border: 2px dashed #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.dropzone:hover {
-  background-color: #f0f0f0;
-}
-
-.dropzone span {
-  color: #555;
-  font-size: 16px;
-  cursor: pointer;
 }
 
 .btn-primary {
@@ -219,15 +168,14 @@ export default {
   transition: background-color 0.3s ease;
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
+.stars-rating {
+  position: relative;
 }
 
-.star-rating {
-  margin-top: 10px;
-}
-
-textarea {
-  resize: none;
+@media (min-width: 768px) {
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
 }
 </style>
