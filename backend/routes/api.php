@@ -90,14 +90,13 @@ Route::get('/reviews/user/{id}', [reviewController::class, 'getReviewsByUser']);
 Route::get('/reviews/disco/{id}', [reviewController::class, 'getReviewsByDisco']);
 // ruta para obtener las reviews por puntuacion
 Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getReviewsByPuntuacion']);
-
-
 // RUTAS DE CATEGORIAS_REVIEWS
 // ruta para obtener todas las categorias
 Route::get('/categorias_reviews', [categoriasReviewController::class, 'getCategorias']);
 // ruta para obtener una categoria por nombre
 Route::get('/categorias_reviews/{nombre}', [categoriasReviewController::class, 'getCategoria']);
-
+// ruta para obtener las fotos de las revisiones por ID
+Route::get('/reviews/fotos/{id}', [reviewController::class, 'getFotos']);
 
 
 
@@ -147,4 +146,3 @@ Route::delete('/comentarios/{id}', [comentariosController::class, 'destroy']);
 
 //ciudades
 Route::get('/ciudades', [CiudadController::class, 'index']);
-
