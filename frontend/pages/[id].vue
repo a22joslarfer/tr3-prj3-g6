@@ -1,9 +1,7 @@
 <template>
   <HeaderGeneral />
-
   <div class="container">
     <form @submit.prevent="submitReview" class="form">
-
       <div class="form-group">
         <label for="titulo" class="texto">Título *</label>
         <input type="text" id="titulo" v-model="titulo" class="form-control" required placeholder="Ingresa el título de la reseña...">
@@ -19,17 +17,14 @@
         <select v-model="categoria" class="form-control">
           <option v-for="(item, index) in categorias_reviews" :key="index" :value="index">{{ item.nombre }}</option>
         </select>
-    
       </div>
 
       <div class="form-group">
         <label for="puntuacion" class="texto">Puntuación </label>
-        <!-- <input type="number" id="puntuacion" v-model="puntuacion" min="1" max="5" class="form-control"> -->
-        <NuxtRating :read-only="false" :ratingValue="1" class="stars-rating" @input="updateRating"/>
-
+        <TestRating :ratingValue="puntuacion" @input="updateRating"/>
       </div>
 
-      <div class="form-group" >
+      <div class="form-group">
         <label for="photo" class="texto">Foto (opcional):</label>
         <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file" accept="image/*">
       </div>
@@ -37,15 +32,19 @@
       <button type="submit" class="btn btn-primary" style="margin-bottom: 150px;">Enviar reseña</button>
     </form>
     <div class="footer">
-
-    <FooterOptions />
+      <FooterOptions />
     </div>  
   </div>
 </template>
 
 <script>
 import { useStore } from '../stores/index.js';
+import TestRating from '../components/TestRating.vue'; // Asegúrate de que la ruta sea correcta
+
 export default {
+  components: {
+    TestRating
+  },
   data() {
     return {
       disco_id: '',
@@ -59,12 +58,13 @@ export default {
     };
   },
   methods: {
-    
     submitReview() {
       if (!this.categoria) {
         alert('Por favor selecciona una categoría.');
         return;
       }
+
+      console.log('Puntuación al enviar:', this.puntuacion);
 
       let formData = new FormData();
       formData.append('disco_id', this.disco_id);
@@ -109,6 +109,11 @@ export default {
         alert('Error al obtener las categorías: ' + error.message);
       });
     },
+    updateRating(value) {
+      console.log('Nueva Puntuación:', value);
+      this.puntuacion = value;
+      console.log('Puntuación actualizada:', this.puntuacion);
+    },
   },
   mounted() {
     const store = useStore();
@@ -126,6 +131,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
