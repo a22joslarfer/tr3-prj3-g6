@@ -14,7 +14,6 @@
             <div v-for="review in reviews" :key="review.id" class="col-md-4">
                 <div class="card mb-3">
                     <img :src="getImagenUrl(review.photo)" class="card-img-top" alt="...">
-
                     <div class="card-body">
                         <h5 class="card-title">{{ review.titulo }}</h5>
                         <p class="card-text">{{ review.content }}</p>
@@ -28,13 +27,13 @@
                             </template>
                             <template v-else>
                                  Display something else if the user is already followed -->
-                                <!-- <span>Already Following</span>
+                        <!-- <span>Already Following</span>
                             </template>
                         </div>
 
                         <div v-else>
                             <button @click="deleteReview(review.id)">Eliminar review</button>
-                        </div> --> 
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -54,7 +53,7 @@ export default {
             categorias_reviews: [],
             client_id: null,
             selectedCategory: '',
-            
+
 
         };
     },
@@ -102,10 +101,11 @@ export default {
             const userName = this.userMap[id];
             return userName ? userName : 'Usuario Desconocido';
         },
-        getImagenUrl(imagen) {
+        getImagenUrl(rutaRelativaImagen) {
+      // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
+      return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
+    },
 
-            return `http://elysium.daw.inspedralbes.cat/backend/public/review_photos/${imagen}`;
-        },
         fetchCategoriasReviews() {
             fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
                 .then(response => {
@@ -130,7 +130,7 @@ export default {
                 store.set_return_path('/reviews');
                 console.log('No estás autenticado pasando por user_id === null');
                 this.$router.push('/login');
-              
+
             }
             this.client_id = user_id;
 
@@ -179,7 +179,7 @@ export default {
                     alert('Error adding friend');
                 });
         },
-        
+
     },
     created() {
         this.checkIfAuth();
@@ -197,7 +197,7 @@ export default {
     font-family: "Antonio", sans-serif;
     margin: 0;
     padding: 0px;
-   
+
     color: #1c1c1c;
 
 }

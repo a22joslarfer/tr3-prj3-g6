@@ -6,18 +6,19 @@
 
       <div class="form-group">
         <label for="titulo" class="texto">Título *</label>
-        <input type="text" id="titulo" v-model="titulo" class="form-control" required
-          placeholder="Ingresa el título de la reseña...">
+        <input type="text" id="titulo" v-model="titulo" class="form-control" required placeholder="Ingresa el título de la reseña...">
       </div>
 
       <div class="form-group">
         <label for="content" class="texto">Contenido </label>
-        <textarea id="content" v-model="content" class="form-control" required
-          placeholder="Escribe aquí el contenido de la reseña..."></textarea>
+        <textarea id="content" v-model="content" class="form-control" required placeholder="Escribe aquí el contenido de la reseña..."></textarea>
       </div>
 
       <div class="form-group">
         <label class="texto">Categoría </label>
+        <select v-model="categoria" class="form-control">
+          <option v-for="(item, index) in categorias_reviews" :key="index" :value="index">{{ item.nombre }}</option>
+        </select>
         <select v-model="categoria" class="form-control">
           <option v-for="(item, index) in categorias_reviews" :key="index" :value="index">{{ item.nombre }}</option>
         </select>
@@ -32,13 +33,7 @@
 
       <div class="form-group" >
         <label for="photo" class="texto">Foto (opcional):</label>
-        <div class="dropzone" @click="openFileInput">
-          <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file"
-            accept="image/*">
-          <div class="dropzone-text" @click="openFileInput">
-
-          </div>
-        </div>
+        <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file" accept="image/*">
       </div>
 
       <button type="submit" class="btn btn-primary" style="margin-bottom: 150px;">Enviar reseña</button>
@@ -66,18 +61,9 @@ export default {
     };
   },
   methods: {
-
-    logRating(rating) {
-      console.log('Rating:', rating);
-      this.puntuacion = rating;
-    },
     submitReview() {
       if (!this.categoria) {
-        alert('Please select a category.');
-        return;
-      }
-      if (!this.photo || this.photo === null) {
-        alert('Please select a photo.');
+        alert('Por favor selecciona una categoría.');
         return;
       }
 
@@ -88,49 +74,42 @@ export default {
       formData.append('content', this.content);
       formData.append('puntuacion', this.puntuacion);
       formData.append('categoria', this.categoria);
-      formData.append('photo', this.photo);
+      if (this.photo) {
+        formData.append('photo', this.photo);
+      }
 
       fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/reviews', {
         method: 'POST',
-        headers: {
-          'Accept': 'application/json'
-        },
         body: formData,
       })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Error submitting review: ${response.status} - ${response.statusText}`);
-          }
-
-          this.$router.push('/reviews');
-        })
-        .catch(error => {
-          alert('Error submitting review: ' + error.message);
-        });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error al enviar la reseña: ${response.status} - ${response.statusText}`);
+        }
+        this.$router.push('/reviews');
+      })
+      .catch(error => {
+        alert('Error al enviar la reseña: ' + error.message);
+      });
     },
     handleFileUpload(event) {
       this.photo = event.target.files[0];
     },
-    openFileInput() {
-      this.$refs.fileInput.click();
-    },
     fetchCategorias() {
       fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Error fetching categorias: ${response.status} - ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          this.categorias_reviews = data;
-          console.log('Categorias:', this.categorias_reviews);
-        })
-        .catch(error => {
-          alert('Error fetching categorias: ' + error.message)
-        });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error al obtener las categorías: ${response.status} - ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        this.categorias_reviews = data;
+      })
+      .catch(error => {
+        alert('Error al obtener las categorías: ' + error.message);
+      });
     },
-
   },
   mounted() {
     const store = useStore();
@@ -139,14 +118,13 @@ export default {
     if (user_id === null) {
       store.set_return_path('/' + this.$route.params.id);
       this.$router.push('/login');
-
     }
+
     this.disco_id = this.$route.params.id;
     this.usuario_id = store.return_user_id();
 
     this.fetchCategorias();
   },
-
 };
 </script>
 
@@ -156,17 +134,7 @@ export default {
   padding: 20px;
   overflow-y: auto;
   background-color: rgb(181, 205, 214);
-  margin-bottom: 60px; /* Añadir un margen inferior para evitar solapamiento con el footer */
-}
-
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #fff; /* Ajusta el color según tu diseño */
-  height: 60px; /* Ajusta la altura según tu diseño */
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 60px;
 }
 .form {
   display: flex;
@@ -182,8 +150,7 @@ export default {
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+  font-variation-settings: "wdth" 100;
 }
 
 .form-control {
@@ -194,21 +161,9 @@ export default {
   background-color: #f9f9f9;
   font-size: 13px;
   transition: border-color 0.3s ease;
-  margin-top:10px;
+  margin-top: 10px;
 }
 
-.dropzone {
-  position: relative;
-  width: 100%;
-  min-height: 50px;
-  border: 2px dashed #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-} 
 .btn-primary {
   width: 100%;
   padding: 15px;
@@ -220,9 +175,10 @@ export default {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-.stars-rating{
-position: relative;
-  }
+
+.stars-rating {
+  position: relative;
+}
 
 @media (min-width: 768px) {
   .container {
