@@ -65,17 +65,22 @@
       </div>
     </div>
     <div class="content">
-      <div v-if="selectedSection === 'inicio'">
-        <div class="publications">
-          <div class="publication">
-            <div class="row" v-for="(imageRow, index) in imageRows" :key="index">
-              <div class="column" v-for="(image, i) in imageRow" :key="i">
-                <img :src="image.src" :alt="'Publicación ' + (index * 3 + i + 1)">
-              </div>
-            </div>
-          </div>
+  <div v-if="selectedSection === 'inicio'">
+    <div class="bereals-container">
+  <div class="bereals-list">
+    <div v-if="misIntime.length">
+      <div v-for="bereal in misIntime" :key="bereal.id" class="bereal-item">
+        <p class="bereal-time">{{ bereal.hora.slice(11, 19) }}</p>
+        <div class="bereal-images">
+          <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
+          <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
         </div>
       </div>
+    </div>
+    <p v-else>No has subido ningún InTime todavía.</p>
+  </div>
+</div>
+</div>
       <div v-else-if="selectedSection === 'explorar'">
         <h2>Contenido de videos</h2>
       </div>
@@ -85,7 +90,7 @@
     </div>
   </div>
 </template>
-  <script>
+<script>
 import { useStore } from '../stores/index.js';
 
 export default {
@@ -103,6 +108,7 @@ export default {
       },
       amigos: [], // Inicializamos amigos como un array vacío
       searchQuery: '', // Añadimos una propiedad para la búsqueda
+      bereals: [], // Inicializamos bereals como un array vacío
     };
   },
 
@@ -111,22 +117,23 @@ export default {
       return this.amigos.filter(amigo =>
         amigo.name.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
-    }
+    },
+    misIntime() {
+      return this.bereals.filter(bereal => bereal.id_usuari === this.userId);
+    },
+    userId() {
+      const store = useStore();
+      return store.return_user_id();
+    },
   },
   
   mounted() {
-    const store = useStore();
-    const userInfo = store.return_user_info();
-    this.user = userInfo.username;
-
-    // Obtener la id del usuario
-    const userId = userInfo.id;
     this.fetch();
     this.fetchAmigos();
+    this.fetchBereals();
   },
   
   methods: {
-
     async fetch() {
       try {
         const store = useStore();
@@ -164,6 +171,28 @@ export default {
       return `http://elysium.daw.inspedralbes.cat/backend/public/${photoPath}`;
     },
     
+    async fetchBereals() {
+  try {
+    const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/inTimes');
+    if (!response.ok) {
+      throw new Error('Error al obtener los Bereals');
+    }
+    const data = await response.json();
+    for (const bereal of data) {
+      // Obtindre el nom de l'usuari del Bereal
+      const usuarioResponse = await fetch(`http://localhost:8000/api/users/${bereal.id_usuari}`);
+      if (!usuarioResponse.ok) {
+        throw new Error('Error al obtener el usuario');
+      }
+      const usuarioData = await usuarioResponse.json();
+      bereal.usuarioNombre = usuarioData.data;
+    }
+    this.bereals = data;
+  } catch (error) {
+    console.error(error);
+  }
+},
+    
     scrollTo(section) {
       this.barPosition = this.sections[section] + '%';
       this.selectedSection = section;
@@ -175,12 +204,44 @@ export default {
     
     editarPerfil() {
       this.$router.push('/PERFIL/ajustes');
+    },
+    getImagenUrl(rutaRelativaImagen) {
+      // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
+      return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
+    },
+
+    irAComentarios(idBereal) {
+      this.$router.push(`/comentarios/${idBereal}`);
     }
   }
 }
 </script>
   
   <style scoped>
+  .bereal-item {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-bottom: 20px;
+}
+.bereal-time {
+  right: 42px;
+    background: white;
+    position: absolute;
+    font-size: 12px;
+    color: #000000;
+    margin-bottom: 10px;
+}
+.bereal-images {
+  display: flex;
+  margin-bottom: 10px;
+  
+}
+.bereal-image {
+  width: calc(50% - 5px); /* Para dos imágenes en una fila */
+  border-radius: 5px;
+}
   .instagram-stories {
     display: flex;
     overflow-x: auto;
