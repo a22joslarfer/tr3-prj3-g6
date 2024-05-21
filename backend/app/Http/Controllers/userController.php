@@ -56,8 +56,10 @@ class UserController extends Controller
             'profile_photo' => $profilePhotoPath, // Almacenar la ruta relativa de la imagen en la base de datos
         ]);
         $user->save();
+        $rewardMessage = "¡Felicidades! Te has registrado exitosamente. Como recompensa, obtienes [detalles de la recompensa aquí].";
 
-        return response()->json($user, 201);
+
+        return response()->json(['user' => $user, 'reward_message' => $rewardMessage], 201);
     }
 
 

@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { useStore } from '../stores/index.js';
 export default {
     data() {
         return {

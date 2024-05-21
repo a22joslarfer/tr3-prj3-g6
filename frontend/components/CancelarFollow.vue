@@ -1,6 +1,7 @@
 <template>
 
-    <button class="follow-btn" @click="cancelarFollow()">Cancelar</button>
+    <UButton  class="follow-btn" @click="cancelarFollow()">Cancelar</UButton >
+        
 
 </template>
 
@@ -17,17 +18,22 @@ export default {
 
 <style scoped>
 .follow-btn {
-    background-color: #ccc;
-    color: #1c1c1c;
-    height: 10vh;
-    font-size: 4rem;
-    width: 100vw;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    background-color: #e22108;
+    color: #fff;
     border: none;
+    padding: 12px 24px; /* Se ajusta el padding */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
 .follow-btn:hover {
-    background-color: #bd2d17;
+    background-color: #7e0303;
 }
 </style>

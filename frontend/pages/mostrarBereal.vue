@@ -110,16 +110,34 @@ h1 {
 
 
 <script>
+import { useStore } from '../stores/index';
+
 export default {
   data() {
     return {
+      activeSection: 'todos', // Sección activa por defecto
       bereals: [],
-    }
+    };
+  },
+  created() {
+    this.checkIfAuth();
   },
   async mounted() {
     await this.obtenerBereals();
   },
+  computed: {
+    misIntime() {
+      return this.bereals.filter(bereal => bereal.id_usuari === this.userId);
+    },
+  },
   methods: {
+    checkIfAuth() {
+      const store = useStore();
+      this.userId = store.return_user_id();
+      if (this.userId === null) {
+        navigateTo('/login');
+      }
+    },
     async obtenerBereals() {
       try {
         const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/inTimes');
@@ -127,21 +145,22 @@ export default {
           throw new Error('Error al obtener los Bereals');
         }
         const data = await response.json();
-       
         for (const bereal of data) {
-          // Obtener el nombre de usuario del Bereal
-          const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${bereal.id_usuari}`);
+          // Obtindre el nom de l'usuari del Bereal
+          const usuarioResponse = await fetch(`http://localhost:8000/api/users/${bereal.id_usuari}`);
           if (!usuarioResponse.ok) {
             throw new Error('Error al obtener el usuario');
           }
           const usuarioData = await usuarioResponse.json();
           bereal.usuarioNombre = usuarioData.data;
         }
-       
         this.bereals = data;
       } catch (error) {
         console.error(error);
       }
+    },
+    showSection(section) {
+      this.activeSection = section;
     },
     getImagenUrl(rutaRelativaImagen) {
       // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
@@ -149,9 +168,8 @@ export default {
     },
     irAComentarios(idBereal) {
       this.$router.push(`/comentarios/${idBereal}`);
-    }
-  }
-}
+    },
+  },
+};
 </script>
-
 

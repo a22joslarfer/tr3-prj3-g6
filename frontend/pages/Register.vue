@@ -5,12 +5,14 @@
         <div class="content">
             <!-- Add multi-step progress bar -->
             <div class="step-progress-content">
-                <button type="button" class="boton-atras" @click="step = step > 1 ? step - 1 : 1">
-    <<
-</button>
-                        <div class="progress-bar">
-                            <div class="progress" :style="{ width: (step * 33.33) + '%' }"></div>
-                        </div>
+                <button type="button" class="boton-atras" @click="step = step > 1 ? step - 1 : 1"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#5f6368">
+                        <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z" />
+                    </svg></button>
+                <div class="progress-bar">
+                    <div class="progress" :style="{ width: (step * 33.33) + '%' }"></div>
+                </div>
 
             </div>
 
@@ -351,5 +353,8 @@ export default {
     font-size: 28px;
     margin-right: 10px;
     padding: 0px 13px;
+}
+svg {
+    fill: #333;
 }
 </style>
