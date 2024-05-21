@@ -16,13 +16,13 @@ class reviewController extends Controller
     public function createReview(Request $request)
     {
         $request->validate([
-            'usuario_id' => 'required',
-            'disco_id' => 'required',
-            'titulo' => 'required',
-            'content' => 'required',
-            'puntuacion' => 'required',
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'categoria' => 'required',
+            'usuario_id' => 'required|integer',
+            'disco_id' => 'required|integer',
+            'titulo' => 'required|string|max:255',
+            'content' => 'required|string',
+            'puntuacion' => 'required|integer|min:1|max:5',
+            'categoria' => 'required|string|max:100',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
@@ -35,7 +35,14 @@ class reviewController extends Controller
             $review->content = $request->content;
             $review->puntuacion = $request->puntuacion;
             $review->categoria = $request->categoria;
-            $review->photo = str_replace('public/', 'storage', $photo);
+
+            // Guardar la imagen en el sistema de archivos
+            if ($request->hasFile('photo')) {
+                $image = $request->file('photo');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('public', $imageName);
+                $review->photo = $imageName;
+            }
 
             $review->save();
 
@@ -47,8 +54,12 @@ class reviewController extends Controller
         }
     }
 
-
-
+    public function getFotos($id)
+    {
+        $review = reviewModel::find($id);
+        $photo = $review->photo;
+        return Storage::url("public/photos/{$photo}");
+    }
     public function getReviews()
     {
         $reviews = reviewModel::all();
