@@ -19,21 +19,27 @@
         <select v-model="categoria" class="form-control">
           <option v-for="(item, index) in categorias_reviews" :key="index" :value="index">{{ item.nombre }}</option>
         </select>
+    
       </div>
 
       <div class="form-group">
         <label for="puntuacion" class="texto">Puntuación </label>
-        <NuxtRating :read-only="false" :ratingValue="1.2" />
+        <!-- <input type="number" id="puntuacion" v-model="puntuacion" min="1" max="5" class="form-control"> -->
+        <NuxtRating :read-only="false" :ratingValue="1" class="stars-rating" @input="updateRating"/>
+
       </div>
 
-      <div class="form-group">
+      <div class="form-group" >
         <label for="photo" class="texto">Foto (opcional):</label>
         <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file" accept="image/*">
       </div>
 
       <button type="submit" class="btn btn-primary" style="margin-bottom: 150px;">Enviar reseña</button>
     </form>
+    <div class="footer">
+
     <FooterOptions />
+    </div>  
   </div>
 </template>
 
@@ -53,6 +59,7 @@ export default {
     };
   },
   methods: {
+    
     submitReview() {
       if (!this.categoria) {
         alert('Por favor selecciona una categoría.');
@@ -121,13 +128,13 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 .container {
   padding: 20px;
   overflow-y: auto;
   background-color: rgb(181, 205, 214);
   margin-bottom: 60px;
 }
-
 .form {
   display: flex;
   flex-direction: column;

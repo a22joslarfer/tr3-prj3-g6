@@ -1,22 +1,20 @@
 <template>
     <div class="container">
-       
-        <div class="row">
-            <div v-for="review in reviews" :key="review.id" class="col-md-4">
-                <div class="card mb-3">
-<!-- photo -->
-<img v-if="review.foto" :src="review.foto" class="card-img-top" alt="Foto de la reseña">
-
-                    <div class="card-body">
-                        <h5 class="card-title">{{ review.titulo }}</h5>
-                        <p class="card-text">{{ review.content }}</p>
-                        <p class="card-text">Puntuación: {{ review.puntuacion }}</p>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted">Review de {{ getUserById(review.usuario_id) }}</small>
-                     
-                    </div>
+        <h1 class="header">Lista de Reseñas</h1>
+        <div class="reviews-list">
+            <div class="review-card" v-for="review in reviews" :key="review.id">
+                <img :src="getImagenUrl(review.photo)" class="review-photo" alt="Foto de reseña">
+                <div class="review-content">
+                    <h2>{{ review.titulo }}</h2>
+                    <p><strong>Usuario:</strong> {{ getUserById(review.usuario_id) }}</p>
+                    <p><strong>Disco ID:</strong> {{ getDiscoNameById(review.disco_id) }}</p>
+                    <p><strong>Contenido:</strong> {{ review.content }}</p>
+                    <p><strong>Puntuación:</strong> {{ review.puntuacion }}</p>
+                    <p><strong>Categoría:</strong> {{ review.categoria }}</p>
+                    <!-- for each a discotecas -->
+            
                 </div>
+                <button @click="follow(review.usuario_id)">Seguir</button>
             </div>
         </div>
     </div>
@@ -24,6 +22,7 @@
 
 <script>
 import { useStore } from '../stores/index.js';
+
 export default {
     data() {
         return {
@@ -35,7 +34,7 @@ export default {
             client_id: null,
             selectedCategory: '',
             
-
+            
         };
     },
     methods: {
@@ -45,7 +44,7 @@ export default {
                     if (!response.ok) {
                         throw new Error(`Error fetching reviews: ${response.status} - ${response.statusText}`);
                     }
-                    return response.json(); // Return the parsed JSON
+                    return response.json();
                 })
                 .then(reviews => {
                     this.reviews = reviews;
@@ -55,7 +54,6 @@ export default {
                 })
                 .catch(error => {
                     console.error('Error fetching reviews:', error);
-                    alert('Error fetching reviews');
                 });
         },
         fetchUserById(id) {
@@ -68,36 +66,36 @@ export default {
                 })
                 .then(response => {
                     this.userMap[id] = response.data;
-
-
-
                 })
                 .catch(error => {
                     console.error('Error fetching user:', error);
-                    alert('Error fetching user');
                 });
         },
         getUserById(id) {
-            console.log('buscando el usuario con id', id);
             const userName = this.userMap[id];
             return userName ? userName : 'Usuario Desconocido';
         },
-       
+        getDiscoNameById(id) {
+            const disco = this.discotecas.find(disco => disco.id === id);
+            return disco ? disco.nombre_local : 'Disco Desconocida';
+        },
+        getImagenUrl(rutaRelativaImagen) {
+            return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
+        },
         fetchCategoriasReviews() {
+            console.log('fetchCategoriasReviews');
             fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Error fetching categorias_reviews: ${response.status} - ${response.statusText}`);
                     }
-                    return response.json(); // Return the parsed JSON
+                    return response.json();
                 })
                 .then(categorias => {
                     this.categorias_reviews = categorias;
-
                 })
                 .catch(error => {
                     console.error('Error fetching categorias_reviews:', error);
-                    alert('Error fetching categorias_reviews');
                 });
         },
         checkIfAuth() {
@@ -105,32 +103,11 @@ export default {
             const user_id = store.return_user_id();
             if (user_id === null) {
                 store.set_return_path('/reviews');
-                console.log('No estás autenticado pasando por user_id === null');
                 this.$router.push('/login');
-              
             }
             this.client_id = user_id;
-
         },
-        deleteReview(review_id) {
-            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/reviews/${review_id}`, {
-                method: 'DELETE',
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Error deleting review: ${response.status} - ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(review => {
-                    alert('Review eliminada');
-                    this.fetchReviews();
-                })
-                .catch(error => {
-                    console.error('Error deleting review:', error);
-                    alert('Error deleting review');
-                });
-        },
+      
         follow(seguido_id) {
             fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/seguidores', {
                 method: 'POST',
@@ -156,154 +133,89 @@ export default {
                     alert('Error adding friend');
                 });
         },
-        
+        //fetch a discotecas/review.disco_id
+        fetchDiscotecas() {
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/discotecas')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error fetching discotecas: ${response.status} - ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    this.discotecas = data;
+                })
+                .catch(error => {
+                    console.error('Error fetching discotecas:', error);
+                });
+        },
+       
     },
     created() {
         this.checkIfAuth();
-
         this.fetchReviews();
         this.fetchCategoriasReviews();
+        this.fetchDiscotecas();
     },
-
 };
 </script>
 
 <style scoped>
-* {
-    box-sizing: border-box;
-    font-family: "Antonio", sans-serif;
-    margin: 0;
-    padding: 0px;
-   
-    color: #1c1c1c;
-
-}
-
-
-
 .container {
-    padding: 8px;
-    background-color: #ff806d;
-    height: auto;
+    padding: 5%;
+    background-color: #f9f9f9;
 }
 
-.btn {
-    display: inline-block;
-    font-weight: 400;
+.header {
     text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    user-select: none;
-    border: 1px solid transparent;
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: 0.25rem;
-    transition: color 0.15s;
-    cursor: pointer;
+    margin-bottom: 5%;
+    font-size: 1.5em;
 }
 
-
-.card {
-    position: relative;
+.reviews-list {
     display: flex;
     flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #f5f5f5;
-    background-clip: border-box;
-
-    border-radius: 1rem;
-    margin: 40px 0;
+    gap: 5%;
 }
 
-.card-img-top {
-    width: 100%;
-    height: 15vw;
-    object-fit: cover;
-}
-
-.card-body {
-    flex: 1 1 auto;
-    padding: 1.25rem;
-}
-
-.card-title {
-    margin-bottom: 0.75rem;
-    font-size: 1.25rem;
-}
-
-.card-text:last-child {
-    margin-bottom: 0;
-}
-
-.card-footer {
-    padding: 0.75rem 1.25rem;
-    background-color: #f1eeeee3;
-    border-top: 1px solid black;
+.review-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 5%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 3%;
 }
 
-
-.dropdown-categorias {
+.review-photo {
     width: 100%;
-    padding: 0;
+    border-radius: 8px;
+}
 
+.review-content h2 {
+    margin: 0 0 5% 0;
+    font-size: 1.2em;
+}
+
+.review-content p {
+    margin: 2% 0;
 }
 
 button {
-    background-color: #ff806d;
-    ;
-    transition: background-color 0.2s ease-in-out;
-    padding: 10px;
+    align-self: flex-start;
+    padding: 5% 10%;
+    margin: 2% 0;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #121322a8;
-
-}
-
-h2 {
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-}
-
-.mobile-select {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    background-color: #1c1c1c;
-    border: 1px solid #ccc;
-
-    border-radius: 4px;
-}
-
-option {
-    background-color: #1c1c1c;
-    color: #ccc;
-    border: 2px solid #ccc;
-}
-
-.dropdown-categorias:focus,
-.mobile-select:focus,
-.dropdown-categorias:active,
-.mobile-select:active {
-    outline: none;
-}
-
-body {
-    margin: 0px;
-}
-
-
-.row {
-    height: auto;
-    overflow-y: auto;
+    background-color: #0056b3;
 }
 </style>
