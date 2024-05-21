@@ -1,15 +1,5 @@
 <template>
     <div class="container">
-        <!--
-        <div class="dropdown-categorias">
-            <select v-model="selectedCategory" class="mobile-select">
-                <option disabled value="">Please select one</option>
-                <option v-for="categoria in categorias_reviews" :key="categoria.id" :value="categoria.id">
-                    {{ categoria.nombre }}
-                </option>
-            </select>
-        </div>
-         -->
         <div class="row">
             <div v-for="review in reviews" :key="review.id" class="col-md-4">
                 <div class="card mb-3">
@@ -21,19 +11,6 @@
                     </div>
                     <div class="card-footer">
                         <small class="text-muted">Review de {{ getUserById(review.usuario_id) }}</small>
-                        <!-- <div v-if="review.usuario_id !== client_id">
-                            <template v-if="!isFollowing(review.usuario_id)">
-                                <button @click="follow(review.usuario_id)">Follow</button>
-                            </template>
-                            <template v-else>
-                                 Display something else if the user is already followed -->
-                        <!-- <span>Already Following</span>
-                            </template>
-                        </div>
-
-                        <div v-else>
-                            <button @click="deleteReview(review.id)">Eliminar review</button>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -42,7 +19,6 @@
 </template>
 
 <script>
-import { useStore } from '../stores/index.js';
 export default {
     data() {
         return {
