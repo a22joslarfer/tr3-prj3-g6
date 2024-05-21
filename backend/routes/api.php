@@ -133,15 +133,15 @@ Route::get('/seguidores/{seguidor_id}/{seguido_id}', [seguidoresController::clas
 
 
 // rutas bereal
-Route::post('/bereal', [BeRealController::class, 'createBereal']);
+Route::post('/inTime', [BeRealController::class, 'createBereal']);
 //ruta para obtener y mostrar
-Route::get('/bereals/{id}', [BeRealController::class, 'show']);
+Route::get('/inTime/{id}', [BeRealController::class, 'show']);
 //mostrar todos
 Route::get('/inTimes', [BeRealController::class, 'index']);
 //crear comentari 
-Route::post('/bereal/{id}/commentari', [BeRealController::class, 'addComentari']);
+Route::post('/inTime/{id}/commentari', [BeRealController::class, 'addComentari']);
 //veure comentari
-Route::post('/bereal/{id}/commentaris', [BeRealController::class, 'getComentaris']);
+Route::post('/inTime/{id}/commentaris', [BeRealController::class, 'getComentaris']);
 // crear bereal
 Route::post('/inTime', [BeRealController::class, 'createBereal']);
 // eliminar bereal

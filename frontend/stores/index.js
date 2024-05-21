@@ -97,13 +97,16 @@ export const useStore = defineStore({
       };
     },
     clear_user_info() {
-      this.username = null;
-      this.email = null;
       this.user_id = null;
-      this.phone = null;
-      this.birthday = null;
+      this.email = null;
       this.password = null;
+      this.birthdate = null;
+      this.phone = null;
+      this.username = null;
       this.profile_picture = null;
+      this.chattingWithId = null;
+      this.chattingWithIdName = null;
+      this.rol = null;
     },
     set_return_path(path) {
       this.return_path = path;
@@ -117,7 +120,7 @@ export const useStore = defineStore({
     set_user_rol(rol) {
       this.rol = rol;
     },
-  
+
     logout() {
       this.clear_user_info();
     }

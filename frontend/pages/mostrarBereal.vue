@@ -1,12 +1,13 @@
 <template>
-  <body>
-    <div class="bereals-container">
+  <div class="container">
+    <div class="wrapper">
       <h1>BeReal</h1>
       <div v-if="bereals.length" class="bereals-list" id="bereals-list">
         <div v-for="bereal in bereals" :key="bereal.id" class="bereal-item">
-          <h2>{{ bereal.usuarioNombre }} </h2>
-          <p>{{ bereal.hora.slice(11, 19)  }}</p>
-         
+          <div class="user-info">
+            <h2>{{ bereal.usuarioNombre }}</h2>
+            <p>{{ bereal.hora.slice(11, 19) }}</p>
+          </div>
           <div class="bereal-images">
             <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
             <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
@@ -14,10 +15,98 @@
           <button @click="irAComentarios(bereal.id)" class="comment-button">Afegir Comentaris</button>
         </div>
       </div>
-      <p v-else>No s'ha pujat cap Bereal encara.</p>
+      <p v-else class="no-bereals-message">No s'ha pujat cap Bereal encara.</p>
     </div>
-  </body>
+  </div>
 </template>
+
+<style>
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  
+}
+
+.wrapper {
+  border: 1px solid #a34427;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #f1693f;
+}
+
+.bereals-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 20px;
+}
+
+.bereal-item {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.user-info {
+  margin-bottom: 10px;
+}
+
+.user-info h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.user-info p {
+  font-size: 14px;
+  color: #777;
+  margin: 0;
+}
+
+.bereal-images {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.bereal-image {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.comment-button {
+  background-color: #f1693f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.comment-button:hover {
+  background-color: #a34427;
+}
+
+.no-bereals-message {
+  text-align: center;
+  margin-top: 20px;
+  color: #777;
+}
+</style>
+
+
 
 
 <script>
@@ -33,7 +122,7 @@ export default {
   methods: {
     async obtenerBereals() {
       try {
-        const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/bereals');
+        const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/inTimes');
         if (!response.ok) {
           throw new Error('Error al obtener los Bereals');
         }
@@ -55,7 +144,8 @@ export default {
       }
     },
     getImagenUrl(rutaRelativaImagen) {
-      return `http://localhost:8000/${rutaRelativaImagen}`;
+      // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
+      return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
     },
     irAComentarios(idBereal) {
       this.$router.push(`/comentarios/${idBereal}`);
@@ -65,91 +155,3 @@ export default {
 </script>
 
 
-<style scoped>
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  
-}
-
-
-body {
-  background-color: black;
-}
-
-
-h1 {
-  color: white;
-  text-align: center;
-}
-
-
-h2 {
-  color: white;
-}
-
-
-p{
-  color: grey;
-  margin-bottom: 20px;
-}
-
-
-.bereals-container {
-  padding: 20px;
-  overflow: auto;
-}
-
-
-.bereal-item {
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  padding: 10px;
-  overflow: auto;
-  border-radius: 5px;
-}
-
-
-.bereal-images {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-
-.bereal-image {
-  width: 45%;
-  max-width: 150px;
-  height: auto;
-  border-radius: 5px;
-}
-
-
-.comment-button {
-  width: 100%;
-  padding: 5px;
-  background-color: grey;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-
-@media (min-width: 768px) {
-  .bereal-item {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-
-
-  .bereal-image {
-    width: 100%;
-    max-width: none;
-    height: 150px;
-  }
-}
-</style>

@@ -534,7 +534,7 @@
         font-variation-settings: "wdth" 100;
         text-align: center;
         text-transform: uppercase;
-        background-color: #f0f1f1
+        background-color: #f0f1f1;
     }
 
     .filter-button {
