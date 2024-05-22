@@ -96,7 +96,8 @@ Route::get('/reviews/puntuacion/{puntuacion}', [reviewController::class, 'getRev
 Route::get('/categorias_reviews', [categoriasReviewController::class, 'getCategorias']);
 // ruta para obtener una categoria por nombre
 Route::get('/categorias_reviews/{nombre}', [categoriasReviewController::class, 'getCategoria']);
-
+// ruta para obtener las fotos de las revisiones por ID
+Route::get('/reviews/fotos/{id}', [reviewController::class, 'getFotos']);
 
 
 

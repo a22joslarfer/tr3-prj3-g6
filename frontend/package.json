@@ -26,7 +26,8 @@
     "pinia-plugin-persistedstate": "^3.2.1",
     "socket.io": "^4.7.5",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "vue-star-rating": "^1.7.0"
   },
   "devDependencies": {
     "@pinia-plugin-persistedstate/nuxt": "^1.2.0",

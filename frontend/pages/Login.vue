@@ -18,9 +18,13 @@
         <form @submit.prevent="login" class="form">
           <div class="input-group">
             <input type="text" v-model="email" class="input" placeholder="Correo Electrónico" required />
+            <!-- mensaje de error -->
+            <span v-if="!validEmail" class="error-message">Por favor, introduce un correo electrónico válido.</span>
           </div>
           <div class="input-group">
             <input type="password" v-model="password" class="input" placeholder="Contraseña" required />
+            <!-- mensaje de error -->
+            <span v-if="password.length < 8" class="error-message">La contraseña debe tener al menos 8 caracteres.</span>
           </div>
           <button type="submit" class="button">Iniciar Sesión</button>
         </form>
@@ -81,6 +85,11 @@ export default {
           console.error('Error al iniciar sesión:', error);
         });
 
+    },
+  },
+  computed: {
+    validEmail() {
+      return this.email.includes('@');
     },
   },
 }
@@ -218,4 +227,70 @@ export default {
   font-size: 16px;
 
 }
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+/* media query ordenador para ponerlo en el centro */
+@media (min-width: 768px) {
+  .login-container {
+    justify-content: center;
+  }
+  .content {
+    padding: 40px;
+  }
+  .company-info {
+    margin-bottom: 30px;
+  }
+  .company-logo {
+    max-width: 150px;
+    width: 100px;
+  }
+  .title_company {
+    font-size: 30px;
+  }
+  .login-form {
+    text-align: left;
+  }
+  .title {
+    font-size: 32px;
+  }
+  .form {
+    margin-top: 70px;
+  }
+  .input {
+    height: 60px;
+    font-size: 20px;
+  }
+  .button {
+    height: 60px;
+    font-size: 24px;
+  }
+  .login-link {
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
+  .login-link a {
+    font-size: 20px;
+  }
+  .gjmkph {
+    margin-bottom: 30px;
+  }
+  .doHtqb {
+    width: 100px;
+  }
+  .bMZrBT {
+    font-size: 1rem;
+    padding: 30px 12px;
+  }
+  .google-logo {
+    width: 30px;
+  }
+  .google-signin-button {
+    padding: 15px 30px;
+    font-size: 20px;
+  }
+} 
+
 </style>

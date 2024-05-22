@@ -1,9 +1,7 @@
 <template>
   <HeaderGeneral />
-
   <div class="container">
     <form @submit.prevent="submitReview" class="form">
-
       <div class="form-group">
         <label for="titulo" class="texto">Título *</label>
         <input type="text" id="titulo" v-model="titulo" class="form-control" required placeholder="Ingresa el título de la reseña...">
@@ -23,7 +21,7 @@
 
       <div class="form-group">
         <label for="puntuacion" class="texto">Puntuación </label>
-        <NuxtRating :read-only="false" :ratingValue="1.2" />
+        <TestRating :ratingValue="puntuacion" @input="updateRating"/>
       </div>
 
       <div class="form-group">
@@ -39,7 +37,12 @@
 
 <script>
 import { useStore } from '../stores/index.js';
+import TestRating from '../components/TestRating.vue'; // Asegúrate de que la ruta sea correcta
+
 export default {
+  components: {
+    TestRating
+  },
   data() {
     return {
       disco_id: '',
@@ -58,6 +61,8 @@ export default {
         alert('Por favor selecciona una categoría.');
         return;
       }
+
+      console.log('Puntuación al enviar:', this.puntuacion);
 
       let formData = new FormData();
       formData.append('disco_id', this.disco_id);
@@ -102,6 +107,11 @@ export default {
         alert('Error al obtener las categorías: ' + error.message);
       });
     },
+    updateRating(value) {
+      console.log('Nueva Puntuación:', value);
+      this.puntuacion = value;
+      console.log('Puntuación actualizada:', this.puntuacion);
+    },
   },
   mounted() {
     const store = useStore();
@@ -120,6 +130,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 .container {
   padding: 20px;
@@ -127,7 +138,6 @@ export default {
   background-color: rgb(181, 205, 214);
   margin-bottom: 60px;
 }
-
 .form {
   display: flex;
   flex-direction: column;
