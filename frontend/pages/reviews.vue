@@ -169,8 +169,8 @@
 
     <style scoped>
     .container {
-        padding: 5%;
-        background-color: #f9f9f9;
+        padding: 5% 10% 50%;
+                background-color: #f9f9f9;
         overflow-y: scroll;
     }
 
@@ -188,12 +188,14 @@
 
     .review-card {
         background-color: white;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 5%;
-        display: flex;
-        flex-direction: column;
-        gap: 3%;
+    border: 1px solid #e67979;
+    border-radius: 8px;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 3%;
+    margin-bottom: 10px;
+    margin-top: 10px;
     }
 
     .review-photo {
@@ -201,9 +203,18 @@
         border-radius: 8px;
     }
 
+    .review-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2%;
+
+    }
+
     .review-content h2 {
         margin: 0 0 5% 0;
         font-size: 1.2em;
+text-decoration: underline;
+    
     }
 
     .review-content p {

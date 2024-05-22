@@ -939,4 +939,38 @@ p {
         top: 100px;
     }
 }
+/* Media query para pantallas de computadora */
+@media screen and (min-width: 769px) {
+    .navbar ul li {
+        margin: 0 20px; /* Aumenta el espaciado entre elementos en pantallas de computadora */
+    }
+
+    .info-card {
+        width: 70%;
+        display: grid;
+        align-content: space-evenly;
+        align-items: center;
+        justify-items: center;
+        }
+        .card-body {
+            font-size: 1.5rem;
+        }
+        .card-header{
+            font-size: 2rem;
+        }
+        .card-closer{
+            font-size: 2rem;
+        }
+        .card-image{
+            height: 300px;
+        }
+        /* centrar el audio con flex*/
+        .card-body audio{
+            width: 100%;
+            margin-top: 20px;
+            padding: 5px;
+
+        }
+}
+
 </style>

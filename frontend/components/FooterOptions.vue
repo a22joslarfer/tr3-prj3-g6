@@ -49,7 +49,7 @@ export default {
 <style scoped>
 .footer {
   position: fixed;
-  bottom: 0;
+  bottom: -4px;
   left: 0;
   width: 100%;
   display: flex;
@@ -57,9 +57,10 @@ export default {
   align-items: center;
   background-color: #ffffff;
   color: white;
-  min-height: 60px; 
+  min-height: 60px;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1001;
+  padding: 10px 0;
 }
 
 .icon {
@@ -84,4 +85,5 @@ svg {
 .active svg {
   fill: rgb(26, 29, 211);
 }
+
 </style>

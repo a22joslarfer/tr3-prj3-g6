@@ -40,9 +40,12 @@
                         <div class="input-group">
                             <input type="email" v-model="email" class="input" placeholder="Correo Electrónico"
                                 required />
+                            <span v-if="!validEmail" class="error-message">Por favor, introduce un correo electrónico
+                                válido.</span>
                         </div>
                         <div class="input-group">
                             <input type="password" v-model="password" class="input" placeholder="Contraseña" required />
+                            <span v-if="password.length < 8" class="error-message">La contraseña debe tener al menos 8 caracteres.</span>
                         </div>
                         <div class="botones">
                             <button type="button" class="button next-button" @click="step++">Siguiente</button>
@@ -51,6 +54,7 @@
                     <div v-if="step === 3">
                         <div class="input-group">
                             <input type="text" v-model="phone" class="input" placeholder="Teléfono" />
+                            <span v-if="phone.length < 9" class="error-message">Por favor, introduce un número de teléfono válido.</span>
                         </div>
                         <div class="input-group">
                             <input type="date" v-model="birthday" class="input" placeholder="Fecha de Nacimiento" />
@@ -147,7 +151,12 @@ export default {
                     console.error('Error:', error);
                 });
         }
-    }
+    },
+    computed: {
+        validEmail() {
+            return this.email.includes('@');
+        },
+    },
 };
 </script>
 <style scoped>
@@ -354,7 +363,66 @@ export default {
     margin-right: 10px;
     padding: 0px 13px;
 }
+
 svg {
     fill: #333;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* media query para hacer el contenido un poco mas pequeño en ordenador */
+@media (min-width: 768px) {
+    .content {
+        width: 40%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .company-info {
+        margin-bottom: 30px;
+    }
+
+    .company-logo {
+        max-width: 120px;
+        width: 100px;
+    }
+
+    .title_company {
+        font-size: 28px;
+    }
+
+    .login-form {
+        text-align: left;
+    }
+
+    .input {
+        height: 40px;
+    }
+
+    .button {
+        width: 100%;
+    }
+
+    .next-button {
+        width: 100%;
+    }
+
+    .login-link {
+        text-align: right;
+    }
+
+    .login-link a {
+        font-size: 16px;
+    }
+
+    .login-link a:hover {
+        font-size: 16px;
+    }
 }
 </style>
