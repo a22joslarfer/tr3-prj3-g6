@@ -7,13 +7,19 @@
             <div class="messages">
                 <div :class="['message', { 'sent': message.sent, 'received': !message.sent }]"
                     v-for="message in messages" :key="message.id">
+                    <img :src="profileImageUrl" alt="Profile Image" class="profile-image">
+
                     <p>{{ message.text }}</p>
                 </div>
             </div>
             <div class="input-container">
                 <input type="text" v-model="newMessage" @keyup.enter="sendPrivateMessage"
-                    placeholder="Type a message...">
-                <button @click="sendPrivateMessage">Send</button>
+                    placeholder="Escribe un mensaje...">
+                <button @click="sendPrivateMessage">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                        <path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
@@ -41,18 +47,38 @@ export default {
         console.log('HABLANDO CON ' + this.chattingWithId + ' SOY ' + this.userId + ' ' + socket.id);
 
         this.userId = store.return_user_id();
-        socket.on('privateMessageReceived', ({ text, from }) => {
+        socket.on('privateMessageReceived', ({ text, from, fromProfilePhoto }) => {
             if (from != this.userId) {
-                this.messages.push({ text, from, sent: false });
+                this.messages.push({ text, from, fromProfilePhoto, sent: false });
 
             }
         });
     },
+    mounted() {
+    this.fetch();
+    },
     methods: {
+        async fetch() {
+          try {
+            const store = useStore();
+            const id = store.return_user_id();
+
+            // Fetch de la imagen de perfil
+            const profilePhotoResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/profile_photo/${id}`);
+            const profilePhotoData = await profilePhotoResponse.json();
+            console.log(profilePhotoData);
+            this.profileImageUrl = profilePhotoData; // Suponiendo que la respuesta contiene la URL de la imagen de perfil
+          } catch (error) {
+            console.error('Error al obtener los datos del usuario:', error);
+          }
+        },
+        getProfilePhotoUrl(photoPath) {
+          return `http://elysium.daw.inspedralbes.cat/backend/public/${photoPath}`;
+        },
         sendPrivateMessage() {
             if (this.newMessage.trim() !== '') {
                 socket.emit('privateMessage', { from: this.userId, to: this.chattingWithId, text: this.newMessage });
-                this.messages.push({ text: this.newMessage, from: this.userId, sent: true }); // Sent message
+                this.messages.push({ text: this.newMessage, from: this.userId, fromProfilePhoto: this.profileImageUrl, sent: true }); // Sent message
                 this.newMessage = '';
             }
         },
@@ -71,6 +97,9 @@ export default {
 
 
 <style scoped>
+svg{
+    fill:white;
+}
 #container {
     display: flex;
     flex-direction: column;
@@ -91,19 +120,20 @@ export default {
 
 .messages {
     margin-bottom: 60px;
-    /* Adjust as necessary to accommodate input */
 }
 
 .message {
-    background-color: #DCF8C6;
-    border-radius: 10px;
-    padding: 8px 12px;
+    display: flex;
+    align-items: center;
     margin: 5px;
+    padding: 10px;
+    border-radius: 10px;
     max-width: 70%;
 }
 
 .message p {
     margin: 0;
+    margin-left: 10px;
 }
 
 .input-container {
@@ -140,21 +170,22 @@ export default {
     background-color: #075E54;
 }
 
-.message {
-    margin: 5px;
-    padding: 10px;
-    border-radius: 10px;
+.profile-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
 .sent {
     background-color: #007bff;
     color: white;
-    text-align: right;
+    justify-content: flex-end;
 }
 
 .received {
     background-color: #f0f0f0;
     color: black;
-    text-align: left;
+    justify-content: flex-start;
 }
 </style>
