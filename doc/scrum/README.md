@@ -12,7 +12,8 @@
     Com a usuari vull veure informació sobre els diferents locals.
     ...
   
-    
+  ## Retrospectiva
+
   ### Seguiments dels SPRINTs
   #### SPRINT 1
     Hi van haver complicacions per a fer sorgir l'idea del projecte, i tot i que finalment acaba sorgint, no s'entén del tot de que està composa, així que, tot i que va haver-hi una direcció, la direcció del grup va ser foscosa.
@@ -62,14 +63,5 @@
     Aquesta adaptació de l'enfocament va permetre un progrés més coherent i va evitar la dispersió dels recursos del projecte. Tot i les complicacions inicials, aquesta redefinició ha portat a un enfocament més clar i concentrat en les necessitats dels usuaris, contribuint a una millora en la direcció i la eficiència del desenvolupament del projecte.
 
 
-    
-  * Sprint review / preparació demo 
-    *  L'últim dia de l'sptint
-    *  Un document per sprint
-    *  Conté informació sobre què es podrà presentar al tancament de l'sprint
-    *  Guió de la demostració del MVP de l'sprint
-  * Retrospectiva 
-    * 1 document per tot el projecte, amb un apartat per cada sprint
-    * Valoració de l'evolució de l'equip
-    * Valoració de l'evolució del projecte
-    * Canvis en l'organització de l'equip, en la filosofia del projecte...
+  
+
