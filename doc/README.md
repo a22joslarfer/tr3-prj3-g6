@@ -77,3 +77,104 @@ Per desplegar l'aplicació en producció, segueix aquests passos:
   "telefono": "+34 932 25 91 00",
   "descripcion": "Pacha Barcelona, conocida por su ambiente vibrante y sus famosas fiestas temáticas, es un destino imperdible en la vida nocturna de la ciudad."
 }
+
+## DESCRIPCIÓ DOCKER-COMPOSE
+### Versio
+- versió: 3.8
+- s'especifica la versió 3.8 de Docker Compose
+### Serveis
+#### Laravel
+- utilitza la imatge: php:8.3-fpm
+- nom del contenidor: `laravel`
+- working_dir: /var/www
+  - Directori de treball:`/var/wwww`
+- volumes:
+  - ./backend:/var/www
+    - Munta el directori ./backend a /var/www dins del contenidor
+- command:
+  - bash -c "apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip git libonig-dev libxml2-dev && docker-php-ext-install pdo pdo_mysql gd && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && composer install && php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000"
+    - Actualitza els paquets del sistema, instal·la les dependències necessàries, instal·la extensions PHP, instal·la Composer, instal·la dependències de Composer, genera una clau d'aplicació i serveix l'aplicació Laravel
+- ports: 
+  - "8000:8000"
+    - Mapeja el port 8000 del contenidor al port 8000 de l'amfitrió 
+- depends_on:
+  - db
+    - Depen del servei `db`
+### Nuxt-app
+- image: node:18-bullseye
+  - Utilitza la imatge `node_18-bullseye`
+- container_name: nuxt
+  - Nom del contenidor: `nuxt`
+- working_dir: /app
+  - Directori de treball: `/app`
+- enviroment
+  - CHOKIDAR_USEPOLLING=true
+    - Defineix `CHOKIDAR_USEPOLLING=true` per permetre polling en Chokidar (útil per a desenvolupament en Windows o Docker)
+- volumes
+  - ./frontend:/app
+    - Munta el directori `./frontend` a `/app` dins del contenidor
+- command: 
+  - sh -c "npm install && npm run dev"
+    - Installa les dependències de npm i executa el servidor de desenvolupament de Nuxt.js.
+- ports:
+  - "3000:3000"
+    - Mapeja el port 3000 del contenidor al port 3000 de l'amfitrió
+### db
+- image:mysql:8.0.26
+  - Utilitza la imatge `mysql:8.0.26`
+- container_name: mysql_db
+  - Nom del contenidor: `mysql_db`
+- volumes: 
+  - db-data2:/var/lib/mysql
+    - Utilitza un volum anomenat `db-data2` per persistir les dades a /`var/lib/mysql`
+- enviroment:
+  - MYSQL_ROOT_PASSWORD: root
+    - Defineix la contrasenya de root de MySQL
+  - MYSQL_DATABASE: a22hugtrigon_projectofinal
+    - Defineix el nom de la base de dades
+  - MYSQL_USER: a22hugtrigon_projectofinal
+    - Defineix l'usuari de la base de dades
+  - MYSQL_PASSWORD: InsPedralbes2022
+    - Defineix la contrasenya de l'usuari de la base de dades
+- ports: 
+  - "3306:3306"
+    - Mapeja el port 3306 del contenidor al port 3306 de l'amfitrió
+
+    Aquesta bd nómes l'utilitzem en desenvolupamnet, i en producció no es necesaria, tenia una bd al labs
+### phpmyadmin
+- image: phpmyadmin/phpmyadmin
+  -Utilitza la imatge `phpmyadmin/phpmyadmin`
+- container_name: phpmyadmin
+  - Nom del contenidor: `phpmyadmin`
+- environment:
+  - PMA_HOST: db
+    - Defineix la configuració de connexió a la base de dades MySQL
+  - PMA_PORT: 3306
+    - Defineix el port de connexió a la base de dades MySQL
+  - PMA_USER: a22hugtrigon_projectofinal
+    - Defineix l'usuari de connexió a la base de dades MySQL
+  - PMA_PASSWORD: InsPedralbes2022
+    - Defineix la contrasenya de l'usuari de la base de dades MySQL
+- ports: 
+  - "8080:8080"
+    - Mapeja el port 80 del contenidor al port 8080 de l'amfitrió
+  - depends_on:
+    - db
+      - Depèn del servei `db`
+### Volums
+- volumes: 
+  - db-data2:
+    - Defineix un volum anomenat `db-data2` per emmagatzemar les dades de la base de dades MySQL de manera persistent.¡
+
+
+
+
+
+
+
+
+
+
+
+
+
