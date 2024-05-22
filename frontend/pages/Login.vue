@@ -65,7 +65,6 @@ export default {
         })
         .then(data => {
           console.log('Sesión iniciada correctamente:', data);
-          alert('Sesión iniciada correctamente');
 
           const store = useStore();
           store.save_user_info(data.name, data.email, data.id);

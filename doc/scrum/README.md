@@ -62,6 +62,55 @@
 
     Aquesta adaptació de l'enfocament va permetre un progrés més coherent i va evitar la dispersió dels recursos del projecte. Tot i les complicacions inicials, aquesta redefinició ha portat a un enfocament més clar i concentrat en les necessitats dels usuaris, contribuint a una millora en la direcció i la eficiència del desenvolupament del projecte.
 
+  ## Identificació de problemes
+  ### SOCKETS
+  #### Autenticación de usuarios:
+
+    Implementar un sistema de autenticación sólido utilizando tokens JWT (JSON Web Tokens) o sesiones de usuario para verificar la identidad del cliente antes de permitir el acceso a las funciones del chat.
+
+    Validación de datos:
+
+    Realizar una validación exhaustiva de los datos recibidos del cliente para evitar ataques de tipo XSS (Cross-Site Scripting) o inyecciones de código malicioso.
+    Validar los IDs de usuario para asegurarse de que corresponden a usuarios legítimos y autorizados para acceder al sistema.
+
+  #### Seguridad en el manejo de sockets:
+
+    Implementar medidas de seguridad adicionales en el manejo de salas de chat, como comprobaciones de permisos para unirse a una sala específica o limitar las acciones que un usuario puede realizar dentro de una sala.
+    Utilizar técnicas de cifrado para proteger la comunicación entre el cliente y el servidor, especialmente en entornos donde se transmiten datos sensibles.
+ 
+ ####   Seguridad en la persistencia de datos:
+
+    Encriptar los mensajes antes de almacenarlos en la base de datos para proteger la privacidad de los usuarios en caso de una brecha de seguridad.
+    Implementar copias de seguridad regulares de la base de datos y utilizar técnicas de hashing seguras para proteger las contraseñas y otros datos confidenciales.
+
+   #### Validación del lado del servidor:
+
+    Realizar validaciones adicionales en el lado del servidor para evitar ataques de inyección SQL y otras vulnerabilidades de seguridad.
+
+  ### Resolució dels problemes dels sockets
+
+ #### Autenticación de usuarios:
+
+    Implementar un sistema de autenticación robusto implica validar las credenciales del usuario, como nombre de usuario y contraseña, utilizando técnicas seguras como el cifrado de contraseñas mediante algoritmos como bcrypt.
+    Una vez que el usuario se autentica correctamente, se puede generar un token JWT que contenga información sobre la sesión del usuario, como su ID y cualquier otro dato relevante. Este token se enviaría al cliente y se adjuntaría a todas las solicitudes posteriores como una forma de identificación.
+    En el servidor, se verificaría la validez y la integridad del token en cada solicitud para garantizar que el usuario esté autorizado para acceder a los recursos solicitados.
+#### Validación de datos:
+
+    Para evitar ataques de tipo XSS, se deben escapar o filtrar todos los datos de entrada del usuario que se muestran en el lado del cliente para eliminar cualquier código malicioso que pueda estar presente.
+    Para prevenir inyecciones de código malicioso, se deben utilizar consultas parametrizadas o funciones ORM en lugar de construir consultas SQL dinámicas concatenando cadenas de texto con datos proporcionados por el usuario. Esto asegura que los datos del usuario no se interpreten como parte de la consulta SQL y evita la ejecución de comandos no autorizados en la base de datos.
+#### Seguridad en el manejo de sockets:
+
+    Además de las validaciones de autenticación, se pueden implementar roles de usuario y permisos específicos para limitar las acciones que un usuario puede realizar en el chat, como enviar mensajes, crear salas o invitar a otros usuarios.
+    Para proteger la comunicación entre el cliente y el servidor, se puede utilizar HTTPS en lugar de HTTP para cifrar los datos transmitidos. Además, se pueden implementar protocolos de seguridad como TLS (Transport Layer Security) para cifrar la comunicación a nivel de socket.
+#### Seguridad en la persistencia de datos:
+
+    Antes de almacenar mensajes en la base de datos, se pueden cifrar utilizando algoritmos de cifrado sólidos como AES (Advanced Encryption Standard). Esto garantiza que los mensajes estén protegidos incluso si la base de datos es comprometida.
+    Además, se pueden implementar técnicas de hashing seguras para almacenar contraseñas y otros datos confidenciales en la base de datos. Esto evita que las contraseñas se almacenen en texto plano y hace que sea más difícil para un atacante obtener acceso a las cuentas de los usuarios incluso si la base de datos es comprometida.
+#### Validación del lado del servidor:
+
+    Al realizar operaciones de base de datos, se deben utilizar consultas parametrizadas o funciones ORM para evitar la posibilidad de inyección SQL. Esto garantiza que los datos proporcionados por el usuario se interpreten solo como valores y no como parte de la estructura de la consulta SQL.
+    Además, se deben realizar validaciones exhaustivas en el lado del servidor para garantizar que los datos proporcionados por el usuario cumplan con ciertos criterios de seguridad y no contengan datos maliciosos o no válidos que puedan comprometer la aplicación.
+
 
   
 
