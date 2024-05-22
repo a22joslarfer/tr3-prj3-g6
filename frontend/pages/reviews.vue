@@ -63,9 +63,6 @@ export default {
                 })
                 .then(response => {
                     this.userMap[id] = response.data;
-
-
-
                 })
                 .catch(error => {
                     console.error('Error fetching user:', error);
@@ -78,9 +75,9 @@ export default {
             return userName ? userName : 'Usuario Desconocido';
         },
         getImagenUrl(rutaRelativaImagen) {
-      // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
-      return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
-    },
+            // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
+            return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
+        },
 
         fetchCategoriasReviews() {
             fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
@@ -104,7 +101,6 @@ export default {
             const user_id = store.return_user_id();
             if (user_id === null) {
                 store.set_return_path('/reviews');
-                console.log('No estás autenticado pasando por user_id === null');
                 this.$router.push('/login');
 
             }
@@ -183,7 +179,7 @@ export default {
 .container {
     padding: 8px;
     background-color: #ff806d;
-    height: auto;
+   
 }
 
 .btn {
@@ -301,8 +297,5 @@ body {
 }
 
 
-.row {
-    height: auto;
-    overflow-y: auto;
-}
+
 </style>

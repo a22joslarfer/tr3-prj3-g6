@@ -49,14 +49,7 @@
 </template>
 
 <style scoped>
-/* General styling */
-body {
-  overflow: visible;
-}
 
-*{
-  overflow-y: scroll;
-}
 
 
 
