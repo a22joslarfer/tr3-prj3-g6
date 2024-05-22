@@ -27,9 +27,9 @@ class UserController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
-            'phone' => 'nullable|string', // Añadido
-            'birthday' => 'nullable|date', // Añadido
-            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Asegúrate de agregar la validación de la imagen aquí
+            'phone' => 'nullable|string|unique:users,phone',
+            'birthday' => 'nullable|date',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Procesar y almacenar la imagen de perfil
@@ -44,6 +44,11 @@ class UserController extends Controller
             // Almacenar la ruta relativa de la imagen en la base de datos
             $profilePhotoPath = 'profile/' . $fileName;
         }
+        $phone = $request->phone;
+        if (User::where('phone', $phone)->exists()) {
+            return response()->json(['error' => 'El teléfono ya está en uso'], 400);
+        }
+
 
         // Crear un nuevo usuario
         $user = new User([
@@ -69,9 +74,6 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         return response()->json($user);
     }
-
-
-
     public function update(Request $request, $id)
     {
         // Validar los datos del formulario
@@ -115,7 +117,7 @@ class UserController extends Controller
         return response()->json(null, 204);
     }
 
-//ruta de register http://elysium.daw.inspedralbes.cat/backend/public/api/register
+    //ruta de register http://elysium.daw.inspedralbes.cat/backend/public/api/register
     public function register(Request $request)
     {
         // Validación de los datos del formulario
@@ -123,12 +125,17 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8|max:255',
-            'phone' => 'nullable|string|max:20',
+            'phone' => 'nullable|string|unique:users,phone|max:9',
             'birthday' => 'nullable|date',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Asegúrate de agregar la validación de la imagen aquí
         ]);
-    
+
         // Crear una nueva instancia de usuario con los datos validados
+        $phone = $request->phone;
+        if (User::where('phone', $phone)->exists()) {
+            return response()->json(['error' => 'El teléfono ya está en uso'], 400);
+        }
+
         $user = new User([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
@@ -137,21 +144,20 @@ class UserController extends Controller
             'birthday' => $validatedData['birthday'],
             'api_token' => Str::random(60),
         ]);
-    
+
         // Guardar la imagen en el sistema de archivos
         if ($request->hasFile('profile_photo')) {
             $image = $request->file('profile_photo');
-            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('profile_photos'), $imageName);
             $user->profile_photo = $imageName;
         }
-    
+
         // Guardar el usuario en la base de datos
         $user->save();
-    
+
         return response()->json($user, 201);
     }
-
 
     public function login(Request $request)
     {
@@ -184,7 +190,6 @@ class UserController extends Controller
 
                 ], 404);
             }
-        
         } else {
             return response()->json([
                 'message' => 'Invalid credentials',
@@ -213,11 +218,7 @@ class UserController extends Controller
         $user->save();
 
         return response()->json($user);
-
-
     }
-
-
     public function logout(Request $request)
     {
         // Obtener el usuario autenticado
@@ -229,8 +230,7 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Logged out']);
     }
-
-public function delete($id)
+    public function delete($id)
     {
         // Eliminar un usuario
         $user = User::find($id);
@@ -247,13 +247,11 @@ public function delete($id)
             ], 404);
         }
     }
-
     public function getUsers($id)
     {
         $user = User::find($id);
         return response()->json($user);
     }
-
     public function getUserById($id)
     {
         $user = User::find($id);
@@ -270,8 +268,6 @@ public function delete($id)
             "data" => $user->name, // Devolver solo el nombre del usuario
         ]);
     }
-
-
     public function generateQRCode($userId)
     {
         try {
@@ -296,8 +292,6 @@ public function delete($id)
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-
 
     // return profile_photo from user
     public function getProfilePhoto($id)
