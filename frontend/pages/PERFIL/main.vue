@@ -67,20 +67,19 @@
     <div class="content">
   <div v-if="selectedSection === 'inicio'">
     <div class="bereals-container">
-  <div class="bereals-list">
-    <div v-if="misIntime.length">
-      <div v-for="bereal in misIntime" :key="bereal.id" class="bereal-item">
-        <p class="bereal-time">{{ bereal.hora.slice(11, 19) }}</p>
-        <div class="bereal-images">
-          <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
-          <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
-        </div>
-      </div>
-    </div>
-    <p v-else>No has subido ningún InTime todavía.</p>
+      <div>
+        <div v-if="misIntime.length" class="bereals-list">
+          <div v-for="bereal in misIntime" :key="bereal.id" class="bereal-item">
+  <div class="bereal-images">
+    <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image1">
+    <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image2" @click="toggleImages(bereal)">
   </div>
 </div>
-</div>
+        </div>
+        <p v-else>No has subido ningún InTime todavía.</p>
+      </div>
+    </div>
+  </div>
       <div v-else-if="selectedSection === 'explorar'">
         <h2>Contenido de videos</h2>
       </div>
@@ -134,6 +133,12 @@ export default {
   },
   
   methods: {
+    toggleImages(bereal) {
+    // Intercambiar las URLs de las imágenes
+    const temp = bereal.img_del;
+    bereal.img_del = bereal.img_tra;
+    bereal.img_tra = temp;
+  },
     async fetch() {
       try {
         const store = useStore();
@@ -233,15 +238,7 @@ export default {
     color: #000000;
     margin-bottom: 10px;
 }
-.bereal-images {
-  display: flex;
-  margin-bottom: 10px;
-  
-}
-.bereal-image {
-  width: calc(50% - 5px); /* Para dos imágenes en una fila */
-  border-radius: 5px;
-}
+
   .instagram-stories {
     display: flex;
     overflow-x: auto;
@@ -469,4 +466,78 @@ export default {
   .amigo-nombre {
     white-space: nowrap;
   }
-  </style>
+  .bereals-container {
+  display: flex;
+  justify-content: center;
+}
+
+.bereals-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px; /* Establece un ancho máximo para evitar que los elementos se extiendan demasiado en pantallas grandes */
+  margin: 0 auto; /* Centra los elementos horizontalmente */
+  padding: 0 10px; /* Agrega un poco de espacio en los lados para que los elementos no toquen los bordes */
+}
+
+.bereal-item {
+  width: calc(33.33% - 20px); /* Tres elementos por fila en todas las pantallas */
+  margin-bottom: 20px;
+}
+
+
+.bereal-time {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.bereal-images {
+  position: relative;
+  width: 100%;
+}
+
+.bereal-image1, .bereal-image2 {
+  width: 90px; /* Ancho fijo para todas las imágenes */
+  height: 150px; /* Altura fija para todas las imágenes */
+  border-radius: 5px;
+}
+
+.bereal-image2 {
+  height: 36%;
+    position: absolute;
+    top: 3%;
+    left: 62%;
+    width: 35%;
+    max-width: 150px;
+    border-radius: 5px;
+    border: 2px solid white;
+}
+.icon-button {
+    width:20px;
+    height: 30px;
+  }
+
+@media (max-width: 768px) {
+  .bereal-item {
+    width: calc(33.33% - 20px); /* Tres elementos por fila en pantallas medianas */
+  }
+}
+
+@media (max-width: 480px) {
+  .bereals-list {
+    margin-top: 30px;
+        gap: 10px;
+        position: absolute;
+        right: -22px;
+        width: 434px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+  }
+
+  .bereal-item {
+    width: calc(33.33% - 20px); /* Tres elementos por fila en pantallas pequeñas */
+  }
+}
+</style>
