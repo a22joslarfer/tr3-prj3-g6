@@ -10,7 +10,7 @@ import { defineStore } from 'pinia'
 export const useStore = defineStore({
   id: 'main',
   state: () => ({
-    return_path: '/',
+    path: '/',
     user_id: null,
     email: null,
     password: null,
@@ -107,12 +107,13 @@ export const useStore = defineStore({
       this.chattingWithId = null;
       this.chattingWithIdName = null;
       this.rol = null;
+      this.path = '/';
     },
     set_return_path(path) {
-      this.return_path = path;
+      this.path = path;
     },
     return_path() {
-      return this.return_path;
+      return this.path;
     },
     return_user_rol() {
       return this.rol;
