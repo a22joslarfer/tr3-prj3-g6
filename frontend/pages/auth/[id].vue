@@ -29,7 +29,7 @@
 
 
 <script>
-import { useStore } from '../stores/index.js';
+import { useStore } from '../../stores/index';
 
 
 export default {
