@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\discoController;
 use App\Http\Controllers\reviewController;
 use App\Http\Controllers\userController;
-use App\Http\Controllers\BeRealController;
+use App\Http\Controllers\inTimesController;
 use App\Http\Controllers\comentariosController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -122,24 +122,42 @@ Route::post('/seguidores', [seguidoresController::class, 'addSeguidor']);
 Route::get('/seguidores/{seguidor_id}/{seguido_id}', [seguidoresController::class, 'checkIfSeguidor']);
 //ruta para crear 
 
+// rutas para likes - dislikes
+Route::post('/likes', [inTimesController::class, 'addLike']);
+Route::post('/dislikes', [inTimesController::class, 'addDislike']);
+Route::get('/likes/{id}', [inTimesController::class, 'getLikes']);
+Route::get('/dislikes/{id}', [inTimesController::class, 'getDislikes']);
+
+Route::post('/likes', [reviewController::class, 'addLike']);
+Route::post('/dislikes', [reviewController::class, 'addDislike']);
+Route::get('/likes/{id}', [reviewController::class, 'getLikes']);
+Route::get('/dislikes/{id}', [reviewController::class, 'getDislikes']);
+
+Route::post('/likes', [comentariosController::class, 'addLike']);
+Route::post('/dislikes', [comentariosController::class, 'addDislike']);
+Route::get('/likes/{id}', [comentariosController::class, 'getLikes']);
+Route::get('/dislikes/{id}', [comentariosController::class, 'getDislikes']);
+
+
+
 
 
 
 // rutas bereal
-Route::post('/inTime', [BeRealController::class, 'createBereal']);
+Route::post('/inTime', [inTimesController::class, 'createBereal']);
 //ruta para obtener y mostrar
-Route::get('/inTime/{id}', [BeRealController::class, 'show']);
+Route::get('/inTime/{id}', [inTimesController::class, 'show']);
 //mostrar todos
-Route::get('/inTimes', [BeRealController::class, 'index']);
+Route::get('/inTimes', [inTimesController::class, 'index']);
 //crear comentari 
-Route::post('/inTime/{id}/commentari', [BeRealController::class, 'addComentari']);
+Route::post('/inTime/{id}/commentari', [inTimesController::class, 'addComentari']);
 //veure comentari
-Route::post('/inTime/{id}/commentaris', [BeRealController::class, 'getComentaris']);
+Route::post('/inTime/{id}/commentaris', [inTimesController::class, 'getComentaris']);
 // crear bereal
 // eliminar bereal
-Route::delete('/inTime/{id}', [BeRealController::class, 'delete']);
+Route::delete('/inTime/{id}', [inTimesController::class, 'delete']);
 // editar bereal
-Route::put('/inTime/{id}', [BeRealController::class, 'update']);
+Route::put('/inTime/{id}', [inTimesController::class, 'update']);
 
 //RUTAS PARA COMENTARIOS BEREAL
 //mostrar tots els comentaris apartir de la id de bereal

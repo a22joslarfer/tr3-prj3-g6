@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Bereal;
+use App\Models\inTime;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
 
-class BeRealController extends Controller
+class inTimesController extends Controller
 {
     /**
      * Store a newly created resource in storage.
@@ -30,7 +30,7 @@ class BeRealController extends Controller
 
        
 
-        $bereal = Bereal::create([
+        $bereal = inTime::create([
             'img_del' => str_replace('public/', 'storage/', $img_del),
             'img_tra' => str_replace('public/', 'storage/', $img_tra),
             'id_usuari' => $validatedData['id_usuari'],
@@ -41,18 +41,25 @@ class BeRealController extends Controller
 
     public function index()
     {
-        $bereals = Bereal::all();
+        $bereals = inTime::all();
         return response()->json($bereals);
     }
 
     public function show($id)
     {
-        return Bereal::find($id);
+        return inTime::find($id);
     }
 
-    public function update(Request $request, $id)
-    {
-        
+    public function addlike($id){
+        $bereal = inTime::find($id);
+        $likes = $bereal->likes;
+        $bereal->likes = $likes + 1;
+    }
+
+    public function addDislike($id){
+        $bereal = inTime::find($id);
+        $likes = $bereal->likes;
+        $bereal->likes = $likes - 1;
     }
     
 
@@ -62,8 +69,8 @@ class BeRealController extends Controller
 
     public function delete($id)
     {
-        Bereal::destroy($id);
-        if (Bereal::find($id) === null) {
+        inTime::destroy($id);
+        if (inTime::find($id) === null) {
             return response()->json();
         }
     }
