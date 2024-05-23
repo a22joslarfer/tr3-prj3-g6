@@ -31,15 +31,13 @@ export default {
         state.notificacionesPendientes.push(notificacion);
       }
     };
-
     const irABereal = (notificacion) => {
-      if (!notificacion.eliminadaPorX) {
+      if (notificacion.eliminadaPorX) {
         localStorage.removeItem('notificacionPendiente');
         window.location.href = '/inTime';
-      } else {
-        window.location.href = '/PERFIL/notificaciones';
       }
     };
+
 
     obtenerNotificacionesPendientes();
 

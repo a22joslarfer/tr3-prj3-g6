@@ -108,19 +108,13 @@ export default {
                 body: "¡Es hora de publicar tu foto!",
             };
 
-            const notificacionPendiente = {
-                titulo: "¡HORA DEL INTIMEE!",
-                eliminadaPorX: false
-            };
-
-            const store = useStore(); 
+            const store = useStore();
             const nuevaHora = store.return_nueva_hora();
 
             if ('Notification' in window) {
                 Notification.requestPermission().then((permission) => {
                     console.log("Permiso de notificación:", permission);
                     if (permission === "granted") {
-                        // Se divide la hora y el minuto de la nueva hora
                         const [hora, minuto] = nuevaHora.split(':');
                         const now = new Date();
                         const horaEspecifica = new Date(
@@ -133,8 +127,6 @@ export default {
                         );
                         const tiempoRestante = horaEspecifica - now;
 
-                        console.log("Tiempo restante hasta la notificación (ms):", tiempoRestante);
-
                         if (tiempoRestante > 0) {
                             setTimeout(() => {
                                 console.log("Mostrando notificación...");
@@ -143,16 +135,17 @@ export default {
                                 notification.onclick = () => {
                                     window.location.href = '/inTime';
                                 };
+                                notification.onclose = () => {
+                                    const notificacionPendiente = {
+                                        titulo: "¡ENCARA NO HAS PUJAT EL INTIMEE!",
+                                        eliminadaPorX: true // Indica que fue eliminada por el usuario
+                                    };
+                                    localStorage.setItem('notificacionPendiente', JSON.stringify(notificacionPendiente));
+                                };
                             }, tiempoRestante);
                         }
-                    } else {
-                        console.log("El permiso de notificación no fue concedido.");
                     }
-                }).catch((error) => {
-                    console.error("Error al solicitar permiso de notificación:", error);
                 });
-            } else {
-                console.log("El navegador no soporta notificaciones.");
             }
         },
 
