@@ -1,4 +1,6 @@
 <template>
+      <HeaderGeneral />
+
   <div class="container">
     <div class="wrapper">
       <h1>inTime</h1>
@@ -18,6 +20,7 @@
       <button @click="uploadImages" class="upload-button">Subir Imágenes</button>
     </div>
   </div>
+  <FooterOptions />
 
 </template>
 

@@ -21,9 +21,16 @@ export const useStore = defineStore({
     chattingWithId: null,
     chattingWithIdName: null,
     rol: null,
+    nuevaHoraNotificacion: null,
 
   }),
   actions: {
+    guardarNuevaHora(nuevaHora) {
+      this.nuevaHoraNotificacion = nuevaHora;
+    },
+    return_nueva_hora(){
+      return this.nuevaHoraNotificacion;
+    },
     set_chattingWithId(id) {
       this.chattingWithId = id;
     },
