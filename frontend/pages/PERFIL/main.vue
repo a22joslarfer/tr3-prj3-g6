@@ -208,7 +208,7 @@ export default {
     },
     
     editarPerfil() {
-      this.$router.push('/PERFIL/ajustes');
+      this.$router.push('/perfil/ajustes');
     },
     getImagenUrl(rutaRelativaImagen) {
       // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
