@@ -54,13 +54,13 @@ export default {
     return {
       isMenuOpen: false,
       options: [
-        { id: 1, name: 'Cambiar datos', route: '/PERFIL/ajustes' },
-        { id: 2, name: 'Amigos', route: '/PERFIL/amigos' },
-        { id: 3, name: 'Chats', route: '/PERFIL/chats' },
-        { id: 4, name: 'Notificaciones', route: '/PERFIL/notificaciones' },
-        { id: 5, name: 'Privacidad', route: '/PERFIL/privacidad' },
-        { id: 6, name: 'Seguridad', route: '/PERFIL/seguridad' },
-        { id: 7, name: 'Cerrar sesión', route: '/PERFIL/logout' },
+        { id: 1, name: 'Cambiar datos', route: '/perfil/ajustes' },
+        { id: 2, name: 'Amigos', route: '/perfil/amigos' },
+        { id: 3, name: 'Chats', route: '/perfil/chats' },
+        { id: 4, name: 'Notificaciones', route: '/perfil/notificaciones' },
+        { id: 5, name: 'Privacidad', route: '/perfil/privacidad' },
+        { id: 6, name: 'Seguridad', route: '/perfil/seguridad' },
+        { id: 7, name: 'Cerrar sesión', route: '/perfil/logout' },
       ],
     };
   },
