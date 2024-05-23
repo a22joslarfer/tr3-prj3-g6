@@ -14,5 +14,6 @@ class Comentario extends Model
         'comentario',
         'id_usuari',
         'hora',
+        'autor'
     ];
 }

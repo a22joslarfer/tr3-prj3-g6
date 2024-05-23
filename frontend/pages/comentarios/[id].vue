@@ -3,7 +3,7 @@
   <div class="bereals-container">
     <h1>BEREAL</h1>
     <div class="bereal-item">
-      <h2>{{ bereal.usuarioNombre }}</h2>
+     
       <div class="bereal-images">
         <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
         <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
@@ -16,7 +16,7 @@
       </div>
       <div class="comentarios-list">
         <div class="comentario-item" v-for="comentario in comentarios" :key="comentario.id">
-          <p>{{ comentario.hora.slice(11, 19) }} - {{ comentario.usuarioNombre }}: {{ comentario.comentario }}</p>
+          <p>{{ comentario.hora.slice(11, 19) }} - {{ comentario.autor }}: {{ comentario.comentario }}</p>
         </div>
       </div>
     </div>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { useStore } from '../stores/index';
+import { useStore } from '../../stores/index';
 
 export default {
   data() {
@@ -35,6 +35,7 @@ export default {
       nuevoComentario: "",
       loading: true,
       clientId: null,
+      nom: null
     };
   },
   async created() {
@@ -69,14 +70,6 @@ export default {
           throw new Error('Error al obtener los comentarios');
         }
         const data = await response.json();
-        for (const comentario of data) {
-          const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${comentario.id_usuari}`);
-          if (!usuarioResponse.ok) {
-            throw new Error('Error al obtener el usuario');
-          }
-          const usuarioData = await usuarioResponse.json();
-          comentario.usuarioNombre = usuarioData.data;
-        }
         this.comentarios = data;
       } catch (error) {
         console.error(error);
@@ -93,6 +86,7 @@ export default {
             comentario: this.nuevoComentario,
             id_bereal: this.$route.params.id,
             id_usuari: this.clientId,
+            autor: this.nom,
           })
         });
         if (!response.ok) {
@@ -115,6 +109,8 @@ export default {
         this.$router.push('/login');
       }
       this.clientId = user_id;
+      this.nom = store.return_user_username();
+      console.log(this.clientId, this.nom);
     },
   }
 };

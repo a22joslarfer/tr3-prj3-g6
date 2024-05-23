@@ -41,7 +41,7 @@ export default defineNuxtConfig({
   },
   ssr: false,
   hooks: {
-    async 'nitro:config'(nitroConfig) {
+    async 'nitro:config'(nitroConfig: { prerender: { routes: any[]; }; }) {
       if (nitroConfig && nitroConfig.prerender && nitroConfig.prerender.routes) {
         const userRoutes = await getUsers();
         const comentarioRoutes = await getComentarioRoutes();
