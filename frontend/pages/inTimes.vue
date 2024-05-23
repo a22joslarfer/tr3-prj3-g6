@@ -2,9 +2,8 @@
   <div>
     <HeaderGeneral />
 
-    <body>
+    <div class="main-content">
       <div class="bereals-container">
-
         <div class="section-buttons">
           <div class="section-button-left">
             <h4 @click="showSection('todos')" :class="{ active: activeSection === 'todos' }">Tots els InTime</h4>
@@ -43,22 +42,21 @@
         </div>
         <p v-else>No s'ha selecionat cap secció.</p>
       </div>
-    </body>
+    </div>
     <FooterOptions />
   </div>
 </template>
 
 <style scoped>
-
-
-
-
 /* Main container styling */
+.main-content {
+  overflow-y: auto;
+  height: calc(100vh - 100px); /* Adjust this value based on your header and footer height */
+}
+
 .bereals-container {
   margin: 20px;
 }
-
-
 
 /* Section buttons styling */
 .section-buttons {
@@ -88,8 +86,6 @@
   color: white;
 }
 
-
-
 /* List styling */
 .bereals-list {
   margin-top: 20px;
@@ -101,7 +97,6 @@
   padding: 10px;
   background-color: #f9f9f9;
   border-radius: 16px;
-
 }
 
 .bereal-item h2 {
@@ -146,9 +141,6 @@
   background-color: #0056b3;
 }
 </style>
-
-
-
 
 <script>
 import { useStore } from '../stores/index';
