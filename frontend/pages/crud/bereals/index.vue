@@ -1,5 +1,12 @@
 <template>
     <div class="container mt-4">
+        <!-- Agrega un formulario para cambiar la hora de notificación -->
+        <form @submit.prevent="guardarNuevaHora">
+            <label for="nueva-hora">Nueva hora de notificación:</label>
+            <input type="time" id="nueva-hora" v-model="nuevaHoraNotificacion">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+
         <table class="table table-bordered">
             <thead class="thead-light">
                 <tr>
@@ -28,11 +35,8 @@
             </tbody>
         </table>
     </div>
+    <FooterOptions />
 </template>
-
-
-
-
 
 <script>
 import 'bootstrap/dist/css/bootstrap.css'
@@ -45,6 +49,7 @@ export default {
         return {
             data: [],
             autenticado: false,
+            nuevaHoraNotificacion: '', // Agrega una variable para almacenar la nueva hora de notificación
         }
 
     },
@@ -94,7 +99,13 @@ export default {
         },
         editarItem(id) {
             navigateTo(`/crud/inTimes/edit/${id}`);
-        }
+        },
+        guardarNuevaHora() {
+            const store = useStore();
+            store.guardarNuevaHora(this.nuevaHoraNotificacion);
+
+            alert('Nueva hora de notificación guardada correctamente.');
+        },
     },
     created() {
         this.fetchData();

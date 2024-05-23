@@ -1,5 +1,4 @@
 <template>
-
     <HeaderGeneral />
     <div class="container">
         <button class="filter-button" @click="toggleFiltro">
@@ -42,7 +41,6 @@
         </div>
         <FooterOptions />
     </div>
-
 </template>
 
 
@@ -95,50 +93,71 @@ export default {
         this.fetchCiudades();
         this.initMapaDatosMapBox();
 
-        // Notification.requestPermission().then((permission) => {
-        //     if (permission === "granted") {
-        //         console.log("Permisos aceptados");
-
-        //         if ("geolocation" in navigator) {
-        //             navigator.geolocation.getCurrentPosition(
-        //                 (position) => {
-        //                     const { latitude, longitude } = position.coords;
-        //                     console.log("Ubicación del usuario:", latitude, longitude);
-
-        //                     const coordenada1 = {
-        //                         //pedralbes
-        //                         latitude: 41.386181,
-        //                         longitude: 2.106058,
-        //                     };
-
-        //                     const coordenada2 = {
-        //                         //pacha
-        //                         latitude: 41.385647,
-        //                         longitude: 2.197256,
-        //                     };
-        //                     if (
-        //                         this.personesAprop({ latitude, longitude }, coordenada1)
-        //                     ) {
-        //                         //pedralbes
-        //                         this.programarNotificacio(9, 37);
-        //                     } else if (
-        //                         //pacha
-        //                         this.personesAprop({ latitude, longitude }, coordenada2)
-        //                     ) {
-        //                         this.programarNotificacio(10, 22);
-        //                     }
-        //                 },
-        //                 (error) => {
-        //                     console.error("Error al obtener la ubicación:", error.message);
-        //                 }
-        //             );
-        //         }
-        //     }
-        // });
+        Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+                console.log("Permisos aceptados");
+                this.enviarNotificacio();
+            }
+        });
 
     },
 
     methods: {
+        enviarNotificacio() {
+            const opcionesNotificacion = {
+                body: "¡Es hora de publicar tu foto!",
+            };
+
+            const notificacionPendiente = {
+                titulo: "¡HORA DEL INTIMEE!",
+                eliminadaPorX: false
+            };
+
+            const store = useStore(); 
+            const nuevaHora = store.return_nueva_hora();
+
+            if ('Notification' in window) {
+                Notification.requestPermission().then((permission) => {
+                    console.log("Permiso de notificación:", permission);
+                    if (permission === "granted") {
+                        // Se divide la hora y el minuto de la nueva hora
+                        const [hora, minuto] = nuevaHora.split(':');
+                        const now = new Date();
+                        const horaEspecifica = new Date(
+                            now.getFullYear(),
+                            now.getMonth(),
+                            now.getDate(),
+                            parseInt(hora),
+                            parseInt(minuto),
+                            0
+                        );
+                        const tiempoRestante = horaEspecifica - now;
+
+                        console.log("Tiempo restante hasta la notificación (ms):", tiempoRestante);
+
+                        if (tiempoRestante > 0) {
+                            setTimeout(() => {
+                                console.log("Mostrando notificación...");
+                                const notification = new Notification("¡No has publicado tu INTIMEE, hazlo AHORA!", opcionesNotificacion);
+
+                                notification.onclick = () => {
+                                    window.location.href = '/inTime';
+                                };
+                            }, tiempoRestante);
+                        }
+                    } else {
+                        console.log("El permiso de notificación no fue concedido.");
+                    }
+                }).catch((error) => {
+                    console.error("Error al solicitar permiso de notificación:", error);
+                });
+            } else {
+                console.log("El navegador no soporta notificaciones.");
+            }
+        },
+
+
+
         handleChangeCiudadSeleccionada(event) {
             this.ciudadSeleccionada = event.target.value;
 
@@ -483,31 +502,6 @@ export default {
             const maxDistancia = 5; // Distancia en km
             return distancia <= maxDistancia;
         },
-        // programarNotificacio(hora, minuts) {
-        //     const now = new Date();
-        //     const horaEspecifica = new Date(
-        //         now.getFullYear(),
-        //         now.getMonth(),
-        //         now.getDate(),
-        //         hora,
-        //         minuts,
-        //         0
-        //     );
-        //     const tempsRestant = horaEspecifica - now;
-
-        //     if (tempsRestant > 0) {
-        //         setTimeout(() => {
-        //             this.enviarNotificacio();
-        //         }, tempsRestant);
-        //     }
-        // },
-        // enviarNotificacio() {
-        //     const opcionesNotificacion = {
-        //         body: "Es hora de publicar tu foto!",
-        //     };
-
-        //     new Notification("¡HORA DE BEREAL!", opcionesNotificacion);
-        // },
 
         toggleFiltro() {
             // Cambiar el estado del filtro al hacer clic en el icono del mapa
@@ -948,10 +942,12 @@ p {
         top: 100px;
     }
 }
+
 /* Media query para pantallas de computadora */
 @media screen and (min-width: 769px) {
     .navbar ul li {
-        margin: 0 20px; /* Aumenta el espaciado entre elementos en pantallas de computadora */
+        margin: 0 20px;
+        /* Aumenta el espaciado entre elementos en pantallas de computadora */
     }
 
     .info-card {
@@ -960,26 +956,30 @@ p {
         align-content: space-evenly;
         align-items: center;
         justify-items: center;
-        }
-        .card-body {
-            font-size: 1.5rem;
-        }
-        .card-header{
-            font-size: 2rem;
-        }
-        .card-closer{
-            font-size: 2rem;
-        }
-        .card-image{
-            height: 300px;
-        }
-        /* centrar el audio con flex*/
-        .card-body audio{
-            width: 100%;
-            margin-top: 20px;
-            padding: 5px;
+    }
 
-        }
+    .card-body {
+        font-size: 1.5rem;
+    }
+
+    .card-header {
+        font-size: 2rem;
+    }
+
+    .card-closer {
+        font-size: 2rem;
+    }
+
+    .card-image {
+        height: 300px;
+    }
+
+    /* centrar el audio con flex*/
+    .card-body audio {
+        width: 100%;
+        margin-top: 20px;
+        padding: 5px;
+
+    }
 }
-
 </style>
