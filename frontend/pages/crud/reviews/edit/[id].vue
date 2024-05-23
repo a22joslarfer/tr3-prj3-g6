@@ -70,7 +70,7 @@
     methods: {
       fetchReview() {
         const reviewId = this.$route.params.id;
-        fetch(`http://localhost:8000/api/reviews/${reviewId}`)
+        fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/reviews/${reviewId}`)
           .then(response => {
             if (!response.ok) {
               throw new Error('Error fetching review data');
@@ -86,7 +86,7 @@
       },
       updateReview() {
         const reviewId = this.$route.params.id;
-        fetch(`http://localhost:8000/api/reviews/${reviewId}`, {
+        fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/reviews/${reviewId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'

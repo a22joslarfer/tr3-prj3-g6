@@ -57,7 +57,7 @@ export default {
     },
     methods: {
         fetchData() {
-            fetch('http://localhost:8000/api/inTimes')
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/inTimes')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error fetching inTime data');
@@ -75,7 +75,7 @@ export default {
             navigateTo('/crud/inTimes/create');
         },
         eliminarItem(id) {
-            fetch(`http://localhost:8000/api/inTime/${id}`, {
+            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/inTime/${id}`, {
                 method: 'DELETE',
             })
                 .then(response => {

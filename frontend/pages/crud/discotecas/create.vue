@@ -80,7 +80,7 @@
     },
     methods: {
       createDiscoteca() {
-        fetch('http://localhost:8000/api/discotecas', {
+        fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/discotecas', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

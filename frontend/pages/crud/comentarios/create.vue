@@ -38,7 +38,7 @@ export default {
     },
     methods: {
         crearNuevoComentario() {
-            fetch('http://localhost:8000/api/comentarios', {
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

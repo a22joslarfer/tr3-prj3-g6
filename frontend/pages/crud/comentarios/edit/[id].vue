@@ -37,7 +37,7 @@ export default {
     methods: {
         obtenerComentario() {
             
-            fetch(`http://localhost:8000/api/comentarios/${this.$route.params.id}`)
+            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios/${this.$route.params.id}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Failed to fetch comentario');
@@ -55,7 +55,7 @@ export default {
                 });
         },
         actualizarComentario() {
-            fetch(`http://localhost:8000/api/comentarios/${this.$route.params.id}`, {
+            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios/${this.$route.params.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -193,7 +193,7 @@ export default {
       }
     },
     getImagenUrl(rutaRelativaImagen) {
-      return `http://localhost:8000/${rutaRelativaImagen}`;
+      return `http://elysium.daw.inspedralbes.cat/${rutaRelativaImagen}`;
     },
     checkIfAuth() {
       const store = useStore();

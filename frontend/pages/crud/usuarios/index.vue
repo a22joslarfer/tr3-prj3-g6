@@ -61,7 +61,7 @@ export default {
     },
     methods: {
         fetchData() {
-            fetch('http://localhost:8000/api/users')
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/users')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error fetching user data');
@@ -85,7 +85,7 @@ export default {
             //id del usuario a eliminar
             console.log('Eliminar item');
             console.log(id);
-            fetch(`http://localhost:8000/api/users/${id}`, {
+            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${id}`, {
                 method: 'DELETE',
             })
                 .then(response => {

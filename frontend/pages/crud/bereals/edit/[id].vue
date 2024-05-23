@@ -71,7 +71,7 @@ export default {
                 console.log(`${key}:`, value);
             }
 
-            fetch(`http://localhost:8000/api/inTime/${this.$route.params.id}`, {
+            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/inTime/${this.$route.params.id}`, {
                 method: 'PUT',
                 body: formData,
             })

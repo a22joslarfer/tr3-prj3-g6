@@ -50,7 +50,7 @@ export default {
             console.log('Fecha de nacimiento:', this.birthday);
             
             try {
-                const response = await fetch(`http://localhost:8000/api/update/users/${this.id}`, {
+                const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/update/users/${this.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

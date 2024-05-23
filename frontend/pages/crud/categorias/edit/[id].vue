@@ -27,7 +27,7 @@ export default {
     methods: {
         obtenerCategoria() {
             const id = this.$route.params.id;
-            fetch(`http://localhost:8000/api/categorias_reviews/${id}`)
+            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews/${id}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Failed to fetch categoria');
@@ -43,7 +43,7 @@ export default {
                 });
         },
         actualizarCategoria() {
-            fetch(`http://localhost:8000/api/categorias_reviews/${this.id}`, {
+            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews/${this.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

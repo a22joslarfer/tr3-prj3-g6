@@ -65,7 +65,7 @@ export default {
     },
     methods: {
         fetchData() {
-            fetch('http://localhost:8000/api/discotecas')
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/discotecas')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error fetching discoteca data');
@@ -84,7 +84,7 @@ export default {
         },
         eliminarItem(id) {
             if (confirm('¿Estás seguro de que deseas eliminar este comentario?')) {
-                fetch(`http://localhost:8000/api/discotecas/${id}`, {
+                fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/discotecas/${id}`, {
                     method: 'DELETE',
                 })
                 .then(response => {

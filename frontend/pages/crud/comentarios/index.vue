@@ -52,7 +52,7 @@ export default {
     },
     methods: {
         fetchData() {
-            fetch('http://localhost:8000/api/comentarios')
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error fetching comentario data');
@@ -71,7 +71,7 @@ export default {
         },
         eliminarItem(id) {
             if (confirm('¿Estás seguro de que deseas eliminar este comentario?')) {
-                fetch(`http://localhost:8000/api/comentarios/${id}`, {
+                fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios/${id}`, {
                     method: 'DELETE',
                 })
                 .then(response => {

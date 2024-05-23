@@ -81,7 +81,7 @@
     methods: {
       fetchDiscoteca() {
         const discotecaId = this.$route.params.id;
-        fetch(`http://localhost:8000/api/discotecas/${discotecaId}`)
+        fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/discotecas/${discotecaId}`)
           .then(response => {
             if (!response.ok) {
               throw new Error('Error fetching discoteca data');
@@ -97,7 +97,7 @@
       },
       updateDiscoteca() {
         const discotecaId = this.$route.params.id;
-        fetch(`http://localhost:8000/api/discotecas/${discotecaId}`, {
+        fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/discotecas/${discotecaId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'

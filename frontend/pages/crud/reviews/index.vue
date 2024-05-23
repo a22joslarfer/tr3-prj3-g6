@@ -59,7 +59,7 @@ export default {
     },
     methods: {
         fetchData() {
-            fetch('http://localhost:8000/api/reviews')
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/reviews')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error fetching review data');
@@ -81,7 +81,7 @@ export default {
             navigateTo('/crud/reviews/create');
         },
         eliminarItem(id) {
-            fetch(`http://localhost:8000/api/reviews/${id}`, {
+            fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/reviews/${id}`, {
                 method: 'DELETE',
             })
                 .then(response => {

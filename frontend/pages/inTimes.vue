@@ -188,7 +188,7 @@ export default {
         const data = await response.json();
         for (const bereal of data) {
           // Obtindre el nom de l'usuari del Bereal
-          const usuarioResponse = await fetch(`http://localhost:8000/api/users/${bereal.id_usuari}`);
+          const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${bereal.id_usuari}`);
           if (!usuarioResponse.ok) {
             throw new Error('Error al obtener el usuario');
           }

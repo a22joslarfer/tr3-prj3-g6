@@ -58,7 +58,7 @@ export default {
             formData.append('id_usuari', this.id_usuari);
             formData.append('hora', this.hora);
 
-            fetch('http://localhost:8000/api/inTime', {
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/inTime', {
                 method: 'POST',
                 body: formData,
 

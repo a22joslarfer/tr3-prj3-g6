@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         fetchData() {
-            fetch('http://localhost:8000/api/categorias_reviews')
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error fetching categoria data');
@@ -56,7 +56,7 @@ export default {
         },
         eliminarItem(id) {
             if (confirm('¿Estás seguro de que deseas eliminar esta categoría?')) {
-                fetch(`http://localhost:8000/api/categorias_reviews/${id}`, {
+                fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews/${id}`, {
                     method: 'DELETE',
                 })
                 .then(response => {

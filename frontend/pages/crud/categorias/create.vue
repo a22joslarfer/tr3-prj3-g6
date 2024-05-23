@@ -25,7 +25,7 @@ export default {
     },
     methods: {
         crearCategoria() {
-            fetch('http://localhost:8000/api/categorias_reviews', {
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
