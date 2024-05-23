@@ -1,26 +1,23 @@
 <template>
-
-  <body>
-    <div class="bereals-container">
-      <h1>BEREAL</h1>
-      <div class="bereal-item">
-        <h2>{{ bereal.usuarioNombre }}</h2>
-        <div class="bereal-images">
-          <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
-          <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
-        </div>
-      </div>
-      <div class="comentarios-container">
-        <div class="comentario-item" v-for="comentario in comentarios" :key="comentario.id">
-          <p>{{ comentario.hora.slice(11, 19) }} - {{ comentario.usuarioNombre }}: {{ comentario.comentario }}</p>
-        </div>
-        <div class="agregar-comentario">
-          <input type="text" v-model="nuevoComentario" placeholder="Escriu un comentari" class="comment-input">
-          <button @click="agregarComentario" class="comment-button">Afegir Comentari</button>
-        </div>
+  <div class="bereals-container">
+    <h1>BEREAL</h1>
+    <div class="bereal-item">
+      <h2>{{ bereal.usuarioNombre }}</h2>
+      <div class="bereal-images">
+        <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
+        <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
       </div>
     </div>
-  </body>
+    <div class="comentarios-container">
+      <div class="comentario-item" v-for="comentario in comentarios" :key="comentario.id">
+        <p>{{ comentario.hora.slice(11, 19) }} - {{ comentario.usuarioNombre }}: {{ comentario.comentario }}</p>
+      </div>
+      <div class="agregar-comentario">
+        <input type="text" v-model="nuevoComentario" placeholder="Escriu un comentari" class="comment-input">
+        <button @click="agregarComentario" class="comment-button">Afegir Comentari</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style>
@@ -111,8 +108,9 @@ h1 {
 }
 </style>
 
-
 <script>
+import { useStore } from '../stores/index';
+
 export default {
   data() {
     return {
@@ -123,7 +121,8 @@ export default {
       clientId: null,
     };
   },
-  async mounted() {
+  async created() {
+    this.checkIfAuth();
     await this.obtenerBereal();
     await this.obtenerComentarios();
     this.loading = false;
@@ -135,14 +134,15 @@ export default {
         if (!response.ok) {
           throw new Error('Error al obtener el Bereal');
         }
-        this.bereal = await response.json();
+        const data = await response.json();
         // Obtener el nombre de usuario asociado al Bereal
-        const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${this.bereal.id_usuari}`);
+        const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${data.id_usuari}`);
         if (!usuarioResponse.ok) {
           throw new Error('Error al obtener el usuario');
         }
         const usuarioData = await usuarioResponse.json();
-        this.bereal.usuarioNombre = usuarioData.data;
+        data.usuarioNombre = usuarioData.data;
+        this.bereal = data;
       } catch (error) {
         console.error(error);
       }
@@ -153,11 +153,9 @@ export default {
         if (!response.ok) {
           throw new Error('Error al obtener los comentarios');
         }
-        this.comentarios = await response.json();
-
-
+        const data = await response.json();
         // Obtener el nombre de usuario asociado a cada comentario
-        for (const comentario of this.comentarios) {
+        for (const comentario of data) {
           const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${comentario.id_usuari}`);
           if (!usuarioResponse.ok) {
             throw new Error('Error al obtener el usuario');
@@ -165,12 +163,12 @@ export default {
           const usuarioData = await usuarioResponse.json();
           comentario.usuarioNombre = usuarioData.data;
         }
+        this.comentarios = data;
       } catch (error) {
         console.error(error);
       }
     },
     async agregarComentario() {
-   
       try {
         const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios', {
           method: 'POST',
@@ -187,28 +185,23 @@ export default {
           throw new Error('Error al subir el comentario');
         }
         this.nuevoComentario = "";
-        this.obtenerComentarios();
+        await this.obtenerComentarios();
       } catch (error) {
         console.error(error);
       }
     },
     getImagenUrl(rutaRelativaImagen) {
-      return `http://elysium.daw.inspedralbes.cat/${rutaRelativaImagen}`;
+      return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
     },
     checkIfAuth() {
       const store = useStore();
       const user_id = store.return_user_id();
       if (user_id == null) {
-        store.set_return_path('/comentarios'+ this.$route.params.id);
+        store.set_return_path('/comentarios' + this.$route.params.id);
         this.$router.push('/login');
-
       }
       this.clientId = user_id;
-
     },
-  },
-  mounted(){
-    this.checkIfAuth();
   }
-}
+};
 </script>
