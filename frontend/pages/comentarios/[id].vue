@@ -1,4 +1,5 @@
 <template>
+  <HeaderGeneral />
   <div class="bereals-container">
     <h1>BEREAL</h1>
     <div class="bereal-item">
@@ -9,16 +10,115 @@
       </div>
     </div>
     <div class="comentarios-container">
-      <div class="comentario-item" v-for="comentario in comentarios" :key="comentario.id">
-        <p>{{ comentario.hora.slice(11, 19) }} - {{ comentario.usuarioNombre }}: {{ comentario.comentario }}</p>
-      </div>
       <div class="agregar-comentario">
         <input type="text" v-model="nuevoComentario" placeholder="Escriu un comentari" class="comment-input">
         <button @click="agregarComentario" class="comment-button">Afegir Comentari</button>
       </div>
+      <div class="comentarios-list">
+        <div class="comentario-item" v-for="comentario in comentarios" :key="comentario.id">
+          <p>{{ comentario.hora.slice(11, 19) }} - {{ comentario.usuarioNombre }}: {{ comentario.comentario }}</p>
+        </div>
+      </div>
     </div>
   </div>
+  <FooterOptions />
 </template>
+
+<script>
+import { useStore } from '../stores/index';
+
+export default {
+  data() {
+    return {
+      bereal: {},
+      comentarios: [],
+      nuevoComentario: "",
+      loading: true,
+      clientId: null,
+    };
+  },
+  async created() {
+    this.checkIfAuth();
+    await this.obtenerBereal();
+    await this.obtenerComentarios();
+    this.loading = false;
+  },
+  methods: {
+    async obtenerBereal() {
+      try {
+        const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/inTime/${this.$route.params.id}`);
+        if (!response.ok) {
+          throw new Error('Error al obtener el Bereal');
+        }
+        const data = await response.json();
+        const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${data.id_usuari}`);
+        if (!usuarioResponse.ok) {
+          throw new Error('Error al obtener el usuario');
+        }
+        const usuarioData = await usuarioResponse.json();
+        data.usuarioNombre = usuarioData.data;
+        this.bereal = data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async obtenerComentarios() {
+      try {
+        const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios/${this.$route.params.id}`);
+        if (!response.ok) {
+          throw new Error('Error al obtener los comentarios');
+        }
+        const data = await response.json();
+        for (const comentario of data) {
+          const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${comentario.id_usuari}`);
+          if (!usuarioResponse.ok) {
+            throw new Error('Error al obtener el usuario');
+          }
+          const usuarioData = await usuarioResponse.json();
+          comentario.usuarioNombre = usuarioData.data;
+        }
+        this.comentarios = data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async agregarComentario() {
+      try {
+        const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            comentario: this.nuevoComentario,
+            id_bereal: this.$route.params.id,
+            id_usuari: this.clientId,
+          })
+        });
+        if (!response.ok) {
+          throw new Error('Error al subir el comentario');
+        }
+        this.nuevoComentario = "";
+        await this.obtenerComentarios();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    getImagenUrl(rutaRelativaImagen) {
+      return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
+    },
+    checkIfAuth() {
+      const store = useStore();
+      const user_id = store.return_user_id();
+      if (user_id == null) {
+        store.set_return_path('/comentarios' + this.$route.params.id);
+        this.$router.push('/login');
+      }
+      this.clientId = user_id;
+    },
+  }
+};
+</script>
 
 <style>
 body {
@@ -72,6 +172,13 @@ h1 {
   border-radius: 5px;
 }
 
+.comentarios-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 20px;
+  padding-right: 10px; /* to avoid content width change when scrollbar appears */
+}
+
 .comentario-item {
   margin-bottom: 10px;
 }
@@ -81,9 +188,15 @@ h1 {
 }
 
 .agregar-comentario {
-  margin-top: 20px;
   display: flex;
   align-items: center;
+  background-color: #e9e6e5;
+  padding: 10px;
+  border-bottom: 1px solid black;
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .comment-input {
@@ -107,101 +220,3 @@ h1 {
   background-color: #a34427;
 }
 </style>
-
-<script>
-import { useStore } from '../stores/index';
-
-export default {
-  data() {
-    return {
-      bereal: {},
-      comentarios: [],
-      nuevoComentario: "",
-      loading: true,
-      clientId: null,
-    };
-  },
-  async created() {
-    this.checkIfAuth();
-    await this.obtenerBereal();
-    await this.obtenerComentarios();
-    this.loading = false;
-  },
-  methods: {
-    async obtenerBereal() {
-      try {
-        const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/inTime/${this.$route.params.id}`);
-        if (!response.ok) {
-          throw new Error('Error al obtener el Bereal');
-        }
-        const data = await response.json();
-        // Obtener el nombre de usuario asociado al Bereal
-        const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${data.id_usuari}`);
-        if (!usuarioResponse.ok) {
-          throw new Error('Error al obtener el usuario');
-        }
-        const usuarioData = await usuarioResponse.json();
-        data.usuarioNombre = usuarioData.data;
-        this.bereal = data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    async obtenerComentarios() {
-      try {
-        const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios/${this.$route.params.id}`);
-        if (!response.ok) {
-          throw new Error('Error al obtener los comentarios');
-        }
-        const data = await response.json();
-        // Obtener el nombre de usuario asociado a cada comentario
-        for (const comentario of data) {
-          const usuarioResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${comentario.id_usuari}`);
-          if (!usuarioResponse.ok) {
-            throw new Error('Error al obtener el usuario');
-          }
-          const usuarioData = await usuarioResponse.json();
-          comentario.usuarioNombre = usuarioData.data;
-        }
-        this.comentarios = data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    async agregarComentario() {
-      try {
-        const response = await fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            comentario: this.nuevoComentario,
-            id_bereal: this.$route.params.id,
-            id_usuari: this.clientId,
-          })
-        });
-        if (!response.ok) {
-          throw new Error('Error al subir el comentario');
-        }
-        this.nuevoComentario = "";
-        await this.obtenerComentarios();
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    getImagenUrl(rutaRelativaImagen) {
-      return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
-    },
-    checkIfAuth() {
-      const store = useStore();
-      const user_id = store.return_user_id();
-      if (user_id == null) {
-        store.set_return_path('/comentarios' + this.$route.params.id);
-        this.$router.push('/login');
-      }
-      this.clientId = user_id;
-    },
-  }
-};
-</script>
