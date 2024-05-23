@@ -51,7 +51,7 @@
 /* Main container styling */
 .main-content {
   overflow-y: auto;
-  height: calc(100vh - 100px); /* Adjust this value based on your header and footer height */
+  height: calc(100vh - 100px);
 }
 
 .bereals-container {
