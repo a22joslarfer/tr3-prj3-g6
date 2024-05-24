@@ -18,8 +18,12 @@
         <div class="comentario-item" v-for="comentario in comentarios" :key="comentario.id">
           <p>
             {{ comentario.hora.slice(11, 19) }} - {{ comentario.autor }}: {{ comentario.comentario }}
-            <span>{{ comentario.likes }} Me gusta</span>
-            <button @click="likeComentario(comentario.id)">Me gusta</button>
+            <span>
+              <button @click="likeComentario(comentario.id)" class="like-button">
+                <img src="../../public/img/like.png" alt="Me gusta">
+              </button>
+              {{ comentario.likes }}
+            </span>
           </p>
         </div>
       </div>
@@ -27,7 +31,6 @@
   </div>
   <FooterOptions />
 </template>
-
 
 <script>
 import { useStore } from '../../stores/index';
@@ -212,7 +215,7 @@ h1 {
   background-color: #e9e6e5;
   padding: 10px;
   border-bottom: 1px solid black;
-  position: -webkit-sticky; /* For Safari */
+  position: -webkit-sticky; /* For Safari*/
   position: sticky;
   top: 0;
   z-index: 100;
@@ -238,5 +241,17 @@ h1 {
 .comment-button:hover {
   background-color: #a34427;
 }
-</style>
 
+.like-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin-right: 5px;
+  padding: 0;
+}
+
+.like-button img {
+  width: 20px;
+  height: 20px;
+}
+</style>
