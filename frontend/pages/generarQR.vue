@@ -75,7 +75,7 @@ export default {
       const store = useStore();
       const user_id = store.return_user_id();
       if (user_id == null) {
-        store.set_return_path('/generarQr');
+        store.set_return_path('/generarQR');
         this.$router.push('/login');
 
       }
