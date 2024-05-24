@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -9,7 +10,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\File;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserRegistered;
 
 class UserController extends Controller
 {
@@ -61,6 +63,12 @@ class UserController extends Controller
             'profile_photo' => $profilePhotoPath, // Almacenar la ruta relativa de la imagen en la base de datos
         ]);
         $user->save();
+
+        
+
+        // Envía un correo electrónico de confirmación al usuario
+    Mail::to($user->email)->send(new UserRegistered($user));
+
         $rewardMessage = "¡Felicidades! Te has registrado exitosamente. Como recompensa, obtienes [detalles de la recompensa aquí].";
 
 

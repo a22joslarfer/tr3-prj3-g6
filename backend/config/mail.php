@@ -1,6 +1,8 @@
 <?php
 
+
 return [
+
 
     /*
     |--------------------------------------------------------------------------
@@ -13,7 +15,9 @@ return [
     |
     */
 
+
     'default' => env('MAIL_MAILER', 'smtp'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -33,6 +37,7 @@ return [
     |
     */
 
+
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
@@ -45,31 +50,38 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
+
         'ses' => [
             'transport' => 'ses',
         ],
+
 
         'mailgun' => [
             'transport' => 'mailgun',
         ],
 
+
         'postmark' => [
             'transport' => 'postmark',
         ],
+
 
         'sendmail' => [
             'transport' => 'sendmail',
             'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
         ],
 
+
         'log' => [
             'transport' => 'log',
             'channel' => env('MAIL_LOG_CHANNEL'),
         ],
 
+
         'array' => [
             'transport' => 'array',
         ],
+
 
         'failover' => [
             'transport' => 'failover',
@@ -79,6 +91,7 @@ return [
             ],
         ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -91,10 +104,12 @@ return [
     |
     */
 
+
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -107,12 +122,15 @@ return [
     |
     */
 
+
     'markdown' => [
         'theme' => 'default',
+
 
         'paths' => [
             resource_path('views/vendor/mail'),
         ],
     ],
+
 
 ];
