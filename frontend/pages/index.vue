@@ -1,6 +1,7 @@
 <template>
     <HeaderGeneral />
     <div class="container">
+        <LoadingDots :isLoading="isLoading" />
         <button class="filter-button" @click="toggleFiltro">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
                 <path
@@ -80,6 +81,7 @@ export default {
             ciudadSeleccionada: null, // Agregar ciudadSeleccionada
             ciudades: [],
             fetchDataError: false,
+            isLoading: true,
         };
     },
     mounted() {
@@ -221,6 +223,7 @@ export default {
 
                 this.crear_mostrar_pines_discos();
                 this.añadir_popup_info_de_las_discos();
+                this.isLoading = false;
             } catch (error) {
                 console.error('Error al obtener los datos de las discotecas:', error);
                 this.fetchDataError = true;

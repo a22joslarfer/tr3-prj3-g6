@@ -54,7 +54,7 @@ export default {
         });
         if (response.ok) {
           alert('Imágenes subidas correctamente');
-          navigateTo('inTimes')
+          navigateTo('/inTimes');
         } else {
           alert('Error al subir imágenes');
         }

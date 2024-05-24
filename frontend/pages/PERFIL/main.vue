@@ -92,9 +92,11 @@
         <h2>Contenido de nombres</h2>
       </div>
     </div>
+    <FooterOptions />
   </div>
 </template>
 <script>
+import FooterOptions from '~/components/FooterOptions.vue';
 import { useStore } from '../stores/index.js';
 
 export default {
