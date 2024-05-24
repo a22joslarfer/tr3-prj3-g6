@@ -59,7 +59,6 @@ export default {
       options: [
         { id: 1, name: 'Cambiar datos', route: '/perfil/ajustes' },
         { id: 2, name: 'Amigos', route: '/perfil/amigos' },
-        { id: 3, name: 'Chats', route: '/perfil/chats' },
         { id: 4, name: 'Notificaciones', route: '/perfil/notificaciones' },
         { id: 5, name: 'Login', route: '/Login' },
         { id: 6, name: 'Register', route: '/Register' },
