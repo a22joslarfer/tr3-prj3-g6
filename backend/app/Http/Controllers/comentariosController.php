@@ -32,12 +32,26 @@ class comentariosController extends Controller
         return response()->json(['message' => 'Comentario creado exitosamente', 'comentario' => $comentario], 201);
     }
 
+    public function like($id)
+    {
+        $comentario = Comentario::find($id);
+
+        if (!$comentario) {
+            return response()->json(['message' => 'Comentario no encontrado'], 404);
+        }
+
+        $comentario->likes++;
+        $comentario->save();
+
+        return response()->json(['message' => 'Me gusta registrado exitosamente', 'comentario' => $comentario]);
+    }
+
     public function show($id)
     {
         $comentario = Comentario::find($id);
         return response()->json($comentario);
     }
-    
+
     public function update(Request $request, $id)
     {
         $request->validate([
