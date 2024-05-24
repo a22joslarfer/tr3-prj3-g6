@@ -154,6 +154,9 @@ Route::delete('/comentarios/{id}', [comentariosController::class, 'destroy']);
 Route::get('/comentarios', [comentariosController::class, 'indexComentarios']);
 // editar un comentario
 Route::put('/comentarios/{id}', [comentariosController::class, 'update']);
+//ruta para dar like
+Route::post('/comentarios/{id}/like', [comentariosController::class, 'like']);
+
 
 
 
