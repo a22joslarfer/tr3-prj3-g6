@@ -3,7 +3,6 @@
   <div class="bereals-container">
     <h1>BEREAL</h1>
     <div class="bereal-item">
-     
       <div class="bereal-images">
         <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">
         <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image">
@@ -43,7 +42,8 @@ export default {
       nuevoComentario: "",
       loading: true,
       clientId: null,
-      nom: null
+      nom: null,
+      comentariosConLike: [] // Array para almacenar los IDs de los comentarios con "like" del usuario
     };
   },
   async created() {
@@ -107,23 +107,30 @@ export default {
       }
     },
     async likeComentario(comentarioId) {
-  try {
-    const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios/${comentarioId}/like`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-      })
-    });
-    if (!response.ok) {
-      throw new Error('Error al dar Me gusta al comentario');
-    }
-    await this.obtenerComentarios();
-  } catch (error) {
-    console.error(error);
-  }
-},
+      // Verificar si el comentario ya tiene "like" del usuario
+      if (this.comentariosConLike.includes(comentarioId)) {
+        console.log("Este comentario ya tiene like del usuario.");
+        return; // No ejecutar la lógica para dar like nuevamente
+      }
+      try {
+        const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios/${comentarioId}/like`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+          })
+        });
+        if (!response.ok) {
+          throw new Error('Error al dar Me gusta al comentario');
+        }
+        // Agregar el ID del comentario al array de comentarios con like del usuario
+        this.comentariosConLike.push(comentarioId);
+        await this.obtenerComentarios();
+      } catch (error) {
+        console.error(error);
+      }
+    },
     getImagenUrl(rutaRelativaImagen) {
       return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
     },
@@ -141,6 +148,7 @@ export default {
   }
 };
 </script>
+
 
 <style>
 body {
