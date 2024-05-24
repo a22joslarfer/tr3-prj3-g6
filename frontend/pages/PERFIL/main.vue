@@ -127,6 +127,13 @@ export default {
   },
   
   mounted() {
+    const store = useStore();
+    const userInfo = store.return_user_info();
+    this.user = userInfo.username;
+
+    // Obtener la id del usuario
+    const userId = userInfo.id;
+
     this.fetch();
     this.fetchAmigos();
     this.fetchBereals();
@@ -139,6 +146,9 @@ export default {
     bereal.img_del = bereal.img_tra;
     bereal.img_tra = temp;
   },
+  llevarAgenerarCodigoQr(){
+      navigateTo('../generarQR');
+    },
     async fetch() {
       try {
         const store = useStore();
@@ -203,9 +213,17 @@ export default {
       this.selectedSection = section;
     },
     
-    llevarAgenerarCodigoQr() {
-      this.$router.push('../generarQR');
-    },
+    checkIfAuth() {
+            const store = useStore();
+            const user_id = store.return_user_id();
+            if (user_id == null) {
+                store.set_return_path('/reviews');
+                this.$router.push('/login');
+
+            }
+            this.client_id = user_id;
+
+        },
     
     editarPerfil() {
       this.$router.push('/perfil/ajustes');
