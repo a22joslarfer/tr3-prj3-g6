@@ -16,13 +16,18 @@
       </div>
       <div class="comentarios-list">
         <div class="comentario-item" v-for="comentario in comentarios" :key="comentario.id">
-          <p>{{ comentario.hora.slice(11, 19) }} - {{ comentario.autor }}: {{ comentario.comentario }}</p>
+          <p>
+            {{ comentario.hora.slice(11, 19) }} - {{ comentario.autor }}: {{ comentario.comentario }}
+            <span>{{ comentario.likes }} Me gusta</span>
+            <button @click="likeComentario(comentario.id)">Me gusta</button>
+          </p>
         </div>
       </div>
     </div>
   </div>
   <FooterOptions />
 </template>
+
 
 <script>
 import { useStore } from '../../stores/index';
@@ -98,6 +103,24 @@ export default {
         console.error(error);
       }
     },
+    async likeComentario(comentarioId) {
+  try {
+    const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios/${comentarioId}/like`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+      })
+    });
+    if (!response.ok) {
+      throw new Error('Error al dar Me gusta al comentario');
+    }
+    await this.obtenerComentarios();
+  } catch (error) {
+    console.error(error);
+  }
+},
     getImagenUrl(rutaRelativaImagen) {
       return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
     },
@@ -216,3 +239,4 @@ h1 {
   background-color: #a34427;
 }
 </style>
+
