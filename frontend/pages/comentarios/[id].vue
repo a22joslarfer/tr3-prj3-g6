@@ -17,12 +17,6 @@
         <div class="comentario-item" v-for="comentario in comentarios" :key="comentario.id">
           <p>
             {{ comentario.hora.slice(11, 19) }} - {{ comentario.autor }}: {{ comentario.comentario }}
-            <span>
-              <button @click="likeComentario(comentario.id)" class="like-button">
-                <img src="../../public/img/like.png" alt="Me gusta">
-              </button>
-              {{ comentario.likes }}
-            </span>
           </p>
         </div>
       </div>
