@@ -1,48 +1,56 @@
-<template>
-    <HeaderGeneral />
-    <div class="container">
-        <LoadingDots :isLoading="isLoading" />
-        <button class="filter-button" @click="toggleFiltro">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
-                <path
-                    d="M440-160q-17 0-28.5-11.5T400-200v-240L168-736q-15-20-4.5-42t36.5-22h560q26 0 36.5 22t-4.5 42L560-440v240q0 17-11.5 28.5T520-160h-80Zm40-308 198-252H282l198 252Zm0 0Z" />
-            </svg>
-        </button>
-        <div class="filter-indicator" v-if="filtroActivo">
-            <select v-model="ciudadSeleccionada" @change="handleChangeCiudadSeleccionada">
-                <option disabled value="">Selecciona una ciudad</option>
-                <option v-for="(ciudad, index) in ciudades" :key="index" :value="ciudad.id">{{ ciudad.nombre }}
-                </option>
-            </select>
+    <template>
+        <HeaderGeneral />
+        <div class="container">
+            <LoadingDots :isLoading="isLoading" />
+            <button class="filter-button" @click="toggleFiltro">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                    <path
+                        d="M440-160q-17 0-28.5-11.5T400-200v-240L168-736q-15-20-4.5-42t36.5-22h560q26 0 36.5 22t-4.5 42L560-440v240q0 17-11.5 28.5T520-160h-80Zm40-308 198-252H282l198 252Zm0 0Z" />
+                </svg>
+            </button>
+            <div class="filter-indicator" v-if="filtroActivo">
+                <select v-model="ciudadSeleccionada" @change="handleChangeCiudadSeleccionada">
+                    <option disabled value="">Selecciona una ciudad</option>
+                    <option v-for="(ciudad, index) in ciudades" :key="index" :value="ciudad.id">{{ ciudad.nombre }}
+                    </option>
+                </select>
+            </div>
+
+
+            <div id="buscador">
+            <input
+                type="text"
+                ref="buscador"
+                @blur="handleBlur"
+                v-model="busqueda"
+                placeholder="Buscar..."
+            />
         </div>
 
+            <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
 
-        <div id="buscador"></div>
+            <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>{{ pin_seleccionado.titulo }}</h3>
+                        <div class="card-closer" @click="cerrarPopUp">X</div>
+                    </div>
+                    <div class="card-body">
+                        <img :src="pin_seleccionado.imgUrl" alt="imagen de la discoteca"
+                            style="width: 100%; height: 200px; object-fit: cover;">
 
-        <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
-
-        <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
-            <div class="card">
-                <div class="card-header">
-                    <h3>{{ pin_seleccionado.titulo }}</h3>
-                    <div class="card-closer" @click="cerrarPopUp">X</div>
-                </div>
-                <div class="card-body">
-                    <img :src="pin_seleccionado.imgUrl" alt="imagen de la discoteca"
-                        style="width: 100%; height: 200px; object-fit: cover;">
-
-                    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
-                    <p>Horario: {{ pin_seleccionado.horario }}</p>
-                    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
-                    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
-                    <audio :src="pin_seleccionado.cancion_mp3" controls></audio>
-                    <NuxtLink :to="'/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
+                        <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
+                        <p>Horario: {{ pin_seleccionado.horario }}</p>
+                        <p>Telefono: {{ pin_seleccionado.telefono }}</p>
+                        <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+                        <audio :src="pin_seleccionado.cancion_mp3" controls></audio>
+                        <NuxtLink :to="'/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
+                    </div>
                 </div>
             </div>
+            <FooterOptions />
         </div>
-        <FooterOptions />
-    </div>
-</template>
+    </template>
 
 
 
@@ -50,7 +58,7 @@
 <script>
 import FooterOptions from '@/components/FooterOptions.vue';
 import mapboxgl from 'mapbox-gl';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';    
 export default {
     components: {
         FooterOptions,
@@ -82,6 +90,7 @@ export default {
             ciudades: [],
             fetchDataError: false,
             isLoading: true,
+            busqueda: '',
         };
     },
     mounted() {
@@ -105,6 +114,19 @@ export default {
     },
 
     methods: {
+        handleBlur() {
+            // Esperar un corto periodo para asegurar que el teclado se haya ocultado
+            setTimeout(() => {
+                // Ajustar el scroll para volver al inicio
+                window.scrollTo(0, 0);
+                // Opcionalmente forzar redibujado de la página
+                document.body.style.height = '101vh';
+                setTimeout(() => {
+                    document.body.style.height = '100vh';
+                }, 10); // Redibujar después de 10ms
+            }, 100); // 100ms debería ser suficiente, ajusta según sea necesario
+        },
+        
         enviarNotificacio() {
             const opcionesNotificacion = {
                 body: "¡Es hora de publicar tu foto!",
@@ -755,7 +777,12 @@ p {
     text-decoration: none;
     margin-top: 40px;
 }
-
+body {
+    /* Asegurarse de que el body tenga una altura adecuada */
+    height: 100vh;
+    overflow: hidden;
+    overscroll-behavior: contain;
+}
 
 @keyframes fade-in {
     from {
