@@ -22,7 +22,7 @@
   </div>
   <div v-else class="else-container">
     <BtnFollowAuth :clientId="clientId" :lectorId="lectorId" />
-    <CancelarFollow />
+    
   </div>
   <FooterOptions />
 </template>
