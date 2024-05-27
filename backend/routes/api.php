@@ -13,7 +13,7 @@ use App\Http\Controllers\categoriasReviewController;
 use App\Http\Controllers\friendController;
 use App\Http\Controllers\seguidoresController;
 use App\Http\Controllers\CiudadController;
-
+use App\Http\Controllers\FavoritoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -163,3 +163,9 @@ Route::post('/comentarios/{id}/like', [comentariosController::class, 'like']);
 
 //ciudades
 Route::get('/ciudades', [CiudadController::class, 'index']);
+
+
+//favoritos
+Route::post('/favoritos', [FavoritoController::class, 'store']);
+Route::delete('/favoritos/{id}', [FavoritoController::class, 'destroy']);
+Route::get('/favoritos/{id}', [FavoritoController::class, 'getFavoritos']);
