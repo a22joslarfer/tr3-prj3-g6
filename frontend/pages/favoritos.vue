@@ -1,8 +1,8 @@
 <template>
-    <div>
-      <h1>Tus Favoritos</h1>
-      <ul>
-        <li v-for="favorito in favoritos" :key="favorito.id">
+    <div class="favorites-container">
+      <h1 class="favorites-title">Tus Favoritos</h1>
+      <ul class="favorites-list">
+        <li v-for="favorito in favoritos" :key="favorito.id" class="favorite-item">
           {{ favorito.discoteca_id }}
         </li>
       </ul>
@@ -10,7 +10,7 @@
   </template>
   
   <script>
-  import { useStore } from '../stores/index'; // Importa la tienda Pinia
+  import { useStore } from '../stores/index';
   
   export default {
     data() {
@@ -36,10 +36,42 @@
         }
       },
       getUserId() {
-        const store = useStore(); // Obtén la instancia de tu tienda Pinia
-        return store.return_user_id(); // Retorna la ID del usuario desde la tienda
+        const store = useStore();
+        return store.return_user_id();
       }
     }
   };
   </script>
+  
+  <style scoped>
+  .favorites-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .favorites-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .favorites-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .favorite-item {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .favorite-item:hover {
+    background-color: #eaeaea;
+    transition: background-color 0.3s ease;
+  }
+  </style>
   
