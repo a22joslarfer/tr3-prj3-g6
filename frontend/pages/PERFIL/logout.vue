@@ -2,11 +2,18 @@
   <HeaderPerfil :pageTitle="pageTitle" />
   <div class="logout-container">
     <div class="logout-content">
-      <button @click="logout" class="logout-button">Cerrar Sesión</button>
-      <!--crea un aviso para preguntar si realmente quiere cerrar sesion -->
-
+      <button @click="showConfirmation = true" class="logout-button">Cerrar Sesión</button>
     </div>
     <FooterOptions />
+    <div v-if="showConfirmation" class="modal-overlay">
+      <div class="modal-content">
+        <p class="modal-text">¿Estás seguro de que quieres cerrar sesión?</p>
+        <div class="modal-buttons">
+          <button @click="confirmLogout" class="modal-button confirm">Sí</button>
+          <button @click="showConfirmation = false" class="modal-button cancel">No</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -14,14 +21,17 @@
 import { useStore } from '../stores/index.js';
 
 export default {
+  data() {
+    return {
+      showConfirmation: false,
+    };
+  },
   methods: {
-    logout() {
+    confirmLogout() {
       const store = useStore();
-      store.logout(); 
+      store.logout();
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      // Eliminar información de usuario en local storage
-      
       this.$router.push('/login');
     },
   },
@@ -41,13 +51,6 @@ export default {
   text-align: center;
 }
 
-.logout-title {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20px;
-}
-
 .logout-button {
   width: 200px;
   height: 50px;
@@ -63,5 +66,60 @@ export default {
 
 .logout-button:hover {
   background-color: #ff6252;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.modal-text {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.modal-button {
+  width: 100px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.modal-button.confirm {
+  background-color: #ff806d;
+  color: white;
+}
+
+.modal-button.confirm:hover {
+  background-color: #ff6252;
+}
+
+.modal-button.cancel {
+  background-color: #cccccc;
+}
+
+.modal-button.cancel:hover {
+  background-color: #aaaaaa;
 }
 </style>
