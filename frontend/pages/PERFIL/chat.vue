@@ -1,6 +1,12 @@
 <template>
     <div id="container">
         <div class="header">
+            <a @click="goBack" class="back-button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                class="back-icon">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+        </a>
             <header>{{ chattingWithIdName }}</header>
         </div>
         <div class="chatbox">
@@ -67,21 +73,25 @@ export default {
         await this.fetch();
     },
     methods: {
-        async startVoiceRecording() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                this.mediaStream = stream;
-                this.mediaRecorder = new MediaRecorder(stream);
-                this.mediaRecorder.start();
-                this.mediaRecorder.ondataavailable = e => {
-                    const blob = new Blob([e.data], { type: 'audio/webm' });
-                    const audioURL = window.URL.createObjectURL(blob);
-                    this.messages.push({ audio: audioURL, sent: true });
-                };
-                this.voiceRecording = true;
-            } catch (error) {
-                console.error('Error al obtener los medios:', error);
-            }
+        goBack() {
+            this.$router.go(-1);
+        },
+        startVoiceRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    this.mediaStream = stream;
+                    this.mediaRecorder = new MediaRecorder(stream);
+                    this.mediaRecorder.start();
+                    this.mediaRecorder.ondataavailable = e => {
+                        const blob = new Blob([e.data], { type: 'audio/webm' });
+                        const audioURL = window.URL.createObjectURL(blob);
+                        this.messages.push({ audio: audioURL, sent: true });
+                    };
+                    this.voiceRecording = true;
+                })
+                .catch(error => {
+                    console.error('Error al obtener los medios:', error);
+                });
         },
         stopVoiceRecording() {
             if (this.mediaRecorder && this.voiceRecording) {
@@ -124,10 +134,25 @@ export default {
 </script>
 
 <style scoped>
+/* svg a la izquierda del todo*/
 svg {
     fill: white;
+    display: grid;
+    position: relative;
+    left: 4px;
+    width: 17px;
+}
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Alinea los elementos a la izquierda */
+    margin-left: 10px; /* Añade margen izquierdo para separar el SVG del nombre */
 }
 
+/* Centra el nombre */
+.header-content header {
+    margin: 0 auto; /* Centra horizontalmente el nombre */
+}
 #container {
     display: flex;
     flex-direction: column;

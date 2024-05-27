@@ -89,7 +89,13 @@ export default {
           })
         });
         const data = await response.json();
-        console.log('Response from server:', data);
+        console.log('Response from server:', data); 
+
+        store.save_user_info_register(this.newName, this.newEmail, userId, this.newPhone, this.newBirthday);
+//console
+console.log('User updated:', this.newName, this.newEmail, userId, this.newPhone, this.newBirthday);
+
+        navigateTo('/')
       } catch (error) {
         console.error('Error updating user:', error);
       }

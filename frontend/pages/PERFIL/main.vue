@@ -100,6 +100,9 @@ import FooterOptions from '~/components/FooterOptions.vue';
 import { useStore } from '../stores/index.js';
 
 export default {
+  components: {
+        FooterOptions,
+    },
   data() {
     return {
       user: null,
@@ -222,8 +225,15 @@ export default {
     },
     
     editarPerfil() {
-      this.$router.push('/perfil/ajustes');
-    },
+      this.$router.push('/perfil/ajustes').then(() => {
+        this.$store.commit('set_return_path', '/perfil');
+        const store = useStore();
+    const userInfo = store.return_user_info();
+    this.user = userInfo.username;
+  }).catch(error => {
+    console.error('Error al navegar a la página de ajustes de perfil:', error);
+  });
+},
     getImagenUrl(rutaRelativaImagen) {
       // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
       return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');

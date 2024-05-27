@@ -10,20 +10,13 @@
     <style>
         /* Estilos generales */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Arial', sans-serif;   
             margin: 0;
             padding: 0;
             background-color: #f9f9f9;
             color: #333333;
         }
-        .background {
-            background-image: url('https://wallpapers.com/images/hd/laser-concert-party-wahno00bwn97aj9v.jpg');
-            background-size: cover;
-            background-position: center;
-
-
-        /* Contenedor principal */
-        }
+       
         .container {
             max-width: 600px;
             margin: 0 auto;
@@ -111,7 +104,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://images6.alphacoders.com/134/1349393.png" alt="Logo de la empresa" class="logo">
+            <img src="../../../public/1349393-min.png" alt="Logo de la empresa" class="logo">
             <h1 class="title">¡Bienvenido a ELYSIUM, {{ $user->name }}!</h1>
         </div>
         <div class="text">
