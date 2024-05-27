@@ -107,10 +107,8 @@ export default {
       }
     },
     async likeComentario(comentarioId) {
-      // Verificar si el comentario ya tiene "like" del usuario
       if (this.comentariosConLike.includes(comentarioId)) {
-        console.log("Este comentario ya tiene like del usuario.");
-        return; // No ejecutar la lógica para dar like nuevamente
+        return; 
       }
       try {
         const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/comentarios/${comentarioId}/like`, {
@@ -124,7 +122,6 @@ export default {
         if (!response.ok) {
           throw new Error('Error al dar Me gusta al comentario');
         }
-        // Agregar el ID del comentario al array de comentarios con like del usuario
         this.comentariosConLike.push(comentarioId);
         await this.obtenerComentarios();
       } catch (error) {
