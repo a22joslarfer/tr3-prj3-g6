@@ -100,9 +100,6 @@ import FooterOptions from '~/components/FooterOptions.vue';
 import { useStore } from '../stores/index.js';
 
 export default {
-  components: {
-        FooterOptions,
-    },
   data() {
     return {
       user: null,
@@ -225,15 +222,8 @@ export default {
     },
     
     editarPerfil() {
-      this.$router.push('/perfil/ajustes').then(() => {
-        this.$store.commit('set_return_path', '/perfil');
-        const store = useStore();
-    const userInfo = store.return_user_info();
-    this.user = userInfo.username;
-  }).catch(error => {
-    console.error('Error al navegar a la página de ajustes de perfil:', error);
-  });
-},
+      this.$router.push('/perfil/ajustes');
+    },
     getImagenUrl(rutaRelativaImagen) {
       // Reemplazar solo la segunda aparición de 'storage' con una cadena vacía
       return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
@@ -246,7 +236,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .bereal-item {
   background-color: #fff;
   border-radius: 10px;
@@ -325,19 +315,16 @@ export default {
   cursor: pointer;
 }
 
-html,
-body {
-  width: 100%;
-  margin: 0;
-  padding: 0;
+.content {
+  overflow: auto;
+  height: calc(100vh - 150px);
 }
 
-/* Estilos del contenido dinámico */
-.content {
-  margin-top: 20px;
-  border-radius: 5px;
-  width: 100%;
-  /* Ajusta el ancho al 100% */
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: scroll;
 }
 
 /* Estilos de las publicaciones */
@@ -500,24 +487,45 @@ body {
 .bereals-container {
   display: flex;
   justify-content: center;
+  overflow-y: auto;
+}
+
+.bereals-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    height: 50px;
+    margin-bottom: 20px;
 }
 
 .bereals-list {
+  overflow-y: auto;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  overflow-x: auto;
   max-width: 1200px;
-  /* Establece un ancho máximo para evitar que los elementos se extiendan demasiado en pantallas grandes */
+  width: 100%;
   margin: 0 auto;
-  /* Centra los elementos horizontalmente */
   padding: 0 10px;
-  /* Agrega un poco de espacio en los lados para que los elementos no toquen los bordes */
+  gap: 10px;
 }
 
 .bereal-item {
-  width: calc(33.33% - 20px);
-  /* Tres elementos por fila en todas las pantallas */
+  flex: 0 0 auto;
+  width: 30%;
   margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .bereal-item {
+    width: 45%;
+  }
+}
+
+@media (max-width: 480px) {
+  .bereal-item {
+    width: 60%;
+  }
 }
 
 
