@@ -9,10 +9,13 @@ class FavoritoController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'discoteca_id' => 'required|exists:discotecas,id',
-        ]);
+        $existingFavorito = Favorito::where('user_id', $request->user_id)
+            ->where('discoteca_id', $request->discoteca_id)
+            ->first();
+
+        if ($existingFavorito) {
+            return response()->json(['error' => 'Ya has agregado esta discoteca a favoritos'], 400);
+        }
 
         $favorito = Favorito::create($request->all());
 

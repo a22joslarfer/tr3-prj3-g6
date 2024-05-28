@@ -14,6 +14,8 @@
                 <option v-for="(ciudad, index) in ciudades" :key="index" :value="ciudad.id">{{ ciudad.nombre }}
                 </option>
             </select>
+            <button @click="resetFilter">Reiniciar</button>
+
         </div>
 
 
@@ -214,6 +216,10 @@ export default {
 
             console.log('Ciudad seleccionada:', this.ciudadSeleccionada);
             this.fetchData(); // Llamar a fetchData para obtener datos actualizados según la ciudad seleccionada
+        },
+        resetFilter() {
+            this.ciudadSeleccionada = '';
+             this.fetchData();
         },
         async handleFileUpload() {
             const file = this.$refs.fileInput.files[0];

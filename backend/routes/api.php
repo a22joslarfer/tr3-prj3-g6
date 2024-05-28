@@ -120,8 +120,8 @@ Route::get('/amigos/{id}', [seguidoresController::class, 'getAmigos']);
 Route::post('/seguidores', [seguidoresController::class, 'addSeguidor']);
 // ruta para comprobar si un usuario sigue a otro usuario
 Route::get('/seguidores/{seguidor_id}/{seguido_id}', [seguidoresController::class, 'checkIfSeguidor']);
-//ruta para crear 
-
+//ruta de cuantas personas esta siguiendo el user
+Route::get('/siguiendo/{id}', [seguidoresController::class, 'countSeguidores']);
 
 
 
