@@ -127,7 +127,7 @@ export default {
             const userId = store.return_user_id(); // Obtén el ID del usuario desde la tienda
 
             try {
-                const response = await fetch(`http://localhost:8000/api/favoritos`, {
+                const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/favoritos`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
