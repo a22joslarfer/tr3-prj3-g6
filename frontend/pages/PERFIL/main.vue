@@ -32,7 +32,7 @@
         </div>
         <div class="stat">
           <span class="stat-label">Siguiendo</span>
-          <h2>10</h2>
+          <span class="stat-value">{{ siguiendo }}</span>
         </div>
       </div>
       <div class="edit-profile">
@@ -112,6 +112,7 @@ export default {
     return {
       user: null,
       profileImageUrl: null,
+      siguiendo:0,
       seguidores: 0,
       barPosition: '5%', // Posición inicial de la barra
       selectedSection: 'inicio', // Sección seleccionada inicialmente
@@ -158,9 +159,23 @@ export default {
     this.getFavoritos();
     this.fetchDiscotecas();
     this.fetchSeguidos();
+    this.fetchSiguiendo();
   },
 
   methods: {
+    async fetchSiguiendo() {
+  try {
+    const store = useStore();
+    const id = store.return_user_id();
+
+    const followingResponse = await fetch(`http://localhost:8000/api/siguiendo/${id}`);
+    const followingData = await followingResponse.json();
+    console.log(followingData);
+    this.siguiendo = followingData.length; // Assign the number of users being followed
+  } catch (error) {
+    console.error('Error fetching users being followed:', error);
+  }
+},
     async fetchSeguidos() {
       try {
         const store = useStore();
