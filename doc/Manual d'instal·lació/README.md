@@ -1,4 +1,4 @@
-# Manual d'instal·lació per al docker-compose.yml
+# Manual d'instal·lació 
 
 Aquest manual descriu els passos necessaris per configurar i executar un entorn de desenvolupament amb Laravel, MySQL, Nuxt.js i phpMyAdmin utilitzant Docker Compose.
 
@@ -8,7 +8,7 @@ Assegura't de tenir instal·lats els següents programes al teu sistema:
 - Docker Compose
 
 ## Fitxer docker-compose.yml
-Lo que se realiza en el docker compose , es  crear las imagenes de cada tecnologia que aplicamos en este caso nuxt, laravel, node, php. en la imagen de laravel nos automatizamos ya lo que hariamos nosotros manualmente desde el terminal, como puede ser compose install, php artisan migrate, php aritan key y por supueto el php artisan serve para abrir el puerto.  Para levantar estas imagenes deberemos hacer compose up, en caso de que queramos actualizar haremos compose restart y en caso de querer apagar el servicio haremos compose down
+El que es realitza en el Docker Compose és crear les imatges de cada tecnologia que apliquem, en aquest cas: Nuxt, Laravel, Node i PHP. A la imatge de Laravel automatitzem tot allò que faríem manualment des del terminal, com ara composer install, php artisan migrate, php artisan key:generate i, per descomptat, php artisan serve per obrir el port. Per aixecar aquestes imatges haurem de fer compose up. En cas que vulguem actualitzar, farem compose restart i, si volem apagar el servei, farem compose down.
 
 **version**: '3.8'
 
