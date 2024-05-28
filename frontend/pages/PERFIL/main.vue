@@ -160,6 +160,7 @@ export default {
     this.fetchDiscotecas();
     this.fetchSeguidos();
     this.fetchSiguiendo();
+    this.checkIfAuth();
   },
 
   methods: {
@@ -311,6 +312,14 @@ export default {
     getDiscoNameById(id) {
       const disco = this.discotecas.find(disco => disco.id === id);
       return disco ? disco.nombre_local : 'Disco Desconocida';
+    },
+    checkIfAuth() {
+      const store = useStore();
+      this.clientId = store.return_user_id();
+      if (!this.clientId) {
+        alert('Necesitas estar logueado para chatear con tus amigos');
+        this.$router.push('/login');
+      }
     },
   }
 }

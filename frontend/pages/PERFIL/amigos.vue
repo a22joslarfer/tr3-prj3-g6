@@ -96,7 +96,6 @@ export default {
         .catch(error => {
           console.error('Error fetching amigos:', error);
           this.loading = false;
-          alert('Error al obtener amigos');
         });
     },
     searchFriends() {

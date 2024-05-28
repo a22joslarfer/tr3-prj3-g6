@@ -1,7 +1,7 @@
 <template>
   <HeaderGeneral />
   <div class="bereals-container">
-    <h1>BEREAL</h1>
+    <h1>InTime</h1>
     <div class="bereal-item">
       <div class="bereal-images">
         <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image">

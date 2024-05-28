@@ -83,6 +83,11 @@ export default {
         })
         .catch(error => {
           console.error('Error al iniciar sesión:', error);
+          if (error.message.includes('401')) {
+            alert('Correo electrónico o contraseña incorrectos.');
+          } else {
+            alert('Error al iniciar sesión. Por favor, inténtalo de nuevo.');
+          }
         });
 
     },

@@ -26,7 +26,7 @@
 
       <div class="form-group">
         <label for="photo" class="texto">Foto (opcional):</label>
-        <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file" accept="image/*">
+        <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file" accept="image/*" required>
       </div>
 
       <button type="submit" class="btn btn-primary" style="margin-bottom: 150px;">Enviar reseña</button>
@@ -60,6 +60,11 @@ export default {
       if (!this.categoria) {
         alert('Por favor selecciona una categoría.');
         return;
+      }
+      //photo
+      if (this.photo) {
+        alert('Por favor selecciona una foto.');
+        console.log('Foto:', this.photo);
       }
 
       console.log('Puntuación al enviar:', this.puntuacion);
@@ -135,8 +140,8 @@ export default {
 .container {
   padding: 20px;
   overflow-y: auto;
-  background-color: rgb(181, 205, 214);
-  margin-bottom: 60px;
+  background-color: rgb(210 217 219);
+    margin-bottom: 60px;
 }
 .form {
   display: flex;
