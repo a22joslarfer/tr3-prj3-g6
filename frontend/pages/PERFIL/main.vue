@@ -87,9 +87,19 @@
       </div>
       <div v-else-if="selectedSection === 'explorar'">
         <h2>Contenido de videos</h2>
+
       </div>
-      <div v-else-if="selectedSection === 'notificaciones'">
-        <h2>Contenido de nombres</h2>
+      <div v-if="selectedSection === 'notificaciones'">
+        <h2>Discotecas favoritas</h2>
+        <div class="favorites-container">
+          <h1 class="favorites-title">Tus Favoritos</h1>
+          <ul class="favorites-list">
+            <li v-if="favoritos.length > 0" v-for="favorito in favoritos" :key="favorito.id" class="favorite-item">
+              {{ getDiscoNameById(favorito.discoteca_id) }}
+            </li>
+            <li v-else>No tienes discotecas favoritas.</li>
+          </ul>
+        </div>
       </div>
     </div>
     <FooterOptions />
@@ -115,6 +125,9 @@ export default {
       amigos: [], // Inicializamos amigos como un array vacío
       searchQuery: '', // Añadimos una propiedad para la búsqueda
       bereals: [], // Inicializamos bereals como un array vacío
+      hayContenidoVideos: false, // Añadimos una propiedad para comprobar si hay contenido de videos
+      hayDiscotecasFavoritas: false, // Añadimos una propiedad para comprobar si hay discotecas favoritas
+      favoritos: [], // Inicializamos favoritos como un array vacío
     };
   },
 
@@ -144,15 +157,51 @@ export default {
     this.fetch();
     this.fetchAmigos();
     this.fetchBereals();
+    this.getFavoritos();
+    this.fetchDiscotecas();
   },
 
   methods: {
+    fetchDiscotecas() {
+      fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/discotecas')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error fetching discotecas: ${response.status} - ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.discotecas = data;
+        })
+        .catch(error => {
+          console.error('Error fetching discotecas:', error);
+        });
+    },
+
+    async getFavoritos() {
+      try {
+        const userId = this.getUserId();
+        const response = await fetch(`http://localhost:8000/api/favoritos/${userId}`);
+        if (!response.ok) {
+          throw new Error('No se pudo obtener los favoritos');
+        }
+        const data = await response.json();
+        this.favoritos = data;
+      } catch (error) {
+        console.error('Error al obtener los favoritos:', error);
+      }
+    },
+    getUserId() {
+      const store = useStore();
+      return store.return_user_id();
+    },
+
     toggleImages(bereal) {
-    // Intercambiar las URLs de las imágenes
-    const temp = bereal.img_del;
-    bereal.img_del = bereal.img_tra;
-    bereal.img_tra = temp;
-  },
+      // Intercambiar las URLs de las imágenes
+      const temp = bereal.img_del;
+      bereal.img_del = bereal.img_tra;
+      bereal.img_tra = temp;
+    },
     async fetch() {
       try {
         const store = useStore();
@@ -216,11 +265,11 @@ export default {
       this.barPosition = this.sections[section] + '%';
       this.selectedSection = section;
     },
-    
+
     llevarAgenerarCodigoQr() {
       this.$router.push('../generarQR');
     },
-    
+
     editarPerfil() {
       this.$router.push('/perfil/ajustes');
     },
@@ -231,21 +280,26 @@ export default {
 
     irAComentarios(idBereal) {
       this.$router.push(`/comentarios/${idBereal}`);
-    }
+    },
+    getDiscoNameById(id) {
+      const disco = this.discotecas.find(disco => disco.id === id);
+      return disco ? disco.nombre_local : 'Disco Desconocida';
+    },
   }
 }
 </script>
 
 <style scoped>
 .bereal-item {
-background-color: #fff;
-border-radius: 10px;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-padding: 15px;
-margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-bottom: 20px;
 }
+
 .bereal-time {
-right: 42px;
+  right: 42px;
   background: white;
   position: absolute;
   font-size: 12px;
@@ -446,30 +500,35 @@ body {
 
 /* Nuevos estilos para la lista de amigos */
 .amigos-lista-content {
-display: flex;
-flex-wrap: nowrap;
-overflow-x: auto;
-padding: 10px 0;
-overflow-y: hidden;
-scrollbar-width: none; /* Oculta la barra de desplazamiento en Firefox */
--ms-overflow-style: none; /* Oculta la barra de desplazamiento en IE y Edge */
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 10px 0;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  /* Oculta la barra de desplazamiento en Firefox */
+  -ms-overflow-style: none;
+  /* Oculta la barra de desplazamiento en IE y Edge */
 }
+
 .amigos-lista-content::-webkit-scrollbar {
-width: 0;
-height: 0; /* Oculta la barra de desplazamiento en Webkit (Chrome, Safari) */
+  width: 0;
+  height: 0;
+  /* Oculta la barra de desplazamiento en Webkit (Chrome, Safari) */
 }
 
 .amigo {
-display: flex;
-align-items: center;
-margin-right: 15px;
-flex-shrink: 0; /* Asegura que los elementos no se reduzcan */
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+  flex-shrink: 0;
+  /* Asegura que los elementos no se reduzcan */
 }
 
 .amigo-avatar img {
-width: 50px;
-height: 80px;
-border-radius: 17%;
+  width: 50px;
+  height: 80px;
+  border-radius: 17%;
 }
 
 .amigo-info {
@@ -480,45 +539,53 @@ border-radius: 17%;
 .amigo-nombre {
   white-space: nowrap;
 }
+
 .bereals-container {
-display: flex;
-justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .bereals-list {
-display: flex;
-flex-wrap: wrap;
-justify-content: space-between;
-max-width: 1200px; /* Establece un ancho máximo para evitar que los elementos se extiendan demasiado en pantallas grandes */
-margin: 0 auto; /* Centra los elementos horizontalmente */
-padding: 0 10px; /* Agrega un poco de espacio en los lados para que los elementos no toquen los bordes */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px;
+  /* Establece un ancho máximo para evitar que los elementos se extiendan demasiado en pantallas grandes */
+  margin: 0 auto;
+  /* Centra los elementos horizontalmente */
+  padding: 0 10px;
+  /* Agrega un poco de espacio en los lados para que los elementos no toquen los bordes */
 }
 
 .bereal-item {
-width: calc(33.33% - 20px); /* Tres elementos por fila en todas las pantallas */
-margin-bottom: 20px;
+  width: calc(33.33% - 20px);
+  /* Tres elementos por fila en todas las pantallas */
+  margin-bottom: 20px;
 }
 
 
 .bereal-time {
-font-size: 12px;
-color: #666;
-margin-bottom: 5px;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 5px;
 }
 
 .bereal-images {
-position: relative;
-width: 100%;
+  position: relative;
+  width: 100%;
 }
 
-.bereal-image1, .bereal-image2 {
-width: 90px; /* Ancho fijo para todas las imágenes */
-height: 150px; /* Altura fija para todas las imágenes */
-border-radius: 5px;
+.bereal-image1,
+.bereal-image2 {
+  width: 90px;
+  /* Ancho fijo para todas las imágenes */
+  height: 150px;
+  /* Altura fija para todas las imágenes */
+  border-radius: 5px;
 }
 
 .bereal-image2 {
-height: 36%;
+  height: 36%;
   position: absolute;
   top: 3%;
   left: 62%;
@@ -527,34 +594,37 @@ height: 36%;
   border-radius: 5px;
   border: 2px solid white;
 }
+
 .icon-button {
-  width:20px;
+  width: 20px;
   height: 30px;
 }
 
 @media (max-width: 768px) {
-.bereal-item {
-  width: calc(33.33% - 20px); /* Tres elementos por fila en pantallas medianas */
-}
+  .bereal-item {
+    width: calc(33.33% - 20px);
+    /* Tres elementos por fila en pantallas medianas */
+  }
 }
 
 @media (max-width: 480px) {
-.bereals-list {
-  margin-top: 30px;
-        gap: 10px;
-        position: relative;
-        right: -22px;
-        width: 434px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        height: 75%;
-        overflow-y: scroll;
-        left: -33px;
-}
+  .bereals-list {
+    margin-top: 30px;
+    gap: 10px;
+    position: relative;
+    right: -22px;
+    width: 434px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 75%;
+    overflow-y: scroll;
+    left: -33px;
+  }
 
-.bereal-item {
-  width: calc(33.33% - 20px); /* Tres elementos por fila en pantallas pequeñas */
-}
+  .bereal-item {
+    width: calc(33.33% - 20px);
+    /* Tres elementos por fila en pantallas pequeñas */
+  }
 }
 </style>
