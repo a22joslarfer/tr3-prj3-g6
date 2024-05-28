@@ -1,58 +1,58 @@
-    <template>
-        <HeaderGeneral />
-        <div class="container">
-            <LoadingDots :isLoading="isLoading" />
-            <button class="filter-button" @click="toggleFiltro">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
-                    <path
-                        d="M440-160q-17 0-28.5-11.5T400-200v-240L168-736q-15-20-4.5-42t36.5-22h560q26 0 36.5 22t-4.5 42L560-440v240q0 17-11.5 28.5T520-160h-80Zm40-308 198-252H282l198 252Zm0 0Z" />
-                </svg>
-            </button>
-            <div class="filter-indicator" v-if="filtroActivo">
-                <select v-model="ciudadSeleccionada" @change="handleChangeCiudadSeleccionada">
-                    <option disabled value="">Selecciona una ciudad</option>
-                    <option v-for="(ciudad, index) in ciudades" :key="index" :value="ciudad.id">{{ ciudad.nombre }}
-                    </option>
-                </select>
-            </div>
-
-
-            <div id="buscador">
-            <input
-                type="text"
-                ref="buscador"
-                @blur="handleBlur"
-                v-model="busqueda"
-                placeholder="Buscar..."
-            />
+<template>
+    <HeaderGeneral />
+    <div class="container">
+        <LoadingDots :isLoading="isLoading" />
+        <button class="filter-button" @click="toggleFiltro">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                <path
+                    d="M440-160q-17 0-28.5-11.5T400-200v-240L168-736q-15-20-4.5-42t36.5-22h560q26 0 36.5 22t-4.5 42L560-440v240q0 17-11.5 28.5T520-160h-80Zm40-308 198-252H282l198 252Zm0 0Z" />
+            </svg>
+        </button>
+        <div class="filter-indicator" v-if="filtroActivo">
+            <select v-model="ciudadSeleccionada" @change="handleChangeCiudadSeleccionada">
+                <option disabled value="">Selecciona una ciudad</option>
+                <option v-for="(ciudad, index) in ciudades" :key="index" :value="ciudad.id">{{ ciudad.nombre }}
+                </option>
+            </select>
         </div>
 
-            <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
 
-            <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>{{ pin_seleccionado.titulo }}</h3>
-                        <div class="card-closer" @click="cerrarPopUp">X</div>
-                    </div>
-                    <div class="card-body">
-                        <img :src="pin_seleccionado.imgUrl" alt="imagen de la discoteca"
-                            style="width: 100%; height: 200px; object-fit: cover;">
+        <div id="buscador">
+            <input type="text" ref="buscador" @blur="handleBlur" v-model="busqueda" placeholder="Buscar..." />
+        </div>
 
-                        <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
-                        <p>Horario: {{ pin_seleccionado.horario }}</p>
-                        <p>Telefono: {{ pin_seleccionado.telefono }}</p>
-                        <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
-                        <audio :src="pin_seleccionado.cancion_mp3" controls></audio>
-                        <NuxtLink :to="'/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
-                        <button @click="agregarFavorito(pin_seleccionado.id)" class="btn-agregar-favorito">Agregar a Favoritos</button>
+        <div id="map" ref="map" style="height: 100%; width: 100%;"></div>
 
-                    </div>
+        <div v-if="punto_de_interes_seleccionado && pin_seleccionado" class="info-card">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-closer" @click="cerrarPopUp">X</div>
+                    <h3>{{ pin_seleccionado.titulo }}</h3>
+                    <button @click="agregarFavorito(pin_seleccionado.id)" class="btn-agregar-favorito"><svg
+                            xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
+                            fill="#BB271A">
+                            <path
+                                d="m480-123.34-46.56-43.17q-107.54-99.7-176.52-169.57-68.97-69.87-108.75-123.1-39.78-53.23-54.64-96.67-14.86-43.44-14.86-87.94 0-90.26 62.28-152.24Q203.22-858 293.79-858q51.36 0 99.72 25.1 48.36 25.11 86.49 73.16 40.44-48.87 87.89-73.57Q615.34-858 666.21-858q90.57 0 152.84 61.97 62.28 61.98 62.28 152.24 0 44.5-14.86 87.94t-54.61 96.61q-39.75 53.18-108.69 123.11-68.94 69.92-176.61 169.62L480-123.34Zm0-91.12q99.81-91.32 164.41-156.01 64.61-64.7 102.23-113.13 37.62-48.43 52.36-85.89 14.74-37.46 14.74-74.38 0-62.98-41.57-104.76-41.58-41.78-105.82-41.78-48.55 0-91.21 29.82-42.65 29.82-65.14 79.26h-60.41q-22.46-49.16-65.38-79.12-42.92-29.96-90.56-29.96-63.86 0-105.62 41.59-41.77 41.59-41.77 105.32 0 36.71 14.78 74.31 14.79 37.6 52.57 85.85 37.77 48.26 102.13 112.99Q380.1-305.62 480-214.46Zm0-288.31Z" />
+                        </svg></button>
+                </div>
+                <div class="card-body">
+                    <img :src="pin_seleccionado.imgUrl" alt="imagen de la discoteca"
+                        style="width: 100%; height: 200px; object-fit: cover;">
+
+                    <p>Sobre el local: {{ pin_seleccionado.descripcion }}</p>
+                    <p>Horario: {{ pin_seleccionado.horario }}</p>
+                    <p>Telefono: {{ pin_seleccionado.telefono }}</p>
+                    <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
+                    <audio :src="pin_seleccionado.cancion_mp3" controls></audio>
+                    <NuxtLink :to="'/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
+
+
                 </div>
             </div>
-            <FooterOptions />
         </div>
-    </template>
+        <FooterOptions />
+    </div>
+</template>
 
 
 
@@ -121,31 +121,33 @@ export default {
 
     methods: {
         async agregarFavorito(discotecaId) {
-      const store = useStore(); // Obtén la instancia de tu tienda Pinia
-      const userId = store.return_user_id(); // Obtén el ID del usuario desde la tienda
+            const store = useStore(); // Obtén la instancia de tu tienda Pinia
+            const userId = store.return_user_id(); // Obtén el ID del usuario desde la tienda
 
-      try {
-        const response = await fetch(`http://localhost:8000/api/favoritos`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            user_id: userId,
-            discoteca_id: discotecaId,
-          }),
-        });
+            try {
+                const response = await fetch(`http://localhost:8000/api/favoritos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        discoteca_id: discotecaId,
+                    }),
+                });
 
-        if (response.ok) {
-          console.log('Discoteca agregada a favoritos correctamente');
-          // Realiza cualquier otra acción necesaria después de agregar a favoritos
-        } else {
-          console.error('Error al agregar la discoteca a favoritos:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error al realizar la solicitud:', error);
-      }
-    },
+                if (response.ok) {
+                    console.log('Discoteca agregada a favoritos correctamente');
+                    //aviso al usuario de que se ha añadido a favoritos
+                    alert('Discoteca añadida a favoritos!!');
+                    // Realiza cualquier otra acción necesaria después de agregar a favoritos
+                } else {
+                    console.error('Error al agregar la discoteca a favoritos:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error al realizar la solicitud:', error);
+            }
+        },
         handleBlur() {
             // Esperar un corto periodo para asegurar que el teclado se haya ocultado
             setTimeout(() => {
@@ -158,7 +160,7 @@ export default {
                 }, 10); // Redibujar después de 10ms
             }, 100); // 100ms debería ser suficiente, ajusta según sea necesario
         },
-        
+
         enviarNotificacio() {
             const opcionesNotificacion = {
                 body: "¡Es hora de publicar tu foto!",
@@ -718,14 +720,14 @@ export default {
     font-size: 7vw;
     color: var(--carne2);
     transition: color 0.2s ease-in-out;
-    /* align-self: flex-end; */
-    position: absolute;
-    /* left: 22px; */
     background-color: grey;
     border-radius: 50%;
     width: 36px;
-    display: grid;
-    justify-items: center;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 
 }
 
@@ -740,9 +742,8 @@ export default {
     padding: 7px;
     font-size: 6vw;
     color: var(--blanco);
-    flex-direction: column;
-    align-content: space-around;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .audio-player {
@@ -809,12 +810,20 @@ p {
     text-decoration: none;
     margin-top: 40px;
 }
+
 body {
     /* Asegurarse de que el body tenga una altura adecuada */
     height: 100vh;
     overflow: hidden;
     overscroll-behavior: contain;
 }
+
+.btn-agregar-favorito {
+    background-color: var(--base2);
+    text-align: center;
+    margin: 0;
+}
+
 
 @keyframes fade-in {
     from {
