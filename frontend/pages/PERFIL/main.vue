@@ -1,100 +1,108 @@
-<template>
-  <div class="social-profile">
-    <div class="header-icon">
-      <button @click="llevarAgenerarCodigoQr()">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
-          <path
-            d="M80-680v-200h200v80H160v120H80Zm0 600v-200h80v120h120v80H80Zm600 0v-80h120v-120h80v200H680Zm120-600v-120H680v-80h200v200h-80ZM700-260h60v60h-60v-60Zm0-120h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60-60h60v60h-60v-60Zm120-120h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60-60h60v60h-60v-60Zm240-320v240H520v-240h240ZM440-440v240H200v-240h240Zm0-320v240H200v-240h240Zm-60 500v-120H260v120h120Zm0-320v-120H260v120h120Zm320 0v-120H580v120h120Z" />
-        </svg>
-      </button>
-    </div>
-    <div class="profile-header">
-      <div class="profile-image">
-        <div class="bordered-image">
-          <img :src="profileImageUrl" alt="Profile Image">
+  <template>
+    <div class="social-profile">
+      <div class="header-icon">
+        <button @click="llevarAgenerarCodigoQr()">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+            <path
+              d="M80-680v-200h200v80H160v120H80Zm0 600v-200h80v120h120v80H80Zm600 0v-80h120v-120h80v200H680Zm120-600v-120H680v-80h200v200h-80ZM700-260h60v60h-60v-60Zm0-120h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60-60h60v60h-60v-60Zm120-120h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60-60h60v60h-60v-60Zm240-320v240H520v-240h240ZM440-440v240H200v-240h240Zm0-320v240H200v-240h240Zm-60 500v-120H260v120h120Zm0-320v-120H260v120h120Zm320 0v-120H580v120h120Z" />
+          </svg>
+        </button>
+      </div>
+      <div class="profile-header">
+        <div class="profile-image">
+          <div class="bordered-image">
+            <img :src="profileImageUrl" alt="Profile Image">
+          </div>
         </div>
-      </div>
-      <div class="profile-info">
-        <div v-if="user" class="user-username">
-          <h3 class="username">{{ user }}</h3>
-          <p class="bio">¡Bienvenido al mundo de las redes sociales! Conéctate, comparte y descubre.</p>
-        </div>
-      </div>
-    </div>
-    <div class="user-stats">
-      <div class="stat">
-        <span class="stat-label">Publicaciones</span>
-        <span class="stat-value">10</span>
-      </div>
-      <div class="stat">
-        <span class="stat-label">Seguidores</span>
-        <span class="stat-value">{{ seguidores }}</span>
-      </div>
-      <div class="stat">
-        <span class="stat-label">Siguiendo</span>
-        <span class="stat-value">300</span>
-      </div>
-    </div>
-    <div class="edit-profile">
-      <button @click="editarPerfil()">Editar perfil</button>
-    </div>
-    <div class="amigos-lista" v-if="filteredAmigos.length > 0">
-      <div class="amigos-lista-content">
-        <div v-for="amigo in filteredAmigos" :key="amigo.id" @click="startChatWith(amigo.id, amigo.name)" class="amigo">
-          <div class="amigo-avatar">
-            <img :src="getProfilePhotoUrl(amigo.profile_photo)" alt="Imagen del perfil">
+        <div class="profile-info">
+          <div v-if="user" class="user-username">
+            <h3 class="username">{{ user }}</h3>
+            <p class="bio">¡Bienvenido al mundo de las redes sociales! Conéctate, comparte y descubre.</p>
           </div>
         </div>
       </div>
-    </div>
-    <div class="bottom-bar">
-      <div class="selected-line" :style="{ left: barPosition }"></div>
-      <div class="icon" @click="scrollTo('inicio')">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
-          <path
-            d="M480-260q75 0 127.5-52.5T660-440q0-75-52.5-127.5T480-620q-75 0-127.5 52.5T300-440q0 75 52.5 127.5T480-260Zm0-80q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM160-120q-33 0-56.5-23.5T80-200v-480q0-33 23.5-56.5T160-760h126l74-80h240l74 80h126q33 0 56.5 23.5T880-680v480q0 33-23.5 56.5T800-120H160Zm0-80h640v-480H638l-73-80H395l-73 80H160v480Zm320-240Z" />
-        </svg>
+      <div class="user-stats">
+        <div class="stat">
+          <span class="stat-label">Publicaciones</span>
+          <span class="stat-value">{{ misIntime.length }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Seguidores</span>
+          <span class="stat-value">{{ seguidores }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Siguiendo</span>
+          <h2>10</h2>
+        </div>
       </div>
-      <div class="icon" @click="scrollTo('explorar')">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
-          <path
-            d="m160-800 80 160h120l-80-160h80l80 160h120l-80-160h80l80 160h120l-80-160h120q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800Zm0 240v320h640v-320H160Zm0 0v320-320Z" />
-        </svg>
+      <div class="edit-profile">
+        <button @click="editarPerfil()">Editar perfil</button>
       </div>
-      <div class="icon" @click="scrollTo('notificaciones')">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
-          <path
-            d="m80-80 200-560 360 360L80-80Zm132-132 282-100-182-182-100 282Zm370-246-42-42 224-224q32-32 77-32t77 32l24 24-42 42-24-24q-14-14-35-14t-35 14L582-458ZM422-618l-42-42 24-24q14-14 14-34t-14-34l-26-26 42-42 26 26q32 32 32 76t-32 76l-24 24Zm80 80-42-42 144-144q14-14 14-35t-14-35l-64-64 42-42 64 64q32 32 32 77t-32 77L502-538Zm160 160-42-42 64-64q32-32 77-32t77 32l64 64-42 42-64-64q-14-14-35-14t-35 14l-64 64ZM212-212Z" />
-        </svg>
+      <div class="amigos-lista" v-if="filteredAmigos.length > 0">
+        <div class="amigos-lista-content">
+          <div v-for="amigo in filteredAmigos" :key="amigo.id" @click="startChatWith(amigo.id, amigo.name)" class="amigo">
+            <div class="amigo-avatar">
+              <img :src="getProfilePhotoUrl(amigo.profile_photo)" alt="Imagen del perfil">
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="content">
-      <div v-if="selectedSection === 'inicio'">
-        <div class="bereals-container">
-          <div>
-            <div v-if="misIntime.length" class="bereals-list">
-              <div v-for="bereal in misIntime" :key="bereal.id" class="bereal-item">
-                <div class="bereal-images">
-                  <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image1">
-                  <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image2"
-                    @click="toggleImages(bereal)">
+      <div class="bottom-bar">
+        <div class="selected-line" :style="{ left: barPosition }"></div>
+        <div class="icon" @click="scrollTo('inicio')">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+            <path
+              d="M480-260q75 0 127.5-52.5T660-440q0-75-52.5-127.5T480-620q-75 0-127.5 52.5T300-440q0 75 52.5 127.5T480-260Zm0-80q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM160-120q-33 0-56.5-23.5T80-200v-480q0-33 23.5-56.5T160-760h126l74-80h240l74 80h126q33 0 56.5 23.5T880-680v480q0 33-23.5 56.5T800-120H160Zm0-80h640v-480H638l-73-80H395l-73 80H160v480Zm320-240Z" />
+          </svg>
+        </div>
+        <div class="icon" @click="scrollTo('explorar')">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+            <path
+              d="m160-800 80 160h120l-80-160h80l80 160h120l-80-160h80l80 160h120l-80-160h120q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800Zm0 240v320h640v-320H160Zm0 0v320-320Z" />
+          </svg>
+        </div>
+        <div class="icon" @click="scrollTo('notificaciones')">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+            <path
+              d="m80-80 200-560 360 360L80-80Zm132-132 282-100-182-182-100 282Zm370-246-42-42 224-224q32-32 77-32t77 32l24 24-42 42-24-24q-14-14-35-14t-35 14L582-458ZM422-618l-42-42 24-24q14-14 14-34t-14-34l-26-26 42-42 26 26q32 32 32 76t-32 76l-24 24Zm80 80-42-42 144-144q14-14 14-35t-14-35l-64-64 42-42 64 64q32 32 32 77t-32 77L502-538Zm160 160-42-42 64-64q32-32 77-32t77 32l64 64-42 42-64-64q-14-14-35-14t-35 14l-64 64ZM212-212Z" />
+          </svg>
+        </div>
+      </div>
+      <div class="content">
+        <div v-if="selectedSection === 'inicio'">
+          <div class="bereals-container">
+            <div>
+              <div v-if="misIntime.length" class="bereals-list">
+                <div v-for="bereal in misIntime" :key="bereal.id" class="bereal-item">
+                  <div class="bereal-images">
+                    <img :src="getImagenUrl(bereal.img_del)" alt="Imagen del Bereal" class="bereal-image1">
+                    <img :src="getImagenUrl(bereal.img_tra)" alt="Imagen del Bereal" class="bereal-image2"
+                      @click="toggleImages(bereal)">
+                  </div>
                 </div>
               </div>
+              <p v-else>No has subido ningún InTime todavía.</p>
             </div>
-            <p v-else>No has subido ningún InTime todavía.</p>
+          </div>
+        </div>
+        <div v-else-if="selectedSection === 'explorar'">
+
+        </div>
+        <div v-if="selectedSection === 'notificaciones'">
+          <div class="favorites-container">
+            <h1 class="favorites-title">Tus Favoritos</h1>
+            <ul class="favorites-list">
+              <li v-if="favoritos.length > 0" v-for="favorito in favoritos" :key="favorito.id" class="favorite-item">
+                {{ getDiscoNameById(favorito.discoteca_id) }}
+              </li>
+              <li v-else>No tienes discotecas favoritas.</li>
+            </ul>
           </div>
         </div>
       </div>
-      <div v-else-if="selectedSection === 'explorar'">
-        <h2>Contenido de videos</h2>
-      </div>
-      <div v-else-if="selectedSection === 'notificaciones'">
-        <h2>Contenido de nombres</h2>
-      </div>
+      <FooterOptions />
     </div>
-    <FooterOptions />
-  </div>
-</template>
+  </template>
 <script>
 import FooterOptions from '~/components/FooterOptions.vue';
 import { useStore } from '../stores/index.js';
@@ -115,6 +123,9 @@ export default {
       amigos: [], // Inicializamos amigos como un array vacío
       searchQuery: '', // Añadimos una propiedad para la búsqueda
       bereals: [], // Inicializamos bereals como un array vacío
+      hayContenidoVideos: false, // Añadimos una propiedad para comprobar si hay contenido de videos
+      hayDiscotecasFavoritas: false, // Añadimos una propiedad para comprobar si hay discotecas favoritas
+      favoritos: [], // Inicializamos favoritos como un array vacío
     };
   },
 
@@ -144,15 +155,65 @@ export default {
     this.fetch();
     this.fetchAmigos();
     this.fetchBereals();
+    this.getFavoritos();
+    this.fetchDiscotecas();
+    this.fetchSeguidos();
   },
 
   methods: {
+    async fetchSeguidos() {
+      try {
+        const store = useStore();
+        const id = store.return_user_id();
+
+        const followingResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/seguidos/${id}`);
+        const followingData = await followingResponse.json();
+        console.log(followingData);
+        this.seguidos = followingData.seguidos; // Asigna el número de seguidos
+      } catch (error) {
+        console.error('Error al obtener los seguidos del usuario:', error);
+      }
+    },
+    fetchDiscotecas() {
+      fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/discotecas')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error fetching discotecas: ${response.status} - ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.discotecas = data;
+        })
+        .catch(error => {
+          console.error('Error fetching discotecas:', error);
+        });
+    },
+
+    async getFavoritos() {
+      try {
+        const userId = this.getUserId();
+        const response = await fetch(`http://localhost:8000/api/favoritos/${userId}`);
+        if (!response.ok) {
+          throw new Error('No se pudo obtener los favoritos');
+        }
+        const data = await response.json();
+        this.favoritos = data;
+      } catch (error) {
+        console.error('Error al obtener los favoritos:', error);
+      }
+    },
+    getUserId() {
+      const store = useStore();
+      return store.return_user_id();
+    },
+
     toggleImages(bereal) {
-    // Intercambiar las URLs de las imágenes
-    const temp = bereal.img_del;
-    bereal.img_del = bereal.img_tra;
-    bereal.img_tra = temp;
-  },
+      // Intercambiar las URLs de las imágenes
+      const temp = bereal.img_del;
+      bereal.img_del = bereal.img_tra;
+      bereal.img_tra = temp;
+    },
     async fetch() {
       try {
         const store = useStore();
@@ -216,11 +277,11 @@ export default {
       this.barPosition = this.sections[section] + '%';
       this.selectedSection = section;
     },
-    
+
     llevarAgenerarCodigoQr() {
       this.$router.push('../generarQR');
     },
-    
+
     editarPerfil() {
       this.$router.push('/perfil/ajustes');
     },
@@ -231,21 +292,26 @@ export default {
 
     irAComentarios(idBereal) {
       this.$router.push(`/comentarios/${idBereal}`);
-    }
+    },
+    getDiscoNameById(id) {
+      const disco = this.discotecas.find(disco => disco.id === id);
+      return disco ? disco.nombre_local : 'Disco Desconocida';
+    },
   }
 }
 </script>
 
 <style scoped>
 .bereal-item {
-background-color: #fff;
-border-radius: 10px;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-padding: 15px;
-margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-bottom: 20px;
 }
+
 .bereal-time {
-right: 42px;
+  right: 42px;
   background: white;
   position: absolute;
   font-size: 12px;
@@ -446,30 +512,35 @@ body {
 
 /* Nuevos estilos para la lista de amigos */
 .amigos-lista-content {
-display: flex;
-flex-wrap: nowrap;
-overflow-x: auto;
-padding: 10px 0;
-overflow-y: hidden;
-scrollbar-width: none; /* Oculta la barra de desplazamiento en Firefox */
--ms-overflow-style: none; /* Oculta la barra de desplazamiento en IE y Edge */
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 10px 0;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  /* Oculta la barra de desplazamiento en Firefox */
+  -ms-overflow-style: none;
+  /* Oculta la barra de desplazamiento en IE y Edge */
 }
+
 .amigos-lista-content::-webkit-scrollbar {
-width: 0;
-height: 0; /* Oculta la barra de desplazamiento en Webkit (Chrome, Safari) */
+  width: 0;
+  height: 0;
+  /* Oculta la barra de desplazamiento en Webkit (Chrome, Safari) */
 }
 
 .amigo {
-display: flex;
-align-items: center;
-margin-right: 15px;
-flex-shrink: 0; /* Asegura que los elementos no se reduzcan */
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+  flex-shrink: 0;
+  /* Asegura que los elementos no se reduzcan */
 }
 
 .amigo-avatar img {
-width: 50px;
-height: 80px;
-border-radius: 17%;
+  width: 50px;
+  height: 80px;
+  border-radius: 17%;
 }
 
 .amigo-info {
@@ -480,45 +551,53 @@ border-radius: 17%;
 .amigo-nombre {
   white-space: nowrap;
 }
+
 .bereals-container {
-display: flex;
-justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .bereals-list {
-display: flex;
-flex-wrap: wrap;
-justify-content: space-between;
-max-width: 1200px; /* Establece un ancho máximo para evitar que los elementos se extiendan demasiado en pantallas grandes */
-margin: 0 auto; /* Centra los elementos horizontalmente */
-padding: 0 10px; /* Agrega un poco de espacio en los lados para que los elementos no toquen los bordes */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px;
+  /* Establece un ancho máximo para evitar que los elementos se extiendan demasiado en pantallas grandes */
+  margin: 0 auto;
+  /* Centra los elementos horizontalmente */
+  padding: 0 10px;
+  /* Agrega un poco de espacio en los lados para que los elementos no toquen los bordes */
 }
 
 .bereal-item {
-width: calc(33.33% - 20px); /* Tres elementos por fila en todas las pantallas */
-margin-bottom: 20px;
+  width: calc(33.33% - 20px);
+  /* Tres elementos por fila en todas las pantallas */
+  margin-bottom: 20px;
 }
 
 
 .bereal-time {
-font-size: 12px;
-color: #666;
-margin-bottom: 5px;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 5px;
 }
 
 .bereal-images {
-position: relative;
-width: 100%;
+  position: relative;
+  width: 100%;
 }
 
-.bereal-image1, .bereal-image2 {
-width: 90px; /* Ancho fijo para todas las imágenes */
-height: 150px; /* Altura fija para todas las imágenes */
-border-radius: 5px;
+.bereal-image1,
+.bereal-image2 {
+  width: 90px;
+  /* Ancho fijo para todas las imágenes */
+  height: 150px;
+  /* Altura fija para todas las imágenes */
+  border-radius: 5px;
 }
 
 .bereal-image2 {
-height: 36%;
+  height: 36%;
   position: absolute;
   top: 3%;
   left: 62%;
@@ -527,34 +606,66 @@ height: 36%;
   border-radius: 5px;
   border: 2px solid white;
 }
+.favorites-list {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.favorites-container {
+  margin-top: 50px;
+}
+
+.favorite-item:last-child {
+  margin-bottom: 0;
+}
+.favorites-list-empty {
+  color: #777;
+}
+.favorites-title {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+}
+.favorite-item {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .icon-button {
-  width:20px;
+  width: 20px;
   height: 30px;
 }
 
 @media (max-width: 768px) {
-.bereal-item {
-  width: calc(33.33% - 20px); /* Tres elementos por fila en pantallas medianas */
-}
+  .bereal-item {
+    width: calc(33.33% - 20px);
+    /* Tres elementos por fila en pantallas medianas */
+  }
 }
 
 @media (max-width: 480px) {
-.bereals-list {
-  margin-top: 30px;
-        gap: 10px;
-        position: relative;
-        right: -22px;
-        width: 434px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        height: 75%;
-        overflow-y: scroll;
-        left: -33px;
-}
+  .bereals-list {
+    margin-top: 70px;
+    gap: 10px;
+    position: relative;
+    right: -22px;
+    width: 434px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 65%;
+    overflow-y: scroll;
+    left: -33px;
+  }
 
-.bereal-item {
-  width: calc(33.33% - 20px); /* Tres elementos por fila en pantallas pequeñas */
-}
+  .bereal-item {
+    width: calc(33.33% - 20px);
+    /* Tres elementos por fila en pantallas pequeñas */
+  }
 }
 </style>
