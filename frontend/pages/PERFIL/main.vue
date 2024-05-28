@@ -236,17 +236,16 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .bereal-item {
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  margin-bottom: 20px;
+background-color: #fff;
+border-radius: 10px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+padding: 15px;
+margin-bottom: 20px;
 }
-
 .bereal-time {
-  right: 42px;
+right: 42px;
   background: white;
   position: absolute;
   font-size: 12px;
@@ -315,16 +314,19 @@ export default {
   cursor: pointer;
 }
 
-.content {
-  overflow: auto;
-  height: calc(100vh - 150px);
-}
-
-body, html {
-  height: 100%;
+html,
+body {
+  width: 100%;
   margin: 0;
   padding: 0;
-  overflow: scroll;
+}
+
+/* Estilos del contenido dinámico */
+.content {
+  margin-top: 20px;
+  border-radius: 5px;
+  width: 100%;
+  /* Ajusta el ancho al 100% */
 }
 
 /* Estilos de las publicaciones */
@@ -444,35 +446,30 @@ body, html {
 
 /* Nuevos estilos para la lista de amigos */
 .amigos-lista-content {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding: 10px 0;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  /* Oculta la barra de desplazamiento en Firefox */
-  -ms-overflow-style: none;
-  /* Oculta la barra de desplazamiento en IE y Edge */
+display: flex;
+flex-wrap: nowrap;
+overflow-x: auto;
+padding: 10px 0;
+overflow-y: hidden;
+scrollbar-width: none; /* Oculta la barra de desplazamiento en Firefox */
+-ms-overflow-style: none; /* Oculta la barra de desplazamiento en IE y Edge */
 }
-
 .amigos-lista-content::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  /* Oculta la barra de desplazamiento en Webkit (Chrome, Safari) */
+width: 0;
+height: 0; /* Oculta la barra de desplazamiento en Webkit (Chrome, Safari) */
 }
 
 .amigo {
-  display: flex;
-  align-items: center;
-  margin-right: 15px;
-  flex-shrink: 0;
-  /* Asegura que los elementos no se reduzcan */
+display: flex;
+align-items: center;
+margin-right: 15px;
+flex-shrink: 0; /* Asegura que los elementos no se reduzcan */
 }
 
 .amigo-avatar img {
-  width: 50px;
-  height: 80px;
-  border-radius: 17%;
+width: 50px;
+height: 80px;
+border-radius: 17%;
 }
 
 .amigo-info {
@@ -483,74 +480,45 @@ body, html {
 .amigo-nombre {
   white-space: nowrap;
 }
-
 .bereals-container {
-  display: flex;
-  justify-content: center;
-  overflow-y: auto;
-}
-
-.bereals-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: auto;
-    height: 50px;
-    margin-bottom: 20px;
+display: flex;
+justify-content: center;
 }
 
 .bereals-list {
-  overflow-y: auto;
-  display: flex;
-  overflow-x: auto;
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 10px;
-  gap: 10px;
+display: flex;
+flex-wrap: wrap;
+justify-content: space-between;
+max-width: 1200px; /* Establece un ancho máximo para evitar que los elementos se extiendan demasiado en pantallas grandes */
+margin: 0 auto; /* Centra los elementos horizontalmente */
+padding: 0 10px; /* Agrega un poco de espacio en los lados para que los elementos no toquen los bordes */
 }
 
 .bereal-item {
-  flex: 0 0 auto;
-  width: 30%;
-  margin-bottom: 20px;
-}
-
-@media (max-width: 768px) {
-  .bereal-item {
-    width: 45%;
-  }
-}
-
-@media (max-width: 480px) {
-  .bereal-item {
-    width: 60%;
-  }
+width: calc(33.33% - 20px); /* Tres elementos por fila en todas las pantallas */
+margin-bottom: 20px;
 }
 
 
 .bereal-time {
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 5px;
+font-size: 12px;
+color: #666;
+margin-bottom: 5px;
 }
 
 .bereal-images {
-  position: relative;
-  width: 100%;
+position: relative;
+width: 100%;
 }
 
-.bereal-image1,
-.bereal-image2 {
-  width: 90px;
-  /* Ancho fijo para todas las imágenes */
-  height: 150px;
-  /* Altura fija para todas las imágenes */
-  border-radius: 5px;
+.bereal-image1, .bereal-image2 {
+width: 90px; /* Ancho fijo para todas las imágenes */
+height: 150px; /* Altura fija para todas las imágenes */
+border-radius: 5px;
 }
 
 .bereal-image2 {
-  height: 36%;
+height: 36%;
   position: absolute;
   top: 3%;
   left: 62%;
@@ -559,34 +527,34 @@ body, html {
   border-radius: 5px;
   border: 2px solid white;
 }
-
 .icon-button {
-  width: 20px;
+  width:20px;
   height: 30px;
 }
 
 @media (max-width: 768px) {
-  .bereal-item {
-    width: calc(33.33% - 20px);
-    /* Tres elementos por fila en pantallas medianas */
-  }
+.bereal-item {
+  width: calc(33.33% - 20px); /* Tres elementos por fila en pantallas medianas */
+}
 }
 
 @media (max-width: 480px) {
-  .bereals-list {
-    margin-top: 30px;
-    gap: 10px;
-    position: absolute;
-    right: -22px;
-    width: 434px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+.bereals-list {
+  margin-top: 30px;
+        gap: 10px;
+        position: relative;
+        right: -22px;
+        width: 434px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        height: 75%;
+        overflow-y: scroll;
+        left: -33px;
+}
 
-  .bereal-item {
-    width: calc(33.33% - 20px);
-    /* Tres elementos por fila en pantallas pequeñas */
-  }
+.bereal-item {
+  width: calc(33.33% - 20px); /* Tres elementos por fila en pantallas pequeñas */
+}
 }
 </style>
