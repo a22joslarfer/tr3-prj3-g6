@@ -45,6 +45,8 @@
                         <p>Edad minima: {{ pin_seleccionado.minEdad }}</p>
                         <audio :src="pin_seleccionado.cancion_mp3" controls></audio>
                         <NuxtLink :to="'/' + pin_seleccionado.id" class="btn-create-review">Crear Reseña</NuxtLink>
+                        <button @click="agregarFavorito(pin_seleccionado.id)" class="btn-agregar-favorito">Agregar a Favoritos</button>
+
                     </div>
                 </div>
             </div>
@@ -60,7 +62,7 @@ import FooterOptions from '@/components/FooterOptions.vue';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import LoadingDots from "@/components/LoadingDots.vue";
-
+import { useStore } from '../stores/index';
 export default {
     components: {
         FooterOptions,
@@ -118,6 +120,32 @@ export default {
     },
 
     methods: {
+        async agregarFavorito(discotecaId) {
+      const store = useStore(); // Obtén la instancia de tu tienda Pinia
+      const userId = store.return_user_id(); // Obtén el ID del usuario desde la tienda
+
+      try {
+        const response = await fetch(`http://localhost:8000/api/favoritos`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            discoteca_id: discotecaId,
+          }),
+        });
+
+        if (response.ok) {
+          console.log('Discoteca agregada a favoritos correctamente');
+          // Realiza cualquier otra acción necesaria después de agregar a favoritos
+        } else {
+          console.error('Error al agregar la discoteca a favoritos:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+      }
+    },
         handleBlur() {
             // Esperar un corto periodo para asegurar que el teclado se haya ocultado
             setTimeout(() => {
