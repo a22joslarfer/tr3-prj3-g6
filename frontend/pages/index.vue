@@ -14,6 +14,8 @@
                 <option v-for="(ciudad, index) in ciudades" :key="index" :value="ciudad.id">{{ ciudad.nombre }}
                 </option>
             </select>
+            <button @click="resetFilter">Reiniciar</button>
+
         </div>
 
 
@@ -125,7 +127,7 @@ export default {
             const userId = store.return_user_id(); // Obtén el ID del usuario desde la tienda
 
             try {
-                const response = await fetch(`http://localhost:8000/api/favoritos`, {
+                const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/favoritos`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -214,6 +216,10 @@ export default {
 
             console.log('Ciudad seleccionada:', this.ciudadSeleccionada);
             this.fetchData(); // Llamar a fetchData para obtener datos actualizados según la ciudad seleccionada
+        },
+        resetFilter() {
+            this.ciudadSeleccionada = '';
+             this.fetchData();
         },
         async handleFileUpload() {
             const file = this.$refs.fileInput.files[0];

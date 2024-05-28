@@ -74,7 +74,12 @@ class seguidoresController extends Controller
         }
     }
 
-
+//funcion de cuantas personas esta siguiendo el user
+    public function countSeguidores($id)
+    {
+        $seguidos = seguidorModel::where('seguidor', $id)->get('seguido');
+        return $seguidos;
+    }
 
 
     public function checkIfSeguidor($user_id, $friend_id)
