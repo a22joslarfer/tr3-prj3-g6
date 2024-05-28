@@ -92,12 +92,6 @@ Encriptar els missatges abans d'emmagatzemar-los a la base de dades per protegir
 Realitzar validacions addicionals al costat del servidor per evitar atacs d'injecció SQL i altres vulnerabilitats de seguretat.
 
 
-
-
-
-
-
-
 ## Resolució dels problemes dels sockets
 #### Autenticació d'usuaris:
 Implementar un sistema d'autenticació robust implica validar les credencials de l'usuari, com ara el nom d'usuari i la contrasenya, utilitzant tècniques segures com el xifrat de contrasenyes amb algoritmes com el bcrypt. Un cop l'usuari s'autentica correctament, es pot generar un token JWT que contingui informació sobre la sessió de l'usuari, com ara la seva ID i qualsevol altra dada rellevant. Aquest token s'enviaria al client i s'adjuntaria a totes les sol·licituds posteriors com a forma d'identificació. Al servidor, es verificarà la validesa i la integritat del token en cada sol·licitud per garantir que l'usuari estigui autoritzat per accedir als recursos sol·licitats.
@@ -113,6 +107,25 @@ Abans d'emmagatzemar missatges a la base de dades, es poden xifrar utilitzant al
 
 #### Validació al costat del servidor:
 En realitzar operacions de base de dades, cal utilitzar consultes parametritzades o funcions ORM per evitar la possibilitat d'injecció SQL. Això garanteix que les dades proporcionades per l'usuari s'interpreten només com a valors i no com a part de l'estructura de la consulta SQL. A més, cal realitzar validacions exhaustives al costat del servidor per garantir que les dades proporcionades per l'usuari compleixin certs criteris de seguretat i no continguin dades malicioses o no vàlides que puguin comprometre l'aplicació.
+
+
+
+## Idenfificació de problemes al xat
+### Autenticació d'usuaris:
+Implementar un sistema d'autenticació sòlid utilitzant tokens JWT (JSON Web Tokens) o sessions d'usuari per verificar la identitat del client abans de permetre l'accés a les funcions del xat.
+
+### Validació de dades: 
+Realitzar una validació exhaustiva de les dades rebudes del client per evitar atacs de tipus XSS (Cross-Site Scripting) o injeccions de codi maliciós. Validar els IDs d'usuari per assegurar-se que corresponen a usuaris legítims i autoritzats per accedir al sistema.
+
+### Seguretat en el maneig de dades a Redis: 
+Implementar mesures de seguretat addicionals en el maneig de missatges emmagatzemats a Redis, com comprovacions de permisos per publicar missatges o accedir a l'historial de missatges. Utilitzar tècniques de xifrat per protegir les dades emmagatzemades i en trànsit.
+
+### Seguretat en la persistència de dades: 
+Encriptar els missatges abans d'emmagatzemar-los a Redis per protegir la privacitat dels usuaris en cas d'una violació de seguretat. Implementar còpies de seguretat regulars de les dades emmagatzemades a Redis i utilitzar tècniques de hash segures per protegir les contrasenyes i altres dades confidencials.
+
+### Validació al costat de servidor
+Realitzar validacions addicionals al costat del servidor per evitar atacs d'injecció SQL, si s'utilitzen bases de dades addicionals, i altres vulnerabilitats de seguretat.
+
 
 
 
