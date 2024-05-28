@@ -168,7 +168,7 @@ export default {
     const store = useStore();
     const id = store.return_user_id();
 
-    const followingResponse = await fetch(`http://localhost:8000/api/siguiendo/${id}`);
+    const followingResponse = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/siguiendo/${id}`);
     const followingData = await followingResponse.json();
     console.log(followingData);
     this.siguiendo = followingData.length; // Assign the number of users being followed
@@ -208,7 +208,7 @@ export default {
     async getFavoritos() {
       try {
         const userId = this.getUserId();
-        const response = await fetch(`http://localhost:8000/api/favoritos/${userId}`);
+        const response = await fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/favoritos/${userId}`);
         if (!response.ok) {
           throw new Error('No se pudo obtener los favoritos');
         }
