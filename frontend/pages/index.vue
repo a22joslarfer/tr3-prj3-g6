@@ -145,6 +145,7 @@ export default {
                     // Realiza cualquier otra acción necesaria después de agregar a favoritos
                 } else {
                     console.error('Error al agregar la discoteca a favoritos:', response.statusText);
+                    alert('No puedes volver a añadidir la misma discoteca a favoritos.');
                 }
             } catch (error) {
                 console.error('Error al realizar la solicitud:', error);
