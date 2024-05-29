@@ -1,341 +1,240 @@
-<template>
-    <div class="container">
-        <h2>Lista de reviews</h2>
-        <div class="dropdown-categorias">
-            <select v-model="selectedCategory" class="mobile-select">
-                <option disabled value="">Please select one</option>
-                <option v-for="categoria in categorias_reviews" :key="categoria.id" :value="categoria.id">
-                    {{ categoria.nombre }}
-                </option>
-            </select>
-        </div>
-
-        <div class="row">
-            <div v-for="review in reviews" :key="review.id" class="col-md-4">
-                <div class="card mb-3">
-                    <img :src="getImagenUrl(review.photo)" class="card-img-top" alt="...">
-
-
-                    <div class="card-body">
-                        <h5 class="card-title">{{ review.titulo }}</h5>
-                        <p class="card-text">{{ review.content }}</p>
-                        <p class="card-text">Puntuación: {{ review.puntuacion }}</p>
-
+    <template>
+        <HeaderGeneral />
+        <div class="container">
+            <h1 class="header">Lista de Reseñas</h1>
+            <div class="reviews-list">
+                <div class="review-card" v-for="review in reviews" :key="review.id">
+                    <img :src="getImagenUrl(review.photo)" class="review-photo" alt="Foto de reseña">
+                    <div class="review-content">
+                        <h2>{{ review.titulo }}</h2>
+                        <p><strong>Usuario:</strong> {{ getUserById(review.usuario_id) }}</p>
+                        <p><strong>Discoteca:</strong> {{ getDiscoNameById(review.disco_id) }}</p>
+                        <p><strong>Contenido:</strong> {{ review.content }}</p>
+                        <p><strong>Puntuación:</strong> {{ review.puntuacion }}</p>
+                        <p><strong>Categoría:</strong> {{ getCategoriaNameById(review.categoria) }}</p>
+                        <!-- for each a discotecas -->
+                
                     </div>
-                    <div class="card-footer">
-                        <small class="text-muted">Review de {{ getUserById(review.usuario_id) }}</small>
-                        <div v-if="review.usuario_id != client_id">
-                            <button @click="follow(review.usuario_id)">Follow</button>
-                        </div>
-
-                        <div v-else>
-                            <button @click="deleteReview(review.id)">Eliminar review</button>
-                        </div>
-
-
-                    </div>
+                    <button @click="follow(review.usuario_id)">Seguir</button>
                 </div>
             </div>
-        </div>
-    </div>
-</template>
+        </div>    
+            <FooterOptions />
 
-<script>
-export default {
-    data() {
-        return {
-            reviews: [],
-            userMap: {},
-            search: '',
-            imageSrc: null,
-            categorias_reviews: [],
-            client_id: null,
-            selectedCategory: '',
+    </template>
 
-        };
-    },
-    methods: {
-        fetchReviews() {
-            fetch('http://localhost:8000/api/reviews')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Error fetching reviews: ${response.status} - ${response.statusText}`);
-                    }
-                    return response.json(); // Return the parsed JSON
-                })
-                .then(reviews => {
-                    this.reviews = reviews;
-                    reviews.forEach(review => {
-                        this.fetchUserById(review.usuario_id);
+    <script>
+import { useStore } from '../stores/index'
+
+    export default {
+        data() {
+            return {
+                reviews: [],
+                userMap: {},
+                search: '',
+                imageSrc: null,
+                categorias_reviews: [],
+                client_id: null,
+                selectedCategory: '',
+                
+                
+            };
+        },
+        methods: {
+            fetchReviews() {
+                fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/reviews')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error fetching reviews: ${response.status} - ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(reviews => {
+                        this.reviews = reviews;
+                        reviews.forEach(review => {
+                            this.fetchUserById(review.usuario_id);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching reviews:', error);
                     });
+            },
+            fetchUserById(id) {
+                fetch(`http://elysium.daw.inspedralbes.cat/backend/public/api/users/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error fetching user: ${response.status} - ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(response => {
+                        this.userMap[id] = response.data;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching user:', error);
+                    });
+            },
+            getUserById(id) {
+                const userName = this.userMap[id];
+                return userName ? userName : 'Usuario Desconocido';
+            },
+            getDiscoNameById(id) {
+                const disco = this.discotecas.find(disco => disco.id === id);
+                return disco ? disco.nombre_local : 'Disco Desconocida';
+            },
+            getCategoriaNameById(id) {
+                const categoria = this.categorias_reviews.find(categoria => categoria.id === id);
+                return categoria ? categoria.nombre : 'Categoría Desconocida';
+            },
+            getImagenUrl(rutaRelativaImagen) {
+                return `http://elysium.daw.inspedralbes.cat/backend/storage/app/public${rutaRelativaImagen}`.replace(/storage(?!.*storage)/, '');
+            },
+            fetchCategoriasReviews() {
+                console.log('fetchCategoriasReviews');
+                fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error fetching categorias_reviews: ${response.status} - ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(categorias => {
+                        this.categorias_reviews = categorias;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching categorias_reviews:', error);
+                    });
+            },
+            checkIfAuth() {
+                const store = useStore();
+                const user_id = store.return_user_id();
+                if (user_id === null) {
+                    store.set_return_path('/reviews');
+                    this.$router.push('/login');
+                }
+                this.client_id = user_id;
+            },
+        
+            follow(seguido_id) {
+                fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/seguidores', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        seguidor: this.client_id,
+                        seguido: seguido_id,
+                    }),
                 })
-                .catch(error => {
-                    console.error('Error fetching reviews:', error);
-                    alert('Error fetching reviews');
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error adding friend: ${response.status} - ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(friend => {
+                        alert('Amigo añadido');
+                    })
+                    .catch(error => {
+                        console.error('Error adding friend:', error);
+                        alert('Error adding friend');
+                    });
+            },
+            //fetch a discotecas/review.disco_id
+            fetchDiscotecas() {
+                fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/discotecas')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error fetching discotecas: ${response.status} - ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        this.discotecas = data;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching discotecas:', error);
+                    });
+            },
+        
         },
-        fetchUserById(id) {
-            fetch(`http://localhost:8000/api/users/${id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Error fetching user: ${response.status} - ${response.statusText}`);
-                    }
-                    return response.json(); // Return the parsed JSON
-                })
-                .then(user => {
-                    this.userMap[id] = user; // Direct assignment
-                })
-                .catch(error => {
-                    console.error('Error fetching user:', error);
-                    alert('Error fetching user');
-                });
+        created() {
+            this.checkIfAuth();
+            this.fetchReviews();
+            this.fetchCategoriasReviews();
+            this.fetchDiscotecas();
         },
-        getUserById(id) {
-            const user = this.userMap[id];
-            return user ? user.name : 'Usuario Desconocido';
-        },
-        getImagenUrl(rutaRelativaImagen) {
+    };
+    </script>
 
-            return `http://localhost:8000/${rutaRelativaImagen}`;
-        },
-        fetchCategoriasReviews() {
-            fetch('http://localhost:8000/api/categorias_reviews')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Error fetching categorias_reviews: ${response.status} - ${response.statusText}`);
-                    }
-                    return response.json(); // Return the parsed JSON
-                })
-                .then(categorias => {
-                    this.categorias_reviews = categorias;
+    <style scoped>
+    .container {
+        padding: 5% 10% 50%;
+                background-color: #f9f9f9;
+        overflow-y: scroll;
+    }
 
-                })
-                .catch(error => {
-                    console.error('Error fetching categorias_reviews:', error);
-                    alert('Error fetching categorias_reviews');
-                });
-        },
-        checkIfAuth() {
-            const store = useStore();
-            const user_id = store.return_user_id();
-            if (user_id == null) {
-                alert('Necesitas estar logueado para crear una review');
-                this.$router.push('/login');
-                store.set_return_path('/reviews');
-            }
-            this.client_id = user_id;
+    .header {
+        text-align: center;
+        margin-bottom: 5%;
+        font-size: 1.5em;
+    }
 
-        },
-        deleteReview(review_id) {
-            fetch(`http://localhost:8000/api/reviews/${review_id}`, {
-                method: 'DELETE',
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Error deleting review: ${response.status} - ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(review => {
-                    alert('Review eliminada');
-                    this.fetchReviews();
-                })
-                .catch(error => {
-                    console.error('Error deleting review:', error);
-                    alert('Error deleting review');
-                });
-        },
-        follow(seguido_id) {
-            fetch('http://localhost:8000/api/seguidores', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    seguidor: this.client_id,
-                    seguido: seguido_id,
-                }),
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Error adding friend: ${response.status} - ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(friend => {
-                    alert('Amigo añadido');
-                })
-                .catch(error => {
-                    console.error('Error adding friend:', error);
-                    alert('Error adding friend');
-                });
-        },
-        unfollow(seguido_id) {
+    .reviews-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5%;
+    }
 
-        },
-        checkIfSeguidor(seguidor_id, seguido_id) {
-            fetch(`http://localhost:8000/api/seguidores/${seguidor_id}/${seguido_id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error fetching seguidores');
-                    }
-                    return response.json();
-
-                })
-                .then(data => {
-                    if (data.status) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                })
-
-                .catch(error => {
-                    console.error('Error fetching seguidores:', error);
-                    alert('Error fetching seguidores catch error');
-                });
-        }
-    },
-    mounted() {
-        this.fetchReviews();
-        this.fetchCategoriasReviews();
-        this.checkIfAuth();
-
-    },
-
-};
-</script>
-
-<style scoped>
-/*normazile*/
-* {
-    box-sizing: border-box;
-    font-family: "Antonio", sans-serif;
-    margin: 0;
-    padding: 0px;
-    overflow: hidden;
-    color: #ccc;
-
-}
-
-
-
-.container {
-    padding: 8px;
-    background-color: #30355ade;
-}
-
-.btn {
-    display: inline-block;
-    font-weight: 400;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    user-select: none;
-    border: 1px solid transparent;
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: 0.25rem;
-    transition: color 0.15s;
-    cursor: pointer;
-}
-
-
-.card {
-    position: relative;
+    .review-card {
+        background-color: white;
+    border: 1px solid #e67979;
+    border-radius: 8px;
+    padding: 5%;
     display: flex;
     flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #30355a;
-    background-clip: border-box;
-    border: 1px solid #23284b;
-    border-radius: 1rem;
-    margin: 40px 0;
-}
+    gap: 3%;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    }
 
-.card-img-top {
-    width: 100%;
-    height: 15vw;
-    object-fit: cover;
-}
+    .review-photo {
+        width: 100%;
+        border-radius: 8px;
+    }
 
-.card-body {
-    flex: 1 1 auto;
-    padding: 1.25rem;
-}
+    .review-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2%;
 
-.card-title {
-    margin-bottom: 0.75rem;
-    font-size: 1.25rem;
-}
+    }
 
-.card-text:last-child {
-    margin-bottom: 0;
-}
+    .review-content h2 {
+        margin: 0 0 5% 0;
+        font-size: 1.2em;
+text-decoration: underline;
+    
+    }
 
-.card-footer {
-    padding: 0.75rem 1.25rem;
-    background-color: rgba(0, 0, 0, 0.301);
-    border-top: 1px solid rgba(252, 252, 252, 0.212);
-    border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .review-content p {
+        margin: 2% 0;
+    }
 
+    button {
+        align-self: flex-start;
+        padding: 5% 10%;
+        margin: 2% 0;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
 
-.dropdown-categorias {
-    width: 100%;
-    padding: 0;
-
-}
-
-button {
-    background-color: #30355a;
-    transition: background-color 0.2s ease-in-out;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #121322a8;
-
-}
-
-h2 {
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-}
-
-.mobile-select {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    background-color: #30355a;
-    border: 1px solid #ccc;
-
-    border-radius: 4px;
-}
-
-option {
-    background-color: #30355a;
-    color: #ccc;
-    border: 2px solid #ccc;
-}
-
-.dropdown-categorias:focus,
-.mobile-select:focus,
-.dropdown-categorias:active,
-.mobile-select:active {
-    outline: none;
-}
-
-body {
-    margin: 0px;
-}
-</style>
+    button:hover {
+        background-color: #0056b3;
+    }
+    </style>

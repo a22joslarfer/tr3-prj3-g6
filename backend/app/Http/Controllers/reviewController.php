@@ -2,55 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\reviewModel;
-use Illuminate\Support\Facades\Storage;
+use App\Models\ReviewModel;
+
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+
+
 
 class reviewController extends Controller
 {
-    //
+
     public function createReview(Request $request)
     {
-        $request->validate([
-            'usuario_id' => 'required',
-            'disco_id' => 'required',
-            'titulo' => 'required',
-            'content' => 'required',
-            'puntuacion' => 'required',
-            'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048|required',
-            'categoria' => 'required',
-        ]);
-
         try {
-            $review = new ReviewModel;
-            $review->usuario_id = $request->usuario_id;
-            $review->disco_id = $request->disco_id;
-            $review->titulo = $request->titulo;
-            $review->content = $request->content;
-            $review->puntuacion = $request->puntuacion;
-            $review->categoria = $request->categoria;
-
-            if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('photos', 'public');
-                $review->photo = $photoPath;
-            } elseif ($request->exists('photo')) {
-                $review->photo = $request->photo;
-            } else {
-                return response()->json(['error' => 'No photo was provided.'], 400);
-            }
-
-
-            $review->save();
-
-            return response()->json($review);
+            $validatedData = $request->validate([
+                'usuario_id' => 'required|exists:users,id',
+                'disco_id' => 'required',
+                'titulo' => 'required',
+                'content' => 'required',
+                'puntuacion' => 'required|integer|min:1|max:5',
+                'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'categoria' => 'required',
+            ]);
+    
+            // Almacenar la foto y obtener la ruta
+            $photoPath = $request->file('photo')->store('public/img');
+    
+            // Crear la nueva revisión
+            $review = ReviewModel::create([
+                'photo' => str_replace('public/', 'storage/', $photoPath),
+                'usuario_id' => $validatedData['usuario_id'],
+                'disco_id' => $validatedData['disco_id'],
+                'titulo' => $validatedData['titulo'],
+                'content' => $validatedData['content'],
+                'puntuacion' => $validatedData['puntuacion'],
+                'categoria' => $validatedData['categoria'],
+            ]);
+    
+            return response()->json(['message' => 'Review stored successfully', 'review' => $review], 201);
         } catch (\Exception $e) {
-            // Log the error for debugging purposes
-            Log::error('Error creating review: ' . $e->getMessage());
-
-            // Return a generic error response
-            return response()->json(['error' => 'An error occurred while creating the review.'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 

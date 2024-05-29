@@ -1,178 +1,163 @@
-<template>   
- <HeaderGeneral />
-
+<template>
+  <HeaderGeneral />
   <div class="container">
     <form @submit.prevent="submitReview" class="form">
-
       <div class="form-group">
         <label for="titulo" class="texto">Título *</label>
-        <input type="text" id="titulo" v-model="titulo" class="form-control" required
-          placeholder="Ingresa el título de la reseña...">
+        <input type="text" id="titulo" v-model="titulo" class="form-control" required placeholder="Ingresa el título de la reseña...">
       </div>
 
       <div class="form-group">
-        <label for="content" class="texto">Contenido *</label>
-        <textarea id="content" v-model="content" class="form-control" required
-          placeholder="Escribe aquí el contenido de la reseña..."></textarea>
+        <label for="content" class="texto">Contenido </label>
+        <textarea id="content" v-model="content" class="form-control" required placeholder="Escribe aquí el contenido de la reseña..."></textarea>
       </div>
 
       <div class="form-group">
-        <label for="categoria" class="texto">Categoría *</label>
-        <select id="categoria" v-model="categoria" class="form-control" required>
-          <option disabled value="">Selecciona una categoría</option>
-          <option v-for="categoria in categorias_reviews" :key="categoria.nombre" :value="categoria.id">
-            {{ categoria.nombre }}
-          </option>
+        <label class="texto">Categoría </label>
+        <select v-model="categoria" class="form-control">
+          <option v-for="(item, index) in categorias_reviews" :key="index" :value="index">{{ item.nombre }}</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="puntuacion" class="texto">Puntuación *</label>
-          <NuxtRating :read-only="false" :rating-count="5" :rating-size="'40px'" :active-color="'gold'"
-            :rating-value="1" rating-content="⭐" @rating-selected="logRating" class="star-rating"/>
-
+        <label for="puntuacion" class="texto">Puntuación </label>
+        <TestRating :ratingValue="puntuacion" @input="updateRating"/>
       </div>
 
       <div class="form-group">
         <label for="photo" class="texto">Foto (opcional):</label>
-        <div class="dropzone" @click="openFileInput">
-          <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file"
-            accept="image/*">
-          <div class="dropzone-text" @click="openFileInput">
-            
-          </div>
-          <span>Seleccionar archivo</span>
-        </div>
+        <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file" accept="image/*" required>
       </div>
 
-      <button type="submit" class="btn btn-primary">Enviar reseña</button>
+      <button type="submit" class="btn btn-primary" style="margin-bottom: 150px;">Enviar reseña</button>
     </form>
     <FooterOptions />
   </div>
 </template>
 
 <script>
-import { useStore } from '../stores/index.js';
+import { useStore } from '../stores/index'
+import TestRating from '../components/TestRating.vue'; // Asegúrate de que la ruta sea correcta
+
 export default {
+  components: {
+    TestRating
+  },
   data() {
     return {
       disco_id: '',
       usuario_id: '',
       titulo: '',
       content: '',
-      puntuacion: null,
+      puntuacion: 1,
       photo: null,
       categorias_reviews: [],
-      categoria: '',
+      categoria: null,
     };
   },
   methods: {
-
-   logRating(rating) {
-      console.log('Rating:', rating);
-      this.puntuacion = rating;
-    },
     submitReview() {
-      let data = {
-        disco_id: this.disco_id,
-        usuario_id: this.usuario_id,
-        titulo: this.titulo,
-        content: this.content,
-        puntuacion: this.puntuacion,
-        photo: this.photo,
-        categoria: this.categoria,
-      };
+      if (!this.categoria) {
+        alert('Por favor selecciona una categoría.');
+        return;
+      }
+      //photo
+      if (this.photo) {
+        alert('Por favor selecciona una foto.');
+        console.log('Foto:', this.photo);
+      }
 
-      fetch('http://localhost:8000/api/reviews', {
+      console.log('Puntuación al enviar:', this.puntuacion);
+
+      let formData = new FormData();
+      formData.append('disco_id', this.disco_id);
+      formData.append('usuario_id', this.usuario_id);
+      formData.append('titulo', this.titulo);
+      formData.append('content', this.content);
+      formData.append('puntuacion', this.puntuacion);
+      formData.append('categoria', this.categoria);
+      if (this.photo) {
+        formData.append('photo', this.photo);
+      }
+
+      fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/reviews', {
         method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        body: formData,
       })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Error submitting review: ${response.status} - ${response.statusText}`);
-          }
-          alert('Tot correcte!');
-          this.$router.push('/reviews');
-
-        })
-        .catch(error => {
-          alert('Error submitting review: ' + error.message);
-        });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error al enviar la reseña: ${response.status} - ${response.statusText}`);
+        }
+        this.$router.push('/reviews');
+      })
+      .catch(error => {
+        alert('Error al enviar la reseña: ' + error.message);
+      });
     },
     handleFileUpload(event) {
       this.photo = event.target.files[0];
     },
-    openFileInput() {
-      this.$refs.fileInput.click();
-    },
     fetchCategorias() {
-      fetch('http://localhost:8000/api/categorias_reviews')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Error fetching categorias: ${response.status} - ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          this.categorias_reviews = data;
-        })
-        .catch(error => {
-          alert('Error fetching categorias: ' + error.message)
-        });
+      fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/categorias_reviews')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error al obtener las categorías: ${response.status} - ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        this.categorias_reviews = data;
+      })
+      .catch(error => {
+        alert('Error al obtener las categorías: ' + error.message);
+      });
     },
-    checkIfAuth(){
-      const store = useStore();
-      const user_id = store.return_user_id();
-      if(user_id === null){
-        alert('Necesitas estar logueado para crear una review');
-        store.set_return_path('/'+ this.$route.params.id);
-        this.$router.push('/login');
-        localStorage.setItem('return_path', '/'+ this.$route.params.id);
-      }
-    }
-  },
-  created() {
-    this.disco_id = this.$route.params.id;
-    const store = useStore();
-    this.usuario_id = store.return_user_id();
-
-    
-
-  },
-  computed() {
-    this.checkifAuth();
+    updateRating(value) {
+      console.log('Nueva Puntuación:', value);
+      this.puntuacion = value;
+      console.log('Puntuación actualizada:', this.puntuacion);
+    },
   },
   mounted() {
+    const store = useStore();
+    const user_id = store.return_user_id();
+
+    if (user_id === null) {
+      store.set_return_path('/' + this.$route.params.id);
+      this.$router.push('/login');
+    }
+
+    this.disco_id = this.$route.params.id;
+    this.usuario_id = store.return_user_id();
+
     this.fetchCategorias();
-    console.log('Categorias:', this.categorias_reviews);
-    this.checkIfAuth();
   },
 };
 </script>
 
+
 <style scoped>
 .container {
   padding: 20px;
-
+  overflow-y: auto;
+  background-color: rgb(210 217 219);
+    margin-bottom: 60px;
 }
-
 .form {
   display: flex;
   flex-direction: column;
 }
 
 .form-group {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .texto {
-
-  font-weight: bold;
-  color: #333;
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
 }
 
 .form-control {
@@ -184,35 +169,6 @@ export default {
   font-size: 13px;
   transition: border-color 0.3s ease;
   margin-top: 10px;
-
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-.dropzone {
-  position: relative;
-  width: 100%;
-  height: 50px;
-  border: 2px dashed #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.dropzone:hover {
-  background-color: #f0f0f0;
-}
-
-.dropzone span {
-  color: #555;
-  font-size: 16px;
-  cursor: pointer;
 }
 
 .btn-primary {
@@ -227,13 +183,14 @@ export default {
   transition: background-color 0.3s ease;
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
+.stars-rating {
+  position: relative;
 }
-.star-rating {
-  margin-top: 10px;
-}
-textarea{
-  resize: none;
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
 }
 </style>

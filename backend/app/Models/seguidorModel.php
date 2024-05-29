@@ -28,17 +28,5 @@ class seguidorModel extends Model
     }
 
 
-    public function getFriendsOfUser($userId)
-    {
-        return $this->where('seguidor', $userId)
-            ->orWhere('seguido', $userId)
-            ->whereExists(function ($query) use ($userId) {
-                $query->selectRaw(1)
-                    ->from('seguidores as f2')
-                    ->whereColumn('f2.seguidor', 'seguidores.seguido')
-                    ->whereColumn('f2.seguido', 'seguidores.seguidor')
-                    ->where('f2.seguidor', $userId);
-            })
-            ->get('seguidor');
-    }
+   
 }

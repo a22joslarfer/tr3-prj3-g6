@@ -10,15 +10,39 @@ import { defineStore } from 'pinia'
 export const useStore = defineStore({
   id: 'main',
   state: () => ({
-    return_path: null,
+    path: '/',
     user_id: null,
     email: null,
     password: null,
-    birthday: null,
+    birthdate: null,
     phone: null,
     username: null,
+    profile_picture: null,
+    chattingWithId: null,
+    chattingWithIdName: null,
+    rol: null,
+    nuevaHoraNotificacion: null,
+
   }),
   actions: {
+    guardarNuevaHora(nuevaHora) {
+      this.nuevaHoraNotificacion = nuevaHora;
+    },
+    return_nueva_hora(){
+      return this.nuevaHoraNotificacion;
+    },
+    set_chattingWithId(id) {
+      this.chattingWithId = id;
+    },
+    set_chattingWithIdName(name) {
+      this.chattingWithIdName = name;
+    },
+    return_chattingWithId() {
+      return this.chattingWithId;
+    },
+    return_chattingWithIdName() {
+      return this.chattingWithIdName;
+    },
     save_seats(seats) {
       this.selected_seats = seats;
     },
@@ -29,16 +53,15 @@ export const useStore = defineStore({
       this.username = username;
       this.email = email;
       this.user_id = id;
-     
 
     },
-    save_user_info_register(username, email, id, phone, birthday, password) {
+    save_user_info_register(username, email, id, phone, birthdate) {
       this.username = username;
       this.email = email;
       this.user_id = id;
       this.phone = phone;
-      this.birthday = birthday;
-      this.password = password;
+      this.birthdate = birthdate;
+
     },
     return_user_id() {
       return this.user_id;
@@ -58,12 +81,15 @@ export const useStore = defineStore({
     return_user_password() {
       return this.password;
     },
+    return_user_profile_picture() {
+      return this.profile_picture;
+    },
     return_user_info() {
       return {
         username: this.username,
         email: this.email,
         user_id: this.user_id,
-       
+        profile_picture: this.profile_picture,
 
       };
     },
@@ -78,25 +104,35 @@ export const useStore = defineStore({
       };
     },
     clear_user_info() {
-      this.username = null;
-      this.email = null;
       this.user_id = null;
-      this.phone = null;
-      this.birthday = null;
+      this.email = null;
       this.password = null;
+      this.birthdate = null;
+      this.phone = null;
+      this.username = null;
+      this.profile_picture = null;
+      this.chattingWithId = null;
+      this.chattingWithIdName = null;
+      this.rol = null;
+      this.path = '/';
     },
     set_return_path(path) {
-      this.return_path = path;
+      this.path = path;
     },
     return_path() {
-      return this.return_path;
+      return this.path;
     },
-
+    return_user_rol() {
+      return this.rol;
+    },
+    set_user_rol(rol) {
+      this.rol = rol;
+    },
 
     logout() {
       this.clear_user_info();
     }
-  
+
   },
 
   persist: true,

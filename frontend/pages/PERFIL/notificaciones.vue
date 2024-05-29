@@ -1,38 +1,78 @@
 <template>
-    <div>
-<HeaderPerfil :pageTitle="pageTitle"/>
-<div class="container">
-<!-- ajustes de notificaciones -->
-    <div class="notificaciones">
-        <h2>Notificaciones</h2>
-        <div class="notificacion">
-            <div class="avatar">
-                <div class="info">
-                    <h3>Nombre del amigo</h3>
-                    <p>Último mensaje</p>
-                    <p>Fecha del último mensaje</p>
-                    <p>Estado del mensaje</p>
-                </div>
-            </div>
-        </div>
+  <div>
+    <HeaderGeneral />
+    <div v-if="notificacionesPendientes.length > 0" class="notificaciones-container">
+      <h2>Notificacions Pendents:</h2>
+      <ul>
+        <li v-for="(notificacion, index) in notificacionesPendientes" :key="index" @click="irABereal(notificacion)">
+          <span>{{ notificacion.titulo }}</span>
+        </li>
+      </ul>
     </div>
-
-
-</div>
-
+    <div v-else>
+      <p>No hi ha notificacions pendents.</p>
     </div>
+    <FooterOptions />
+  </div>
 </template>
-
+  
 <script>
-    export default {
-        data() {
-            return {
-                pageTitle: 'Notificaciones', // Definir el título aquí en el objeto data
-            }
-        }
-    }
+import { reactive } from 'vue';
+import { useStore } from "../../stores/index";
+
+export default {
+  setup() {
+    const state = reactive({
+      notificacionesPendientes: []
+    });
+
+    const obtenerNotificacionesPendientes = () => {
+      const notificacion = JSON.parse(localStorage.getItem('notificacionPendiente'));
+      if (notificacion) {
+        state.notificacionesPendientes.push(notificacion);
+      }
+    };
+    const irABereal = (notificacion) => {
+      if (notificacion.eliminadaPorX) {
+        localStorage.removeItem('notificacionPendiente');
+        window.location.href = '/inTime';
+      }
+    };
+
+
+    obtenerNotificacionesPendientes();
+
+    return {
+      ...state,
+      irABereal,
+    };
+  },
+};
 </script>
+  
+<style lang="css" scoped>
+.notificaciones-container {
+  margin-top: 20px;
+}
 
-<style lang="scss" scoped>
+h2 {
+  margin-bottom: 20px;
+}
 
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 </style>
+  

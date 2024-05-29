@@ -1,4 +1,6 @@
 import io from 'socket.io-client';
 
-// Connect to the Socket.io server
-export const socket = io('http://localhost:5000');
+export const socket = io('http://elysium.daw.inspedralbes.cat:3333');
+
+//export const socket = io('http://localhost:3333');
+

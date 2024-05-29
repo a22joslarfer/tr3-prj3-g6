@@ -3,19 +3,23 @@
 
     <div class="login-container">
         <div class="content">
-          <!-- Add multi-step progress bar -->
-          <div class="step-progress-content">    
-            <button type="radio" class="boton-atras" @click="step--"><</button>
-
+            <!-- Add multi-step progress bar -->
+            <div class="step-progress-content">
+                <button type="button" class="boton-atras" @click="step = step > 1 ? step - 1 : 1"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#5f6368">
+                        <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z" />
+                    </svg></button>
                 <div class="progress-bar">
                     <div class="progress" :style="{ width: (step * 33.33) + '%' }"></div>
                 </div>
+
             </div>
 
             <div class="company-info">
                 <img src="https://static.vecteezy.com/system/resources/previews/029/938/250/non_2x/planet-earth-globe-world-map-ai-generative-free-png.png"
                     alt="Logo de la empresa" class="company-logo">
-                <div class="title_company">BIENVENIDO A VIAEGIS</div>
+                <div class="title_company">BIENVENIDO A ELYSIUM</div>
             </div>
 
             <div class="login-form">
@@ -25,6 +29,8 @@
                 <form @submit.prevent="register" class="form">
                     <div class="input-group" v-if="step === 1">
                         <input type="text" v-model.trim="name" class="input" placeholder="Nombre Completo" required />
+                        <input type="file" @change="handleFileUpload" accept="image/*" />
+
                         <div class="botones">
 
                             <button type="button" class="button next-button" @click="step++">Siguiente</button>
@@ -32,12 +38,14 @@
                     </div>
                     <div v-if="step === 2">
                         <div class="input-group">
-                            <input type="email" v-model.trim="email" class="input" placeholder="Correo Electrónico"
+                            <input type="email" v-model="email" class="input" placeholder="Correo Electrónico"
                                 required />
+                            <span v-if="!validEmail" class="error-message">Por favor, introduce un correo electrónico
+                                válido.</span>
                         </div>
                         <div class="input-group">
-                            <input type="password" v-model.trim="password" class="input" placeholder="Contraseña"
-                                required />
+                            <input type="password" v-model="password" class="input" placeholder="Contraseña" required />
+                            <span v-if="password.length < 8" class="error-message">La contraseña debe tener al menos 8 caracteres.</span>
                         </div>
                         <div class="botones">
                             <button type="button" class="button next-button" @click="step++">Siguiente</button>
@@ -45,18 +53,18 @@
                     </div>
                     <div v-if="step === 3">
                         <div class="input-group">
-                            <input type="text" v-model.trim="phone" class="input" placeholder="Teléfono" />
+                            <input type="text" v-model="phone" class="input" placeholder="Teléfono" />
+                            <span v-if="phone.length < 9" class="error-message">Por favor, introduce un número de teléfono válido.</span>
                         </div>
                         <div class="input-group">
-                            <input type="date" v-model.trim="birthday" class="input"
-                                placeholder="Fecha de Nacimiento" />
+                            <input type="date" v-model="birthday" class="input" placeholder="Fecha de Nacimiento" />
                         </div>
                         <div class="botones">
                             <button type="submit" class="button">Regístrate</button>
                         </div>
                     </div>
                 </form>
-                 <!-- GOOGLE
+                <!-- GOOGLE
                     <div class="sc-18d118e1-0 gjmkph">
                     <hr class="sc-1a86d6e9-0 doHtqb"><span class="sc-7b9b9acb-0 bMZrBT">or</span>
                     <hr class="sc-1a86d6e9-0 doHtqb">
@@ -78,7 +86,6 @@
 import { useStore } from '../stores/index.js';
 
 export default {
-
     data() {
         return {
             step: 1,
@@ -87,27 +94,30 @@ export default {
             password: '',
             phone: '',
             birthday: '',
-
+            profile_photo: null, // Cambiado de 'photo' a 'profile_photo'
+            selected_photo: null // Nuevo estado para la imagen seleccionada
 
         };
     },
-
     methods: {
+        handleFileUpload(event) {
+            this.selected_photo = event.target.files[0];
+            this.profile_photo = URL.createObjectURL(this.selected_photo);
+        },
         register() {
-            fetch('http://localhost:8000/api/register', {
+            const formData = new FormData();
+            formData.append('name', this.name.trim());
+            formData.append('email', this.email.trim());
+            formData.append('password', this.password.trim());
+            formData.append('phone', this.phone.trim());
+            formData.append('birthday', this.birthday.trim());
+
+            if (this.selected_photo) {
+                formData.append('profile_photo', this.selected_photo);
+            }
+            fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: this.name.trim(),
-                    email: this.email.trim(),
-                    password: this.password.trim(),
-                    phone: this.phone.trim(),
-                    birthday: this.birthday.trim(),
-
-
-                }),
+                body: formData,
             })
                 .then(response => {
                     if (!response.ok) {
@@ -127,23 +137,12 @@ export default {
 
                     if (data.error) {
                         console.error('Error:', data.error);
-                        localStorage.setItem('authToken', data.access_token);
-                        // Almacena solo la información necesaria del usuario
-                        
-
-                     
                         alert(data.error);
                     } else {
                         alert('Usuario registrado correctamente!');
                         const store = useStore();
-                        store.save_user_info_register(data.name, data.email, data.id,data.phone, data.birthday, data.token);
-                        // Almacena solo la información necesaria del usuario
-                        localStorage.setItem('user', JSON.stringify({
-                            nombre: this.name,
-                            email: this.email,
-                            token: data.access_token,
-                            
-                        }));
+                        store.save_user_info_register(data.name, data.email, data.id, data.phone, data.birthday, data.token);
+
                         this.$router.push('/login');
                     }
                 })
@@ -152,29 +151,40 @@ export default {
                     console.error('Error:', error);
                 });
         }
-    }
+    },
+    computed: {
+        validEmail() {
+            return this.email.includes('@');
+        },
+    },
 };
 </script>
-
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap');
+
 /* Contenedor de la barra de progreso */
 .progress-bar {
     width: 80%;
     margin: 0 auto;
     margin-top: 10px;
     margin-bottom: 10px;
-    height: 10px; /* Altura de la barra de progreso */
-    background-color: #ddd; /* Color de fondo de la barra de progreso */
-    border-radius: 5px; /* Borde redondeado de la barra de progreso */
+    height: 10px;
+    /* Altura de la barra de progreso */
+    background-color: #ddd;
+    /* Color de fondo de la barra de progreso */
+    border-radius: 5px;
+    /* Borde redondeado de la barra de progreso */
 }
 
 .progress {
     height: 100%;
-    background-color: #ff806d; /* Color de la barra de progreso */
-    border-radius: 5px; /* Borde redondeado de la barra de progreso */
-    transition: width 0.3s ease; /* Transición suave del ancho */
+    background-color: #ff806d;
+    /* Color de la barra de progreso */
+    border-radius: 5px;
+    /* Borde redondeado de la barra de progreso */
+    transition: width 0.3s ease;
+    /* Transición suave del ancho */
 }
 
 /* Contenedor de la barra de progreso */
@@ -269,7 +279,7 @@ export default {
 }
 
 
-.next-button{
+.next-button {
     background-color: #f1693f;
     color: white;
     border: none;
@@ -281,8 +291,8 @@ export default {
 
 
 }
- 
-.button[type="submit"]{
+
+.button[type="submit"] {
     background-color: #f1693f;
     color: white;
 
@@ -344,13 +354,75 @@ export default {
 
 }
 
-.boton-atras{
+.boton-atras {
     background-color: #cbc5c5af;
     color: #333;
     border: none;
     border-radius: 26px;
     font-size: 28px;
     margin-right: 10px;
-    padding: 0px 13px;  
+    padding: 0px 13px;
+}
+
+svg {
+    fill: #333;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* media query para hacer el contenido un poco mas pequeño en ordenador */
+@media (min-width: 768px) {
+    .content {
+        width: 40%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .company-info {
+        margin-bottom: 30px;
+    }
+
+    .company-logo {
+        max-width: 120px;
+        width: 100px;
+    }
+
+    .title_company {
+        font-size: 28px;
+    }
+
+    .login-form {
+        text-align: left;
+    }
+
+    .input {
+        height: 40px;
+    }
+
+    .button {
+        width: 100%;
+    }
+
+    .next-button {
+        width: 100%;
+    }
+
+    .login-link {
+        text-align: right;
+    }
+
+    .login-link a {
+        font-size: 16px;
+    }
+
+    .login-link a:hover {
+        font-size: 16px;
+    }
 }
 </style>

@@ -8,7 +8,7 @@
         <img
           src="https://static.vecteezy.com/system/resources/previews/029/938/250/non_2x/planet-earth-globe-world-map-ai-generative-free-png.png"
           alt="Logo de la empresa" class="company-logo">
-        <div class="title_company">BIENVENIDO A VIAEGIS</div>
+        <div class="title_company">BIENVENIDO A ELYSIUM</div>
       </div>
 
       <div class="login-form">
@@ -17,24 +17,18 @@
         </div>
         <form @submit.prevent="login" class="form">
           <div class="input-group">
-            <input type="text" v-model.trim="email" class="input" placeholder="Correo Electrónico" required />
+            <input type="text" v-model="email" class="input" placeholder="Correo Electrónico" required />
+            <!-- mensaje de error -->
+            <span v-if="!validEmail" class="error-message">Por favor, introduce un correo electrónico válido.</span>
           </div>
           <div class="input-group">
-            <input type="password" v-model.trim="password" class="input" placeholder="Contraseña" required />
+            <input type="password" v-model="password" class="input" placeholder="Contraseña" required />
+            <!-- mensaje de error -->
+            <span v-if="password.length < 8" class="error-message">La contraseña debe tener al menos 8 caracteres.</span>
           </div>
           <button type="submit" class="button">Iniciar Sesión</button>
         </form>
-        <!-- GOOGLE
-        <div class="sc-18d118e1-0 gjmkph">
-          <hr class="sc-1a86d6e9-0 doHtqb"><span class="sc-7b9b9acb-0 bMZrBT">or</span>
-          <hr class="sc-1a86d6e9-0 doHtqb">
-        </div>
-        
-          <div>
-    <button id="signinButton" class="google-signin-button">
-      <img src="../public/img/google_icon.png" alt="Google Logo" class="google-logo"> Iniciar sesión con Google
-    </button>
-  </div> -->
+
       </div>
     </div>
 
@@ -43,7 +37,9 @@
 </template>
 
 <script>
-import { useStore } from '../stores/index.js';
+
+import { useStore } from '../stores/index'
+
 export default {
   data() {
     return {
@@ -54,14 +50,14 @@ export default {
   },
   methods: {
     login() {
-      fetch('http://localhost:8000/api/login', {
+      fetch('http://elysium.daw.inspedralbes.cat/backend/public/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: this.email.trim(),
-          password: this.password.trim(),
+          email: this.email,
+          password: this.password,
 
         }),
       })
@@ -73,31 +69,35 @@ export default {
         })
         .then(data => {
           console.log('Sesión iniciada correctamente:', data);
-          alert('Sesión iniciada correctamente');
-          localStorage.setItem('token', data.token);
+
           const store = useStore();
           store.save_user_info(data.name, data.email, data.id);
 
-          if (store.return_path === null) {
-            this.$router.push('/');
-          } else {
-            const path = store.return_path;
-            store.set_return_path(null);
-            this.$router.push(path);
-
+          if (data.rol === 'admin') {
+            store.set_user_rol('admin');
           }
 
-          
-        
-     
+          navigateTo('/');
+
+
         })
         .catch(error => {
           console.error('Error al iniciar sesión:', error);
+          if (error.message.includes('401')) {
+            alert('Correo electrónico o contraseña incorrectos.');
+          } else {
+            alert('Error al iniciar sesión. Por favor, inténtalo de nuevo.');
+          }
         });
 
     },
   },
-  }
+  computed: {
+    validEmail() {
+      return this.email.includes('@');
+    },
+  },
+}
 
 </script>
 <style scoped>
@@ -171,12 +171,12 @@ export default {
 
 .button {
   width: 47%;
-    height: 50px;
-    border: none;
-    border-radius: 25px;
-    background-color: #ff806d;
-    color: white;
-    font-size: 18px;
+  height: 50px;
+  border: none;
+  border-radius: 25px;
+  background-color: #ff806d;
+  color: white;
+  font-size: 18px;
 }
 
 .login-link {
@@ -196,37 +196,106 @@ export default {
 }
 
 .gjmkph {
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    justify-content: center;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
 }
+
 .doHtqb {
-    border-top: 0.5px solid rgb(205, 214, 223);
-    border-bottom: 0.5px solid rgb(205, 214, 223);
-    width: 64px;
+  border-top: 0.5px solid rgb(205, 214, 223);
+  border-bottom: 0.5px solid rgb(205, 214, 223);
+  width: 64px;
 }
 
 .bMZrBT {
-    display: block;
-    text-transform: uppercase;
-    margin: 0px 12px;
-    color: rgb(105, 119, 134);
-    padding: 24px 12px;
-    font-size: 0.75rem;
-    letter-spacing: 0px;
-    line-height: 1.5;
-    font-weight: 600;
+  display: block;
+  text-transform: uppercase;
+  margin: 0px 12px;
+  color: rgb(105, 119, 134);
+  padding: 24px 12px;
+  font-size: 0.75rem;
+  letter-spacing: 0px;
+  line-height: 1.5;
+  font-weight: 600;
 }
-.google-logo{
+
+.google-logo {
   width: 20px;
   margin-right: 10px;
 }
-.google-signin-button{
+
+.google-signin-button {
   border-radius: 25px;
   padding: 10px 20px;
   font-size: 16px;
-  
+
 }
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+/* media query ordenador para ponerlo en el centro */
+@media (min-width: 768px) {
+  .login-container {
+    justify-content: center;
+  }
+  .content {
+    padding: 40px;
+  }
+  .company-info {
+    margin-bottom: 30px;
+  }
+  .company-logo {
+    max-width: 150px;
+    width: 100px;
+  }
+  .title_company {
+    font-size: 30px;
+  }
+  .login-form {
+    text-align: left;
+  }
+  .title {
+    font-size: 32px;
+  }
+  .form {
+    margin-top: 70px;
+  }
+  .input {
+    height: 60px;
+    font-size: 20px;
+  }
+  .button {
+    height: 60px;
+    font-size: 24px;
+  }
+  .login-link {
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
+  .login-link a {
+    font-size: 20px;
+  }
+  .gjmkph {
+    margin-bottom: 30px;
+  }
+  .doHtqb {
+    width: 100px;
+  }
+  .bMZrBT {
+    font-size: 1rem;
+    padding: 30px 12px;
+  }
+  .google-logo {
+    width: 30px;
+  }
+  .google-signin-button {
+    padding: 15px 30px;
+    font-size: 20px;
+  }
+} 
+
 </style>
