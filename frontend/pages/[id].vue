@@ -62,7 +62,7 @@ export default {
         return;
       }
       //photo
-      if (this.photo) {
+      if (!this.photo) {
         alert('Por favor selecciona una foto.');
         console.log('Foto:', this.photo);
       }
