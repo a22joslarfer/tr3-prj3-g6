@@ -1,5 +1,7 @@
 import axios from "axios";
 import path from "path";
+import cron from 'node-cron';
+
 
 const getUsers = async () => {
   try {
@@ -41,12 +43,14 @@ export default defineNuxtConfig({
   },
   ssr: false,
   hooks: {
-    async 'nitro:config'(nitroConfig: { prerender: { routes: any[]; }; }) {
-      if (nitroConfig && nitroConfig.prerender && nitroConfig.prerender.routes) {
-        const userRoutes = await getUsers();
-        const comentarioRoutes = await getComentarioRoutes();
-        nitroConfig.prerender.routes.push(...userRoutes, ...comentarioRoutes);
-      }
+    'nitro:config'(nitroConfig: { prerender: { routes: any[]; }; }) {
+      cron.schedule('*/5 * * * *', async () => { // runs every 5 minutes
+        if (nitroConfig && nitroConfig.prerender && nitroConfig.prerender.routes) {
+          const userRoutes = await getUsers();
+          const comentarioRoutes = await getComentarioRoutes();
+          nitroConfig.prerender.routes.push(...userRoutes, ...comentarioRoutes);
+        }
+      });
     }
   }
 });
