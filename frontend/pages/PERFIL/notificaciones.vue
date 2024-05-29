@@ -18,6 +18,7 @@
   
 <script>
 import { reactive } from 'vue';
+import { useStore } from "../../stores/index";
 
 export default {
   setup() {

@@ -39,6 +39,7 @@
 
 <script>
 import { socket } from "../../socket.js";
+import { useStore } from "../../stores/index";
 
 export default {
   data() {

@@ -64,7 +64,7 @@ import FooterOptions from '@/components/FooterOptions.vue';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import LoadingDots from "@/components/LoadingDots.vue";
-import { useStore } from '../stores/index';
+import { useStore } from '../stores/index'
 export default {
     components: {
         FooterOptions,

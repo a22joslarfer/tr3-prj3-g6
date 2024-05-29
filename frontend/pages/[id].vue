@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { useStore } from '../stores/index.js';
+import { useStore } from '../stores/index'
 import TestRating from '../components/TestRating.vue'; // Asegúrate de que la ruta sea correcta
 
 export default {
