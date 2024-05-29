@@ -59,9 +59,9 @@ export default {
       options: [
         { id: 1, name: 'Cambiar datos', route: '/perfil/ajustes' },
         { id: 2, name: 'Amigos', route: '/perfil/amigos' },
-        { id: 4, name: 'Reviews', route: '/reviews' },
-        { id: 5, name: 'Login', route: '/Login' },
-        { id: 6, name: 'Register', route: '/Register' },
+        { id: 4, name: 'Reseñas', route: '/reviews' },
+        { id: 5, name: 'Iniciar Sesion', route: '/Login' },
+        { id: 6, name: 'Registrate', route: '/Register' },
         { id: 7, name: 'Cerrar sesión', route: '/perfil/logout' },
       ],
     };

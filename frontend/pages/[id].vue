@@ -25,7 +25,7 @@
       </div>
 
       <div class="form-group">
-        <label for="photo" class="texto">Foto (opcional):</label>
+        <label for="photo" class="texto">Foto:</label>
         <input type="file" id="photo" ref="fileInput" @change="handleFileUpload" class="form-control-file" accept="image/*" required>
       </div>
 

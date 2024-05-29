@@ -28,6 +28,7 @@
 
 
 <script>
+import { useStore } from "../../../stores/index";
 import 'bootstrap/dist/css/bootstrap.css'
 definePageMeta({
     middleware: 'admin'
